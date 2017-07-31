@@ -1,0 +1,14 @@
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Repository\bin\Release\Cllearworks.COH.Repository.dll.config
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Repository\bin\Release\Cllearworks.COH.Repository.dll
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Repository\bin\Release\Cllearworks.COH.Repository.pdb
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Repository\bin\Release\Cllearworks.COH.Models.dll
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Repository\bin\Release\EntityFramework.dll
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Repository\bin\Release\EntityFramework.SqlServer.dll
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Repository\bin\Release\Newtonsoft.Json.dll
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Repository\bin\Release\Cllearworks.COH.Models.pdb
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Repository\bin\Release\EntityFramework.xml
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Repository\bin\Release\EntityFramework.SqlServer.xml
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Repository\bin\Release\Newtonsoft.Json.xml
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Repository\obj\Release\Cllearworks.COH.Repository.csprojResolveAssemblyReference.cache
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Repository\obj\Release\Cllearworks.COH.Repository.dll
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Repository\obj\Release\Cllearworks.COH.Repository.pdb

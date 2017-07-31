@@ -1,0 +1,7 @@
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Utility\bin\Debug\Cllearworks.COH.Utility.dll
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Utility\bin\Debug\Cllearworks.COH.Utility.pdb
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Utility\bin\Debug\Newtonsoft.Json.dll
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Utility\bin\Debug\Newtonsoft.Json.xml
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Utility\obj\Debug\Cllearworks.COH.Utility.csprojResolveAssemblyReference.cache
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Utility\obj\Debug\Cllearworks.COH.Utility.dll
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Utility\obj\Debug\Cllearworks.COH.Utility.pdb

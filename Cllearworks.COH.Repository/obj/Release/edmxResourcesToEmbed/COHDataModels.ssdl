@@ -1,0 +1,367 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="COHModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Applications">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="ClientId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ClientSecret" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Scope" Type="varchar" MaxLength="20" />
+    <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+    <Property Name="UpdatedOn" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Attendance">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EmployeeId" Type="int" Nullable="false" />
+    <Property Name="AttendanceDate" Type="datetime" />
+    <Property Name="CheckInTime" Type="datetime" />
+    <Property Name="CheckOutTime" Type="datetime" />
+    <Property Name="TotalInTime" Type="bigint" />
+    <Property Name="TotalOutTime" Type="bigint" />
+    <Property Name="Remarks" Type="varchar(max)" />
+    <Property Name="IsPresent" Type="bit" />
+  </EntityType>
+  <EntityType Name="Beacon">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MacAddress" Type="varchar" MaxLength="500" />
+    <Property Name="UUID" Type="varchar" MaxLength="500" />
+    <Property Name="Major" Type="int" />
+    <Property Name="Minor" Type="int" />
+    <Property Name="BeaconType" Type="int" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+    <Property Name="UpdatedOn" Type="datetime" Nullable="false" />
+    <Property Name="PlaceId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Client">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FirstName" Type="varchar" MaxLength="250" Nullable="false" />
+    <Property Name="LastName" Type="varchar" MaxLength="250" />
+    <Property Name="Email" Type="varchar" MaxLength="250" Nullable="false" />
+    <Property Name="Address" Type="varchar" MaxLength="250" Nullable="false" />
+    <Property Name="SubscriptionPlan" Type="int" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+    <Property Name="UpdatedOn" Type="datetime" Nullable="false" />
+    <Property Name="ApplicationId" Type="int" Nullable="false" />
+    <Property Name="OrganizationName" Type="varchar" MaxLength="250" />
+  </EntityType>
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DeviceId" Type="varchar" MaxLength="250" Nullable="false" />
+    <Property Name="GmcId" Type="varchar" MaxLength="250" />
+    <Property Name="ApnId" Type="varchar" MaxLength="250" />
+    <Property Name="FirstName" Type="varchar" MaxLength="250" Nullable="false" />
+    <Property Name="LastName" Type="varchar" MaxLength="250" />
+    <Property Name="Email" Type="varchar" MaxLength="250" Nullable="false" />
+    <Property Name="PhoneNumber" Type="varchar" MaxLength="40" />
+    <Property Name="WorkingHours" Type="decimal" Precision="2" Scale="2" />
+    <Property Name="BreakHours" Type="decimal" Precision="2" Scale="2" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="FailedLoginAttemptCount" Type="int" />
+    <Property Name="LastLoginDate" Type="datetime" />
+    <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+    <Property Name="UpdatedOn" Type="datetime" Nullable="false" />
+    <Property Name="ClientId" Type="int" Nullable="false" />
+    <Property Name="PlaceId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Place">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="250" Nullable="false" />
+    <Property Name="Address" Type="varchar" MaxLength="250" />
+    <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+    <Property Name="UpdatedOn" Type="datetime" Nullable="false" />
+    <Property Name="ClientId" Type="int" Nullable="false" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ShiftEmployeeHistory">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ShiftId" Type="int" Nullable="false" />
+    <Property Name="StartDate" Type="datetime" Nullable="false" />
+    <Property Name="EndDate" Type="datetime" />
+    <Property Name="EmployeeId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ShiftMaster">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="StartTime" Type="datetime" Nullable="false" />
+    <Property Name="EndTime" Type="datetime" Nullable="false" />
+    <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+    <Property Name="UpdatedOn" Type="datetime" Nullable="false" />
+    <Property Name="CreatedBy" Type="int" Nullable="false" />
+    <Property Name="ClientId" Type="int" Nullable="false" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Track">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AttendanceId" Type="int" Nullable="false" />
+    <Property Name="FromTime" Type="datetime" />
+    <Property Name="ToTime" Type="datetime" />
+    <Property Name="IsIn" Type="bit" />
+    <Property Name="IsOut" Type="bit" />
+    <Property Name="TrackDuration" Type="bigint" />
+    <Property Name="FromBeacon" Type="int" Nullable="false" />
+    <Property Name="Status" Type="varchar" MaxLength="500" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FirstName" Type="varchar" MaxLength="250" Nullable="false" />
+    <Property Name="LastName" Type="varchar" MaxLength="250" />
+    <Property Name="Email" Type="varchar" MaxLength="250" Nullable="false" />
+    <Property Name="PasswordHash" Type="varchar(max)" Nullable="false" />
+    <Property Name="Salt" Type="varchar(max)" Nullable="false" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+    <Property Name="UpdatedOn" Type="datetime" Nullable="false" />
+    <Property Name="Role" Type="int" Nullable="false" />
+    <Property Name="ClientId" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK__Attendanc__Emplo__22751F6C">
+    <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+    <End Role="Attendance" Type="Self.Attendance" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Attendance">
+        <PropertyRef Name="EmployeeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Beacon__PlaceId__1F98B2C1">
+    <End Role="Place" Type="Self.Place" Multiplicity="1" />
+    <End Role="Beacon" Type="Self.Beacon" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Place">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Beacon">
+        <PropertyRef Name="PlaceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Client__Applicat__08B54D69">
+    <End Role="Applications" Type="Self.Applications" Multiplicity="1" />
+    <End Role="Client" Type="Self.Client" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Applications">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Client">
+        <PropertyRef Name="ApplicationId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Employee__Client__1332DBDC">
+    <End Role="Client" Type="Self.Client" Multiplicity="1" />
+    <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Client">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="ClientId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Employee__PlaceI__14270015">
+    <End Role="Place" Type="Self.Place" Multiplicity="1" />
+    <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Place">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="PlaceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Place__ClientId__0B91BA14">
+    <End Role="Client" Type="Self.Client" Multiplicity="1" />
+    <End Role="Place" Type="Self.Place" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Client">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Place">
+        <PropertyRef Name="ClientId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ShiftEmpl__Emplo__1BC821DD">
+    <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+    <End Role="ShiftEmployeeHistory" Type="Self.ShiftEmployeeHistory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ShiftEmployeeHistory">
+        <PropertyRef Name="EmployeeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ShiftEmpl__Shift__1AD3FDA4">
+    <End Role="ShiftMaster" Type="Self.ShiftMaster" Multiplicity="1" />
+    <End Role="ShiftEmployeeHistory" Type="Self.ShiftEmployeeHistory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ShiftMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ShiftEmployeeHistory">
+        <PropertyRef Name="ShiftId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ShiftMast__Clien__17F790F9">
+    <End Role="Client" Type="Self.Client" Multiplicity="1" />
+    <End Role="ShiftMaster" Type="Self.ShiftMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Client">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ShiftMaster">
+        <PropertyRef Name="ClientId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ShiftMast__Creat__17036CC0">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="ShiftMaster" Type="Self.ShiftMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ShiftMaster">
+        <PropertyRef Name="CreatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Track__Attendanc__25518C17">
+    <End Role="Attendance" Type="Self.Attendance" Multiplicity="1" />
+    <End Role="Track" Type="Self.Track" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Attendance">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Track">
+        <PropertyRef Name="AttendanceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Track__FromBeaco__2645B050">
+    <End Role="Beacon" Type="Self.Beacon" Multiplicity="1" />
+    <End Role="Track" Type="Self.Track" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Beacon">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Track">
+        <PropertyRef Name="FromBeacon" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Users__ClientId__0F624AF8">
+    <End Role="Client" Type="Self.Client" Multiplicity="1" />
+    <End Role="Users" Type="Self.Users" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Client">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Users">
+        <PropertyRef Name="ClientId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="COHModelStoreContainer">
+    <EntitySet Name="Applications" EntityType="Self.Applications" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Attendance" EntityType="Self.Attendance" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Beacon" EntityType="Self.Beacon" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Place" EntityType="Self.Place" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ShiftEmployeeHistory" EntityType="Self.ShiftEmployeeHistory" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ShiftMaster" EntityType="Self.ShiftMaster" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Track" EntityType="Self.Track" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK__Attendanc__Emplo__22751F6C" Association="Self.FK__Attendanc__Emplo__22751F6C">
+      <End Role="Employee" EntitySet="Employee" />
+      <End Role="Attendance" EntitySet="Attendance" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Beacon__PlaceId__1F98B2C1" Association="Self.FK__Beacon__PlaceId__1F98B2C1">
+      <End Role="Place" EntitySet="Place" />
+      <End Role="Beacon" EntitySet="Beacon" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Client__Applicat__08B54D69" Association="Self.FK__Client__Applicat__08B54D69">
+      <End Role="Applications" EntitySet="Applications" />
+      <End Role="Client" EntitySet="Client" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Employee__Client__1332DBDC" Association="Self.FK__Employee__Client__1332DBDC">
+      <End Role="Client" EntitySet="Client" />
+      <End Role="Employee" EntitySet="Employee" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Employee__PlaceI__14270015" Association="Self.FK__Employee__PlaceI__14270015">
+      <End Role="Place" EntitySet="Place" />
+      <End Role="Employee" EntitySet="Employee" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Place__ClientId__0B91BA14" Association="Self.FK__Place__ClientId__0B91BA14">
+      <End Role="Client" EntitySet="Client" />
+      <End Role="Place" EntitySet="Place" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ShiftEmpl__Emplo__1BC821DD" Association="Self.FK__ShiftEmpl__Emplo__1BC821DD">
+      <End Role="Employee" EntitySet="Employee" />
+      <End Role="ShiftEmployeeHistory" EntitySet="ShiftEmployeeHistory" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ShiftEmpl__Shift__1AD3FDA4" Association="Self.FK__ShiftEmpl__Shift__1AD3FDA4">
+      <End Role="ShiftMaster" EntitySet="ShiftMaster" />
+      <End Role="ShiftEmployeeHistory" EntitySet="ShiftEmployeeHistory" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ShiftMast__Clien__17F790F9" Association="Self.FK__ShiftMast__Clien__17F790F9">
+      <End Role="Client" EntitySet="Client" />
+      <End Role="ShiftMaster" EntitySet="ShiftMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ShiftMast__Creat__17036CC0" Association="Self.FK__ShiftMast__Creat__17036CC0">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="ShiftMaster" EntitySet="ShiftMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Track__Attendanc__25518C17" Association="Self.FK__Track__Attendanc__25518C17">
+      <End Role="Attendance" EntitySet="Attendance" />
+      <End Role="Track" EntitySet="Track" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Track__FromBeaco__2645B050" Association="Self.FK__Track__FromBeaco__2645B050">
+      <End Role="Beacon" EntitySet="Beacon" />
+      <End Role="Track" EntitySet="Track" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Users__ClientId__0F624AF8" Association="Self.FK__Users__ClientId__0F624AF8">
+      <End Role="Client" EntitySet="Client" />
+      <End Role="Users" EntitySet="Users" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,218 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7E6FED2E-03E3-4FB9-9D1B-98F3F93904B3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Cllearworks.COH.Repository</RootNamespace>
+    <AssemblyName>Cllearworks.COH.Repository</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Application.cs">
+      <DependentUpon>COHDataModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Applications\ApplicationRepository.cs" />
+    <Compile Include="Applications\IApplicationRepository.cs" />
+    <Compile Include="Attendance.cs">
+      <DependentUpon>COHDataModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Attendances\AttendanceRepository.cs" />
+    <Compile Include="Attendances\IAttendanceRepository.cs" />
+    <Compile Include="BaseRepository.cs" />
+    <Compile Include="Beacon.cs">
+      <DependentUpon>COHDataModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Beacons\BeaconRepository.cs" />
+    <Compile Include="Beacons\IBeaconRepository.cs" />
+    <Compile Include="ChangeRequest.cs">
+      <DependentUpon>COHDataModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Client.cs">
+      <DependentUpon>COHDataModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Clients\ClientRepository.cs" />
+    <Compile Include="Clients\IClientRepository.cs" />
+    <Compile Include="COHDataModels.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>COHDataModels.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="COHDataModels.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>COHDataModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="COHDataModels.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>COHDataModels.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Dashboard\DashboardRepository.cs" />
+    <Compile Include="Dashboard\IDashboardRepository.cs" />
+    <Compile Include="Department.cs">
+      <DependentUpon>COHDataModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Departments\DepartmentRepository.cs" />
+    <Compile Include="Departments\IDepartmentRepository.cs" />
+    <Compile Include="Employee.cs">
+      <DependentUpon>COHDataModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Employees\ChangeRequestRepository.cs" />
+    <Compile Include="Employees\EmployeeRepository.cs" />
+    <Compile Include="Employees\IChangeRequestRepository.cs" />
+    <Compile Include="Employees\IEmployeeRepository.cs" />
+    <Compile Include="GetAdvancedReport_Result.cs">
+      <DependentUpon>COHDataModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetDailyAttendanceCount_Result.cs">
+      <DependentUpon>COHDataModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetMonthlyReport_Result.cs">
+      <DependentUpon>COHDataModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetWeeklyAttendanceByEmployee_ForMobile_Result.cs">
+      <DependentUpon>COHDataModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetYearlyAttendanceByEmployee_ForMobile_Result.cs">
+      <DependentUpon>COHDataModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetYearlyAttendanceByEmployee_Result.cs">
+      <DependentUpon>COHDataModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Holiday.cs">
+      <DependentUpon>COHDataModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="HolidayDetail.cs">
+      <DependentUpon>COHDataModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Holidays\HolidayRepository.cs" />
+    <Compile Include="Holidays\IHolidayRepository.cs" />
+    <Compile Include="Leave.cs">
+      <DependentUpon>COHDataModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Leaves\ILeaveRepository.cs" />
+    <Compile Include="Leaves\LeaveRepository.cs" />
+    <Compile Include="Permissions\IPermissionRepository.cs" />
+    <Compile Include="Permissions\PermissionRepository.cs" />
+    <Compile Include="Place.cs">
+      <DependentUpon>COHDataModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Places\IPlaceRepository.cs" />
+    <Compile Include="Places\PlaceRepository.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\IReportsRepository.cs" />
+    <Compile Include="Reports\ReportsRepository.cs" />
+    <Compile Include="Shift.cs">
+      <DependentUpon>COHDataModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ShiftDetail.cs">
+      <DependentUpon>COHDataModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ShiftEmployeeHistory.cs">
+      <DependentUpon>COHDataModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ShiftHistory\IShiftHistoryRepository.cs" />
+    <Compile Include="ShiftHistory\ShiftHistoryRepository.cs" />
+    <Compile Include="Shifts\IShiftRepository.cs" />
+    <Compile Include="Shifts\ShiftRepository.cs" />
+    <Compile Include="Track.cs">
+      <DependentUpon>COHDataModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tracks\ITrackRepository.cs" />
+    <Compile Include="Tracks\TrackRepository.cs" />
+    <Compile Include="User.cs">
+      <DependentUpon>COHDataModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Users\IUsersRepository.cs" />
+    <Compile Include="Users\UsersRepository.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EntityDeploy Include="COHDataModels.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>COHDataModels.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <None Include="COHDataModels.edmx.diagram">
+      <DependentUpon>COHDataModels.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="COHDataModels.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>COHDataModels.edmx</DependentUpon>
+      <LastGenOutput>COHDataModels.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="COHDataModels.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>COHDataModels.edmx</DependentUpon>
+      <LastGenOutput>COHDataModels.cs</LastGenOutput>
+    </Content>
+    <Content Include="DB_Script\COH_DB_Script_Pending.sql" />
+    <Content Include="DB_Script\COH_DB_Script.sql" />
+    <Content Include="DB_Script\COH_DB_Script_SPs.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cllearworks.COH.Models\Cllearworks.COH.Models.csproj">
+      <Project>{03D20341-72B3-4DAF-B740-CD856C34E59F}</Project>
+      <Name>Cllearworks.COH.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

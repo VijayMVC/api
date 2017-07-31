@@ -1,0 +1,15 @@
+D:\CllearworksProjects\cms-api\Cllearworks.COH.BusinessManager\bin\Release\Cllearworks.COH.BusinessManager.dll
+D:\CllearworksProjects\cms-api\Cllearworks.COH.BusinessManager\bin\Release\Cllearworks.COH.BusinessManager.pdb
+D:\CllearworksProjects\cms-api\Cllearworks.COH.BusinessManager\bin\Release\Cllearworks.COH.Models.dll
+D:\CllearworksProjects\cms-api\Cllearworks.COH.BusinessManager\bin\Release\Cllearworks.COH.Repository.dll
+D:\CllearworksProjects\cms-api\Cllearworks.COH.BusinessManager\bin\Release\Cllearworks.COH.Utility.dll
+D:\CllearworksProjects\cms-api\Cllearworks.COH.BusinessManager\bin\Release\Newtonsoft.Json.dll
+D:\CllearworksProjects\cms-api\Cllearworks.COH.BusinessManager\bin\Release\EntityFramework.dll
+D:\CllearworksProjects\cms-api\Cllearworks.COH.BusinessManager\bin\Release\Cllearworks.COH.Models.pdb
+D:\CllearworksProjects\cms-api\Cllearworks.COH.BusinessManager\bin\Release\Cllearworks.COH.Repository.pdb
+D:\CllearworksProjects\cms-api\Cllearworks.COH.BusinessManager\bin\Release\Cllearworks.COH.Utility.pdb
+D:\CllearworksProjects\cms-api\Cllearworks.COH.BusinessManager\bin\Release\Newtonsoft.Json.xml
+D:\CllearworksProjects\cms-api\Cllearworks.COH.BusinessManager\bin\Release\EntityFramework.xml
+D:\CllearworksProjects\cms-api\Cllearworks.COH.BusinessManager\obj\Release\Cllearworks.COH.BusinessManager.csprojResolveAssemblyReference.cache
+D:\CllearworksProjects\cms-api\Cllearworks.COH.BusinessManager\obj\Release\Cllearworks.COH.BusinessManager.dll
+D:\CllearworksProjects\cms-api\Cllearworks.COH.BusinessManager\obj\Release\Cllearworks.COH.BusinessManager.pdb

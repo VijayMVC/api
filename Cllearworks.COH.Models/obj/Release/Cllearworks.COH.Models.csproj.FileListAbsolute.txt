@@ -1,0 +1,6 @@
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Models\bin\Release\Cllearworks.COH.Models.dll
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Models\bin\Release\Cllearworks.COH.Models.pdb
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Models\bin\Release\Newtonsoft.Json.dll
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Models\bin\Release\Newtonsoft.Json.xml
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Models\obj\Release\Cllearworks.COH.Models.dll
+D:\CllearworksProjects\cms-api\Cllearworks.COH.Models\obj\Release\Cllearworks.COH.Models.pdb

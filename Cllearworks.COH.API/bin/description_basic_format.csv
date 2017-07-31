@@ -1,0 +1,4 @@
+TourOperatour;BookingNumber;Surname;Name;age;birthday;salutation;airline;flightNumber;flightDate;DepartureAirport;arrivalAirport;departureTume;arrivalTime
+TC;54958130;SCHYMANIETZ;PARASCHKEVA;;;FRAU;DE;DE1402;01.04.17;FRA;FUE;12:00:00;15:35:00
+TC;54958130;SCHYMANIETZ;ALINA;;;KIND;DE;DE1402;01.04.17;FRA;FUE;12:00:00;15:35:00
+TC;42916690;DRIESELMANN;SVEN;;;HERR;DE;DE1402;01.04.17;FRA;FUE;11:50:00;15:25:00

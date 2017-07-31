@@ -1,0 +1,526 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="COHModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="COHEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Applications" EntityType="COHModel.Application" />
+    <EntitySet Name="Attendances" EntityType="COHModel.Attendance" />
+    <EntitySet Name="Beacons" EntityType="COHModel.Beacon" />
+    <EntitySet Name="ChangeRequests" EntityType="COHModel.ChangeRequest" />
+    <EntitySet Name="Clients" EntityType="COHModel.Client" />
+    <EntitySet Name="Departments" EntityType="COHModel.Department" />
+    <EntitySet Name="Employees" EntityType="COHModel.Employee" />
+    <EntitySet Name="Places" EntityType="COHModel.Place" />
+    <EntitySet Name="ShiftEmployeeHistories" EntityType="COHModel.ShiftEmployeeHistory" />
+    <EntitySet Name="ShiftMasters" EntityType="COHModel.ShiftMaster" />
+    <EntitySet Name="Tracks" EntityType="COHModel.Track" />
+    <EntitySet Name="Users" EntityType="COHModel.User" />
+    <AssociationSet Name="FK__Client__Applicat__619B8048" Association="COHModel.FK__Client__Applicat__619B8048">
+      <End Role="Application" EntitySet="Applications" />
+      <End Role="Client" EntitySet="Clients" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Attendanc__Emplo__03F0984C" Association="COHModel.FK__Attendanc__Emplo__03F0984C">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="Attendance" EntitySet="Attendances" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Track__Attendanc__06CD04F7" Association="COHModel.FK__Track__Attendanc__06CD04F7">
+      <End Role="Attendance" EntitySet="Attendances" />
+      <End Role="Track" EntitySet="Tracks" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Beacon__Departme__01142BA1" Association="COHModel.FK__Beacon__Departme__01142BA1">
+      <End Role="Department" EntitySet="Departments" />
+      <End Role="Beacon" EntitySet="Beacons" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Beacon__PlaceId__00200768" Association="COHModel.FK__Beacon__PlaceId__00200768">
+      <End Role="Place" EntitySet="Places" />
+      <End Role="Beacon" EntitySet="Beacons" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Track__FromBeaco__07C12930" Association="COHModel.FK__Track__FromBeaco__07C12930">
+      <End Role="Beacon" EntitySet="Beacons" />
+      <End Role="Track" EntitySet="Tracks" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ChangeReq__Appro__0B91BA14" Association="COHModel.FK__ChangeReq__Appro__0B91BA14">
+      <End Role="User" EntitySet="Users" />
+      <End Role="ChangeRequest" EntitySet="ChangeRequests" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Departmen__Clien__693CA210" Association="COHModel.FK__Departmen__Clien__693CA210">
+      <End Role="Client" EntitySet="Clients" />
+      <End Role="Department" EntitySet="Departments" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Employee__Client__70DDC3D8" Association="COHModel.FK__Employee__Client__70DDC3D8">
+      <End Role="Client" EntitySet="Clients" />
+      <End Role="Employee" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Place__ClientId__656C112C" Association="COHModel.FK__Place__ClientId__656C112C">
+      <End Role="Client" EntitySet="Clients" />
+      <End Role="Place" EntitySet="Places" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ShiftMast__Clien__787EE5A0" Association="COHModel.FK__ShiftMast__Clien__787EE5A0">
+      <End Role="Client" EntitySet="Clients" />
+      <End Role="ShiftMaster" EntitySet="ShiftMasters" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Users__ClientId__6D0D32F4" Association="COHModel.FK__Users__ClientId__6D0D32F4">
+      <End Role="Client" EntitySet="Clients" />
+      <End Role="User" EntitySet="Users" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Employee__Depart__72C60C4A" Association="COHModel.FK__Employee__Depart__72C60C4A">
+      <End Role="Department" EntitySet="Departments" />
+      <End Role="Employee" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Employee__Approv__0C85DE4D" Association="COHModel.FK__Employee__Approv__0C85DE4D">
+      <End Role="User" EntitySet="Users" />
+      <End Role="Employee" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Employee__PlaceI__71D1E811" Association="COHModel.FK__Employee__PlaceI__71D1E811">
+      <End Role="Place" EntitySet="Places" />
+      <End Role="Employee" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ShiftEmpl__Emplo__7C4F7684" Association="COHModel.FK__ShiftEmpl__Emplo__7C4F7684">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="ShiftEmployeeHistory" EntitySet="ShiftEmployeeHistories" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ShiftEmpl__Shift__7B5B524B" Association="COHModel.FK__ShiftEmpl__Shift__7B5B524B">
+      <End Role="ShiftMaster" EntitySet="ShiftMasters" />
+      <End Role="ShiftEmployeeHistory" EntitySet="ShiftEmployeeHistories" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ShiftMast__Creat__778AC167" Association="COHModel.FK__ShiftMast__Creat__778AC167">
+      <End Role="User" EntitySet="Users" />
+      <End Role="ShiftMaster" EntitySet="ShiftMasters" />
+    </AssociationSet>
+    <FunctionImport Name="GetDailyAttendanceCount" ReturnType="Collection(COHModel.GetDailyAttendanceCount_Result)">
+      <Parameter Name="clientId" Mode="In" Type="Int32" />
+      <Parameter Name="placeId" Mode="In" Type="Int32" />
+    </FunctionImport>
+  </EntityContainer>
+  <EntityType Name="Application">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="ClientId" Type="Guid" Nullable="false" />
+    <Property Name="ClientSecret" Type="Guid" Nullable="false" />
+    <Property Name="Scope" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="UpdatedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="Clients" Relationship="COHModel.FK__Client__Applicat__619B8048" FromRole="Application" ToRole="Client" />
+  </EntityType>
+  <EntityType Name="Attendance">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="EmployeeId" Type="Int32" Nullable="false" />
+    <Property Name="AttendanceDate" Type="DateTime" Precision="3" />
+    <Property Name="CheckInTime" Type="DateTime" Precision="3" />
+    <Property Name="CheckOutTime" Type="DateTime" Precision="3" />
+    <Property Name="TotalInTime" Type="Int64" />
+    <Property Name="TotalOutTime" Type="Int64" />
+    <Property Name="Remarks" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="IsPresent" Type="Boolean" />
+    <NavigationProperty Name="Employee" Relationship="COHModel.FK__Attendanc__Emplo__03F0984C" FromRole="Attendance" ToRole="Employee" />
+    <NavigationProperty Name="Tracks" Relationship="COHModel.FK__Track__Attendanc__06CD04F7" FromRole="Attendance" ToRole="Track" />
+  </EntityType>
+  <EntityType Name="Beacon">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="MacAddress" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="UUID" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="Major" Type="Int32" />
+    <Property Name="Minor" Type="Int32" />
+    <Property Name="BeaconType" Type="Int32" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="UpdatedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="PlaceId" Type="Int32" Nullable="false" />
+    <Property Name="DepartmentId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Department" Relationship="COHModel.FK__Beacon__Departme__01142BA1" FromRole="Beacon" ToRole="Department" />
+    <NavigationProperty Name="Place" Relationship="COHModel.FK__Beacon__PlaceId__00200768" FromRole="Beacon" ToRole="Place" />
+    <NavigationProperty Name="Tracks" Relationship="COHModel.FK__Track__FromBeaco__07C12930" FromRole="Beacon" ToRole="Track" />
+  </EntityType>
+  <EntityType Name="ChangeRequest">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DeviceId" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="GmcId" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="ApnId" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Email" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="IsApproved" Type="Boolean" Nullable="false" />
+    <Property Name="RequestedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ApprovedBy" Type="Int32" />
+    <NavigationProperty Name="User" Relationship="COHModel.FK__ChangeReq__Appro__0B91BA14" FromRole="ChangeRequest" ToRole="User" />
+  </EntityType>
+  <EntityType Name="Client">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="OrganizationName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="FirstName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="LastName" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Email" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Address" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="SubscriptionPlan" Type="Int32" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="UpdatedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ApplicationId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Application" Relationship="COHModel.FK__Client__Applicat__619B8048" FromRole="Client" ToRole="Application" />
+    <NavigationProperty Name="Departments" Relationship="COHModel.FK__Departmen__Clien__693CA210" FromRole="Client" ToRole="Department" />
+    <NavigationProperty Name="Employees" Relationship="COHModel.FK__Employee__Client__70DDC3D8" FromRole="Client" ToRole="Employee" />
+    <NavigationProperty Name="Places" Relationship="COHModel.FK__Place__ClientId__656C112C" FromRole="Client" ToRole="Place" />
+    <NavigationProperty Name="ShiftMasters" Relationship="COHModel.FK__ShiftMast__Clien__787EE5A0" FromRole="Client" ToRole="ShiftMaster" />
+    <NavigationProperty Name="Users" Relationship="COHModel.FK__Users__ClientId__6D0D32F4" FromRole="Client" ToRole="User" />
+  </EntityType>
+  <EntityType Name="Department">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="UpdatedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ClientId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Beacons" Relationship="COHModel.FK__Beacon__Departme__01142BA1" FromRole="Department" ToRole="Beacon" />
+    <NavigationProperty Name="Client" Relationship="COHModel.FK__Departmen__Clien__693CA210" FromRole="Department" ToRole="Client" />
+    <NavigationProperty Name="Employees" Relationship="COHModel.FK__Employee__Depart__72C60C4A" FromRole="Department" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DeviceId" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="GmcId" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="ApnId" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="FirstName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="LastName" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Email" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="PhoneNumber" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+    <Property Name="WorkingHours" Type="Decimal" Precision="4" Scale="2" />
+    <Property Name="BreakHours" Type="Decimal" Precision="4" Scale="2" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="FailedLoginAttemptCount" Type="Int32" />
+    <Property Name="LastLoginDate" Type="DateTime" Precision="3" />
+    <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="UpdatedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ClientId" Type="Int32" Nullable="false" />
+    <Property Name="PlaceId" Type="Int32" />
+    <Property Name="DepartmentId" Type="Int32" />
+    <Property Name="EmployeeCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="IsApproved" Type="Boolean" Nullable="false" />
+    <Property Name="ApprovedBy" Type="Int32" />
+    <NavigationProperty Name="Attendances" Relationship="COHModel.FK__Attendanc__Emplo__03F0984C" FromRole="Employee" ToRole="Attendance" />
+    <NavigationProperty Name="Client" Relationship="COHModel.FK__Employee__Client__70DDC3D8" FromRole="Employee" ToRole="Client" />
+    <NavigationProperty Name="Department" Relationship="COHModel.FK__Employee__Depart__72C60C4A" FromRole="Employee" ToRole="Department" />
+    <NavigationProperty Name="User" Relationship="COHModel.FK__Employee__Approv__0C85DE4D" FromRole="Employee" ToRole="User" />
+    <NavigationProperty Name="Place" Relationship="COHModel.FK__Employee__PlaceI__71D1E811" FromRole="Employee" ToRole="Place" />
+    <NavigationProperty Name="ShiftEmployeeHistories" Relationship="COHModel.FK__ShiftEmpl__Emplo__7C4F7684" FromRole="Employee" ToRole="ShiftEmployeeHistory" />
+  </EntityType>
+  <EntityType Name="Place">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Address" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="UpdatedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ClientId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Beacons" Relationship="COHModel.FK__Beacon__PlaceId__00200768" FromRole="Place" ToRole="Beacon" />
+    <NavigationProperty Name="Client" Relationship="COHModel.FK__Place__ClientId__656C112C" FromRole="Place" ToRole="Client" />
+    <NavigationProperty Name="Employees" Relationship="COHModel.FK__Employee__PlaceI__71D1E811" FromRole="Place" ToRole="Employee" />
+  </EntityType>
+  <EntityType Name="ShiftEmployeeHistory">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ShiftId" Type="Int32" Nullable="false" />
+    <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="EndDate" Type="DateTime" Precision="3" />
+    <Property Name="EmployeeId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Employee" Relationship="COHModel.FK__ShiftEmpl__Emplo__7C4F7684" FromRole="ShiftEmployeeHistory" ToRole="Employee" />
+    <NavigationProperty Name="ShiftMaster" Relationship="COHModel.FK__ShiftEmpl__Shift__7B5B524B" FromRole="ShiftEmployeeHistory" ToRole="ShiftMaster" />
+  </EntityType>
+  <EntityType Name="ShiftMaster">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="StartTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="EndTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="UpdatedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+    <Property Name="ClientId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Client" Relationship="COHModel.FK__ShiftMast__Clien__787EE5A0" FromRole="ShiftMaster" ToRole="Client" />
+    <NavigationProperty Name="ShiftEmployeeHistories" Relationship="COHModel.FK__ShiftEmpl__Shift__7B5B524B" FromRole="ShiftMaster" ToRole="ShiftEmployeeHistory" />
+    <NavigationProperty Name="User" Relationship="COHModel.FK__ShiftMast__Creat__778AC167" FromRole="ShiftMaster" ToRole="User" />
+  </EntityType>
+  <EntityType Name="Track">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AttendanceId" Type="Int32" Nullable="false" />
+    <Property Name="FromTime" Type="DateTime" Precision="3" />
+    <Property Name="ToTime" Type="DateTime" Precision="3" />
+    <Property Name="IsIn" Type="Boolean" />
+    <Property Name="IsOut" Type="Boolean" />
+    <Property Name="TrackDuration" Type="Int64" />
+    <Property Name="FromBeacon" Type="Int32" Nullable="false" />
+    <Property Name="Status" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Attendance" Relationship="COHModel.FK__Track__Attendanc__06CD04F7" FromRole="Track" ToRole="Attendance" />
+    <NavigationProperty Name="Beacon" Relationship="COHModel.FK__Track__FromBeaco__07C12930" FromRole="Track" ToRole="Beacon" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="LastName" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Email" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="PasswordHash" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Salt" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="UpdatedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Role" Type="Int32" Nullable="false" />
+    <Property Name="ClientId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="ChangeRequests" Relationship="COHModel.FK__ChangeReq__Appro__0B91BA14" FromRole="User" ToRole="ChangeRequest" />
+    <NavigationProperty Name="Client" Relationship="COHModel.FK__Users__ClientId__6D0D32F4" FromRole="User" ToRole="Client" />
+    <NavigationProperty Name="Employees" Relationship="COHModel.FK__Employee__Approv__0C85DE4D" FromRole="User" ToRole="Employee" />
+    <NavigationProperty Name="ShiftMasters" Relationship="COHModel.FK__ShiftMast__Creat__778AC167" FromRole="User" ToRole="ShiftMaster" />
+  </EntityType>
+  <Association Name="FK__Client__Applicat__619B8048">
+    <End Type="COHModel.Application" Role="Application" Multiplicity="1" />
+    <End Type="COHModel.Client" Role="Client" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Application">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Client">
+        <PropertyRef Name="ApplicationId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Attendanc__Emplo__03F0984C">
+    <End Type="COHModel.Employee" Role="Employee" Multiplicity="1" />
+    <End Type="COHModel.Attendance" Role="Attendance" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Attendance">
+        <PropertyRef Name="EmployeeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Track__Attendanc__06CD04F7">
+    <End Type="COHModel.Attendance" Role="Attendance" Multiplicity="1" />
+    <End Type="COHModel.Track" Role="Track" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Attendance">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Track">
+        <PropertyRef Name="AttendanceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Beacon__Departme__01142BA1">
+    <End Type="COHModel.Department" Role="Department" Multiplicity="1" />
+    <End Type="COHModel.Beacon" Role="Beacon" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Department">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Beacon">
+        <PropertyRef Name="DepartmentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Beacon__PlaceId__00200768">
+    <End Type="COHModel.Place" Role="Place" Multiplicity="1" />
+    <End Type="COHModel.Beacon" Role="Beacon" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Place">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Beacon">
+        <PropertyRef Name="PlaceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Track__FromBeaco__07C12930">
+    <End Type="COHModel.Beacon" Role="Beacon" Multiplicity="1" />
+    <End Type="COHModel.Track" Role="Track" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Beacon">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Track">
+        <PropertyRef Name="FromBeacon" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ChangeReq__Appro__0B91BA14">
+    <End Type="COHModel.User" Role="User" Multiplicity="0..1" />
+    <End Type="COHModel.ChangeRequest" Role="ChangeRequest" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ChangeRequest">
+        <PropertyRef Name="ApprovedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Departmen__Clien__693CA210">
+    <End Type="COHModel.Client" Role="Client" Multiplicity="1" />
+    <End Type="COHModel.Department" Role="Department" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Client">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Department">
+        <PropertyRef Name="ClientId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Employee__Client__70DDC3D8">
+    <End Type="COHModel.Client" Role="Client" Multiplicity="1" />
+    <End Type="COHModel.Employee" Role="Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Client">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="ClientId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Place__ClientId__656C112C">
+    <End Type="COHModel.Client" Role="Client" Multiplicity="1" />
+    <End Type="COHModel.Place" Role="Place" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Client">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Place">
+        <PropertyRef Name="ClientId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ShiftMast__Clien__787EE5A0">
+    <End Type="COHModel.Client" Role="Client" Multiplicity="1" />
+    <End Type="COHModel.ShiftMaster" Role="ShiftMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Client">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ShiftMaster">
+        <PropertyRef Name="ClientId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Users__ClientId__6D0D32F4">
+    <End Type="COHModel.Client" Role="Client" Multiplicity="1" />
+    <End Type="COHModel.User" Role="User" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Client">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="User">
+        <PropertyRef Name="ClientId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Employee__Depart__72C60C4A">
+    <End Type="COHModel.Department" Role="Department" Multiplicity="0..1" />
+    <End Type="COHModel.Employee" Role="Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Department">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="DepartmentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Employee__Approv__0C85DE4D">
+    <End Type="COHModel.User" Role="User" Multiplicity="0..1" />
+    <End Type="COHModel.Employee" Role="Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="ApprovedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Employee__PlaceI__71D1E811">
+    <End Type="COHModel.Place" Role="Place" Multiplicity="0..1" />
+    <End Type="COHModel.Employee" Role="Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Place">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="PlaceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ShiftEmpl__Emplo__7C4F7684">
+    <End Type="COHModel.Employee" Role="Employee" Multiplicity="1" />
+    <End Type="COHModel.ShiftEmployeeHistory" Role="ShiftEmployeeHistory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ShiftEmployeeHistory">
+        <PropertyRef Name="EmployeeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ShiftEmpl__Shift__7B5B524B">
+    <End Type="COHModel.ShiftMaster" Role="ShiftMaster" Multiplicity="1" />
+    <End Type="COHModel.ShiftEmployeeHistory" Role="ShiftEmployeeHistory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ShiftMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ShiftEmployeeHistory">
+        <PropertyRef Name="ShiftId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ShiftMast__Creat__778AC167">
+    <End Type="COHModel.User" Role="User" Multiplicity="1" />
+    <End Type="COHModel.ShiftMaster" Role="ShiftMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ShiftMaster">
+        <PropertyRef Name="CreatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <ComplexType Name="GetDailyAttendanceCount_Result">
+    <Property Type="DateTime" Name="AttendanceDate" Nullable="true" />
+    <Property Type="Int32" Name="TotalEmp" Nullable="true" />
+    <Property Type="Int32" Name="Ontime" Nullable="true" />
+    <Property Type="Int32" Name="Late" Nullable="true" />
+  </ComplexType>
+</Schema>

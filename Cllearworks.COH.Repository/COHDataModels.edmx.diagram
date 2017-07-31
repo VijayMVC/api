@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="2422e2075a294c01acd3176171eb8243" Name="Diagram1" ZoomLevel="71">
+        <EntityTypeShape EntityType="COHModel.Application" Width="1.5" PointX="0.75" PointY="18.625" />
+        <EntityTypeShape EntityType="COHModel.Attendance" Width="1.5" PointX="9.75" PointY="31.25" />
+        <EntityTypeShape EntityType="COHModel.Beacon" Width="1.5" PointX="7.5" PointY="13.875" />
+        <EntityTypeShape EntityType="COHModel.ChangeRequest" Width="1.5" PointX="7.5" PointY="27.75" />
+        <EntityTypeShape EntityType="COHModel.Client" Width="1.5" PointX="3" PointY="17.5" />
+        <EntityTypeShape EntityType="COHModel.Department" Width="1.5" PointX="5.25" PointY="12.5" />
+        <EntityTypeShape EntityType="COHModel.Holiday" Width="1.5" PointX="5.25" PointY="23.875" />
+        <EntityTypeShape EntityType="COHModel.HolidayDetail" Width="1.5" PointX="9.75" PointY="17.75" />
+        <EntityTypeShape EntityType="COHModel.Leave" Width="1.5" PointX="12.75" PointY="26.25" />
+        <EntityTypeShape EntityType="COHModel.Place" Width="1.5" PointX="5.25" PointY="16.125" />
+        <EntityTypeShape EntityType="COHModel.Track" Width="1.5" PointX="15" PointY="22.625" />
+        <EntityTypeShape EntityType="COHModel.User" Width="1.5" PointX="5.25" PointY="27" />
+        <AssociationConnector Association="COHModel.FK__Client__Applicat__619B8048" />
+        <AssociationConnector Association="COHModel.FK__Track__Attendanc__06CD04F7" />
+        <AssociationConnector Association="COHModel.FK__Beacon__Departme__01142BA1" />
+        <AssociationConnector Association="COHModel.FK__Beacon__PlaceId__00200768" />
+        <AssociationConnector Association="COHModel.FK__Track__FromBeaco__07C12930" />
+        <AssociationConnector Association="COHModel.FK__ChangeReq__Appro__0B91BA14" />
+        <AssociationConnector Association="COHModel.FK__Departmen__Clien__693CA210" />
+        <AssociationConnector Association="COHModel.FK__Holiday__ClientI__5E8A0973" />
+        <AssociationConnector Association="COHModel.FK__HolidayDe__ToCli__681373AD" />
+        <AssociationConnector Association="COHModel.FK__Place__ClientId__656C112C" />
+        <AssociationConnector Association="COHModel.FK__Users__ClientId__6D0D32F4" />
+        <AssociationConnector Association="COHModel.FK__HolidayDe__ToDep__69FBBC1F" />
+        <AssociationConnector Association="COHModel.FK__HolidayDe__Holid__671F4F74" />
+        <AssociationConnector Association="COHModel.FK__HolidayDe__ToPla__690797E6" />
+        <AssociationConnector Association="COHModel.FK__Leave__ApprovedB__46B27FE2" />
+        <EntityTypeShape EntityType="COHModel.Employee" Width="1.5" PointX="7.5" PointY="18.625" />
+        <AssociationConnector Association="COHModel.FK__Attendanc__Emplo__03F0984C" />
+        <AssociationConnector Association="COHModel.FK__Employee__Client__70DDC3D8" />
+        <AssociationConnector Association="COHModel.FK__Employee__Depart__72C60C4A" />
+        <AssociationConnector Association="COHModel.FK__Employee__Approv__0C85DE4D" />
+        <AssociationConnector Association="COHModel.FK__Employee__PlaceI__71D1E811" />
+        <AssociationConnector Association="COHModel.FK__HolidayDe__ToEmp__6AEFE058" />
+        <AssociationConnector Association="COHModel.FK__Leave__ApprovedB__45BE5BA9" />
+        <AssociationConnector Association="COHModel.FK__Leave__EmployeeI__44CA3770" />
+        <EntityTypeShape EntityType="COHModel.Shift" Width="1.5" PointX="10.5" PointY="24.75" />
+        <EntityTypeShape EntityType="COHModel.ShiftDetail" Width="1.5" PointX="12.75" PointY="21.875" />
+        <EntityTypeShape EntityType="COHModel.ShiftEmployeeHistory" Width="1.5" PointX="9.75" PointY="21.625" />
+        <AssociationConnector Association="COHModel.FK__Shift__ClientId__7B264821" />
+        <AssociationConnector Association="COHModel.FK__ShiftEmpl__Emplo__02C769E9" />
+        <AssociationConnector Association="COHModel.FK__Shift__CreatedBy__7A3223E8" />
+        <AssociationConnector Association="COHModel.FK__ShiftDeta__Shift__7E02B4CC" />
+        <AssociationConnector Association="COHModel.FK__ShiftEmpl__Shift__01D345B0" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
