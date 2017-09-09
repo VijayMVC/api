@@ -1,0 +1,18 @@
+﻿@using ConnectCMS.Resources
+<div class="listItemContainer marginTop" data-bind="click: ClickListItem, isHover: Hover">
+	<a class="listItemMapPinCircle marginListItemImage marginRight" data-bind="text: MapId, css: ClassName"></a>
+	<div class="flexSpacer block marginLeft marginRight">
+		<div class="block">
+			<div class="block marginBlock">
+				<img class="listItemLabelImage" src="Content/monscierge/images/distance.png" />
+				<span class="listItemLabel black bold" data-bind="text: FormattedDistanceInMiles"></span>
+				<span class="listItemLabel black bold">@ConnectCMSResources.Miles</span>
+			</div>
+			<div data-bind="if: Location() != null">
+				<span class="listItemLabel block gray marginBlock" data-bind="text: Location().FullAddress()"></span>
+			</div>
+			<span class="listItemLabel block gray" data-bind="text: Phone"></span>
+		</div>
+	</div>
+	<div class="marginLeft" data-bind="listButton: ListButtonViewModel"></div>
+</div>

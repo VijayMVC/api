@@ -1,0 +1,168 @@
+﻿@using ConnectCMS.Resources
+
+<div id="imageGalleryBody">
+    <div class="ImageGallery-Header">
+        <!--ko foreach: Tabs-->
+        <div class="ImageGallery-HeaderTab">
+            <a class="ImageGallery-HeaderTabItem" data-bind="click: $parent.TabSelect, css: $parent.SelectedTab() == Id() ? 'selected' : '', text: Name"></a>
+        </div>
+        <!--/ko-->
+        <div class="ImageGallery-HeaderSpacer">
+        </div>
+        <div class="ImageGallery-HeaderTab">
+            <a class="ImageGallery-Button" data-bind="click: InsertSelected, visible:SelectedTab() == 'browse'">@ConnectCMSResources.Insert</a>
+            <a class="ImageGallery-Button" data-bind="click: UploadSelected, visible:SelectedTab() == 'upload'">@ConnectCMSResources.Upload</a>
+        </div>
+    </div>
+
+    <div class="ImageGallery-Content">
+        <div id="browse-Content" class="Browse-Content" data-bind="visible: SelectedTab() == 'browse'">
+            <div class="ImageGallery-BrowseHeader">
+                <a class="ImageGallery-Button Up" data-bind="enable: SelectedGallery().ParentGallery != null, click: Up, css: SelectedGallery().ParentGallery == null ? 'disabled' : ''">@ConnectCMSResources.Up</a>
+                <div class="ImageGallery-Browse-Crumb" data-bind="template: { name: 'GalleryCrumbTemplate', data: SelectedGallery}">
+                </div>
+            </div>
+            <div class="ImageGallery-BrowseItems" data-bind="with: SelectedGallery">
+                <div class="ImageGallery-BrowseItems-Header" data-bind="visible: GalleryCount() > 0">
+                    <span> @ConnectCMSResources.Galleries </span>
+                </div>
+                <div class="ImageGallery-BrowseItems-Galleries" data-bind="visible:  GalleryCount() > 0">
+                    <div data-bind="style: {width: (GalleryCount() * 106) + 'px'}, template:{ name: 'GalleryTemplate', foreach: SubGalleries}">
+                    </div>
+                </div>
+                <div class="ImageGallery-BrowseItems-Header">
+                    <span> @ConnectCMSResources.Images </span>
+                </div>
+                <div class="ImageGallery-BrowseItems-Container">
+                    <div class="ImageGallery-BrowseItems-Images" data-bind="template:{ name: 'ImageTemplate', foreach: FilteredImages}">
+                    </div>
+                    <div class="ImageGallery-BrowseItems-Tags">
+                        <div class="ImageGallery-TagContainer" style="margin-bottom:5px; max-height: 200px;" data-bind="visible: SelectedTags().length > 0">
+                            <div class="ImageGallery-Tag-Header"><span> @ConnectCMSResources.SelectedTags </span></div>
+                            <div class="ImageGallery-TagSelected-Container" data-bind="foreach: SelectedTags">
+                                <div data-bind="click: ToggleSelected" class="ImageGallery-Tag-Container">
+                                    <span data-bind="text: Name">
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ImageGallery-BrowseItems-Details-Filter" data-bind="visible: Tags().length > 0">
+                            <span>@ConnectCMSResources.Filter :</span>
+                            <input id="tagFilterText" type="text" data-bind="value: TagFilterText, valueUpdate: 'input'" />
+                        </div>
+                        <div class="ImageGallery-TagContainer" data-bind="visible: Tags().length > 0">
+                            <div class="ImageGallery-Tag-Header"><span> @ConnectCMSResources.AvailableTags </span></div>
+                            <div class="ImageGallery-TagAvailable-Container" data-bind="foreach: FilteredTags">
+                                <div data-bind="click: ToggleSelected" class="ImageGallery-Tag-Container">
+                                    <span class="flexSpacer" data-bind="text: Name">
+                                    </span>
+                                    <span data-bind="text: '( '+ UsageCount() +' )'">
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ImageGallery-GalleryPager">
+                    <div class="ImageGallery-GalleryPager-Controls">
+                        <a data-bind="click: function(){if(Page() != 0) Page(0);}, css: Page() == 0 ? 'disabled' : ''"> @ConnectCMSResources.First </a>
+                        <a data-bind="click: function(){if(Page() != 0) Page(Page() - 1);}, css: Page() == 0 ? 'disabled' : ''"> @ConnectCMSResources.Previous </a>
+                        <a data-bind="click: function(){Page(Page() - 5);}, visible: Page() >= 5">...</a>
+                        <a data-bind="click: function(){Page((Math.floor(Page() / 5) * 5));}, css: Page() == (Math.floor(Page() / 5) * 5) ? 'selected' : '', visible: Page() == 0 || (Math.floor(Page() / 5) * 5) < PageCount(), text: (Math.floor(Page() / 5) * 5) + 1"></a>
+                        <a data-bind="click: function(){Page((Math.floor(Page() / 5) * 5) + 1);}, css: Page() == (Math.floor(Page() / 5) * 5) + 1 ? 'selected' : '', visible: (Math.floor(Page() / 5) * 5) + 1 < PageCount(), text: (Math.floor(Page() / 5) * 5) + 2"></a>
+                        <a data-bind="click: function(){Page((Math.floor(Page() / 5) * 5) + 2);}, css: Page() == (Math.floor(Page() / 5) * 5) + 2 ? 'selected' : '', visible: (Math.floor(Page() / 5) * 5) + 2 < PageCount(), text: (Math.floor(Page() / 5) * 5) + 3"></a>
+                        <a data-bind="click: function(){Page((Math.floor(Page() / 5) * 5) + 3);}, css: Page() == (Math.floor(Page() / 5) * 5) + 3 ? 'selected' : '', visible: (Math.floor(Page() / 5) * 5) + 3 < PageCount(), text: (Math.floor(Page() / 5) * 5) + 4"></a>
+                        <a data-bind="click: function(){Page((Math.floor(Page() / 5) * 5) + 4);}, css: Page() == (Math.floor(Page() / 5) * 5) + 4 ? 'selected' : '', visible: (Math.floor(Page() / 5) * 5) + 4 < PageCount(), text: (Math.floor(Page() / 5) * 5) + 5"></a>
+                        <a data-bind="click: function(){Page((Math.floor(Page() / 5) * 5) + 5);}, visible: PageCount() > (Math.floor(Page() / 5) * 5) + 5">...</a>
+                        <a data-bind="click: function(){if(Page() != PageCount() - 1) Page(Page() + 1);}, css: Page() == PageCount()-1 || PageCount() == 0 ? 'disabled' : ''"> @ConnectCMSResources.Next </a>
+                        <a data-bind="click: function(){if(Page() != PageCount() - 1) Page(PageCount() - 1);}, css: Page() == PageCount()-1 || PageCount() == 0 ? 'disabled' : ''"> @ConnectCMSResources.Last </a>
+                    </div>
+                    <div class="ImageGallery-GalleryPager-SizeSelector">
+                        <select data-bind="options: ImageGallery.PageSizes, optionsText: 'Label', optionsValue: 'Size', value: PageSize"></select>
+                        <span> @ConnectCMSResources.ImagePerPage </span>
+                    </div>
+                    <div class="ImageGallery-GalleryPager-Legend">
+                        <span data-bind="text: (Page() * PageSize()) + 1"></span>
+                        <span>-</span>
+                        <span data-bind="text: ImageCount() < (Page() * PageSize()) + PageSize() ? ImageCount() : (Page() * PageSize()) + PageSize()"></span>
+                        <span> @ConnectCMSResources.Of </span>
+                        <span data-bind="text: ImageCount">100</span>
+                        <span> @ConnectCMSResources.Images </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="upload-Content" class="Upload-Content" data-bind="visible: SelectedTab() == 'upload'">
+            <div class="ImageGallery-UploadHeader">
+                <a class="ImageGallery-Button Up" data-bind="enable: SelectedGallery().ParentGallery != null, click: Up, css: SelectedGallery().ParentGallery == null ? 'disabled' : ''"> @ConnectCMSResources.Up </a>
+                <div class="ImageGallery-Upload-Crumb" data-bind="template: { name: 'GalleryCrumbTemplate', data: SelectedGallery}">
+                </div>
+            </div>
+            <div class="ImageGallery-UploadItems" data-bind="with: SelectedGallery">
+                <div class="ImageGallery-UploadItems-Header" data-bind="visible: GalleryCount() > 0">
+                    <span> @ConnectCMSResources.Galleries </span>
+                </div>
+                <div class="ImageGallery-UploadItems-Galleries" data-bind="visible:  GalleryCount() > 0, template:{ name: 'GalleryTemplate', foreach: SubGalleries}">
+                </div>
+                <div class="ImageGallery-UploadItems-Header">
+                    <span> @ConnectCMSResources.Images </span>
+                </div>
+                <div class="ImageGallery-UploadItems-Container">
+                    <div class="ImageGallery-UploadItems-Images" id="imageGallery-UploadItems" data-bind="template:{ name: 'ImageTemplate', foreach: Images}">
+                    </div>
+                    <div class="ImageGallery-UploadItems-Details" data-bind="with: ImageGallery.SelectedUploadImage">
+                        <div class="ImageGallery-UploadItems-Details-IsStock" data-bind="with: ImageDetails">
+                            <input id="isStockCheck" type="checkbox" data-bind="checked: IsStockImage" />
+                            <label for="isStockCheck">Is Stock Image</label>
+                        </div>
+                        <div class="ImageGallery-UploadItems-Details-Tags" style="margin-bottom:10px;" data-bind="with: ImageDetails,visible: ImageDetails().IsStockImage">
+                            <div class="ImageGallery-UploadItems-Details-Filter">
+                                <input id="tagFilterText" type="text" data-bind="value: TagFilterText, valueUpdate: 'input'" />
+                                <a data-bind="click: Add, css: CanAdd() ? '' : 'disabled'">Add</a>
+                            </div>
+                            <div class="ImageGallery-UploadItems-Details-SelectedTags" data-bind="foreach: Tags">
+                                <div data-bind="click: $parent.ToggleImageTag">
+                                    <span class="flexSpacer" data-bind="text: Name">
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="ImageGallery-UploadItems-Details-AvailableTags" data-bind="foreach: AvailableTags">
+                                <div data-bind="click: $parent.ToggleImageTag">
+                                    <span class="flexSpacer" data-bind="text: Name">
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ImageGallery-UploadItems-Toolbar">
+                    <input id="imageGallery-Upload" type="file" style="display: none" accept="image/*" />
+                    <a class="ImageGallery-Button" data-bind="click: AddImages"> @ConnectCMSResources.AddFiles </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script id="GalleryTemplate" type="text/html">
+    <div class="ImageGallery-Gallery" data-bind="click: Select, style: {backgroundImage: 'url('+CategoryImageUrl()+')'}">
+        <div>
+            <span data-bind="text:Name"></span>
+        </div>
+    </div>
+</script>
+
+<script id="GalleryCrumbTemplate" type="text/html">
+    <a data-bind="text: Name, click: Select, css: ImageGallery.SelectedGallery() == $data ? 'selected' : ''"></a>
+    <span data-bind="visible: ParentGallery != null"><</span>
+    <!--ko if: ParentGallery != null-->
+    <!--ko template: {name: 'GalleryCrumbTemplate', data: ParentGallery}-->
+    <!--/ko-->
+    <!--/ko-->
+</script>
+
+<script id="ImageTemplate" type="text/html">
+    <div class="ImageGallery-Image" data-bind="click: Select, style: { backgroundImage: 'url(' + ImageGalleryThumbnailImageUrl() + ')' }, css:  ((IsExisting() ? 'Exists ' : '') + (IsSelected() ? 'Selected ' : ''))">
+        <img src="~/Content/monscierge/images/selected.png" data-bind="visible: IsSelected" class="ImageGallery-Item-SelectedIcon" />
+        <img src="~/Content/monscierge/images/exists.png" data-bind="visible: IsExisting" class="ImageGallery-Item-ExistsIcon" />
+    </div>
+</script>

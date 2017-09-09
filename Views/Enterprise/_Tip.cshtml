@@ -1,0 +1,35 @@
+﻿@using ConnectCMS.Resources
+<div data-bind="with: RecommendationEnterpriseTipViewModel">
+	<div data-bind="errorMessage: ErrorMessageViewModel"></div>
+	<div class="toolBarContainer overflow">
+		<div class="flexSpacer marginRight">
+			<a class="linkButton green" data-bind="click: ClickAdd">@ConnectCMSResources.CreateNewTip</a>
+		</div>
+		<div class="inline marginLeft">
+			<label class="marginRight" for="filterBySelect">@ConnectCMSResources.FilterBy</label>
+			<select class="horizontal marginRight" id="filterBySelect" data-bind="value: Filter, enable: ToolBarEnabled">
+				<option value="1">@ConnectCMSResources.FromEveryone</option>
+				<option value="2">@ConnectCMSResources.FromMe</option>
+				<option value="3">@ConnectCMSResources.FromOthers</option>
+			</select>
+			<div class="vr marginLeft marginRight"></div>
+			<label class="marginLeft marginRight" for="sortBySelect">@ConnectCMSResources.SortBy</label>
+			<select class="horizontal marginRight" id="sortBySelect" data-bind="value: Sort, enable: ToolBarEnabled">
+				<option value="1">@ConnectCMSResources.Latest</option>
+				<option value="2">@ConnectCMSResources.Earliest</option>
+				<option value="3">@ConnectCMSResources.TipsterName</option>
+				<option value="4">@ConnectCMSResources.Address</option>
+			</select>
+			<div class="vr marginLeft marginRight"></div>
+			<label class="marginLeft marginRight" for="languageSelect">@ConnectCMSResources.Language</label>
+			<select class="horizontal" id="languageSelect" data-bind="options: ConnectCMS.AvailableLanguages, optionsText: 'Value', value: ConnectCMS.SelectedLanguage, enable: ToolBarEnabled"></select>
+		</div>
+	</div>
+	<div data-bind="progressBar: ProgressBarViewModel"></div>
+	<div data-bind="visible: Executed">
+		<div data-bind="template: { name: 'noDataTemplate', data: NoDataViewModel }"></div>
+		<div data-bind="if: Enterprise() != null">
+			<div data-bind="template: { name: 'tipTemplate', foreach: Enterprise().AllTips }"></div>
+		</div>
+	</div>
+</div>

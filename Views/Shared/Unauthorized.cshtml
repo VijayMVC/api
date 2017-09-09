@@ -1,0 +1,5 @@
+﻿@using ConnectCMS.Resources
+@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout.cshtml";
+}
+<span>@ConnectCMSResources.UnauthorizedBody</span>

@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "Test Notifications";
+    Layout = (Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout.cshtml");
+}
+
+<div id="page-container" class="flexSpacer pageContainer" data-bind="allowBindings: false">
+    <div id="bindingDiv" class="transitionPanelContainer">
+        <div>
+            <h1>Release Note - User Notifications</h1>
+        </div>
+        <p>
+            This is a test page to demonstrate the functionality of Release Note notifications.
+        </p>
+    </div>
+</div>
+
+<!-- This named link is needed in order to open the Release Notes in a new window when an alert is clicked. -->
+<a id="release-notes-link" href="javascript: return void(0);" onclick="javascript: window.open('@Url.Action("TestNotes", "ReleaseNotes")', '', 'width=600,height=800,scrollbars=1');" style="visibility: hidden"></a>
+
+<script type="text/javascript">
+    $(function () {
+        $('body').showReleaseNotifications();
+    });
+</script>

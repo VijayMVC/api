@@ -1,0 +1,26 @@
+﻿@using ConnectCMS.Resources
+<div>
+	<div class="bottomBorder flexContainer paddingBottom">
+		<h1 class="flexSpacer marginRight">@ConnectCMSResources.ReorderRecommendations</h1>
+		<a class="linkButton marginLeft white" data-bind="click: ClickBack">@ConnectCMSResources.Back</a>
+	</div>
+	<div data-bind="errorMessage: ErrorMessageViewModel"></div>
+	<div data-bind="helpMessage: HelpMessageViewModel"></div>
+	<div class="toolBarContainer overflow">
+		<div class="flexSpacer">
+			<a class="linkButton marginRight" data-bind="click: ClickUpdate, css: ToolBarEnabled() ? '' : 'disabled'">@ConnectCMSResources.Save</a>
+		</div>
+		<div class="inline">
+			<label class="marginLeft marginRight" for="categorySelect">@ConnectCMSResources.Category</label>
+			<select class="horizontal" id="categorySelect" data-bind="options: RecommendationRecommendViewModel.RecommendationViewModel.CategoriesOnDevice, optionsCaption: '@(ConnectCMSResources.SelectACategory)', optionsText: 'Name', value: SelectedCategory, enable: ToolBarEnabled"></select>
+		</div>
+	</div>
+	<div data-bind="progressBar: ProgressBarViewModel"></div>
+	<div data-bind="visible: Executed">
+		<div data-bind="template: { name: 'noDataTemplate', data: CategoryNoDataViewModel }"></div>
+		<div data-bind="visible: !CategoryNoDataVisible()">
+			<div data-bind="template: { name: 'noDataTemplate', data: NoDataViewModel }"></div>
+			<div class="enterpriseDragDrop" data-bind="sortable: SortableViewModel, template: { name: 'enterpriseReorderTemplate', foreach: FilteredEnterprises }"></div>
+		</div>
+	</div>
+</div>

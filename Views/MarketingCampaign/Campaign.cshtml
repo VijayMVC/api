@@ -1,0 +1,237 @@
+﻿@using System.Web.UI.WebControls
+@using ConnectCMS.Resources
+@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout.cshtml";
+}
+
+@section PageStyles{
+	@Styles.Render( "~/Content/kendo/2016.1.226/bootstrap-css" )
+	@Styles.Render( "~/Content/monscierge/bootstrappy/css" )
+}
+
+<script id="SingleImageTemplate" type="text/html">
+	@Html.Partial( "~/Views/Image/_SingleUploadableImage.cshtml" )
+</script>
+<div id="equalizer" data-bind="allowBindings: false" class="connect_cms">
+	<div class="container-fluid" id="bindingDiv">
+		<div class="row" id="campaigns" data-bind="validationOptions: {decorateElement: false, insertMessages: false}">
+			@Html.Partial( "_LeftNav" );
+			<div class="col-sm-9 col-md-9 col-sm-offset-3 col-md-offset-3 col-xs-12 base-content">
+				<div class="page-header headroom">
+					<!-- Please change this functionality if needed -->
+					<h1 class="pull-left" id="page_section_title">
+						Create campaign
+					</h1>
+					<!-- Start Header Action -->
+					<div class="header_btn_holder pull-right">
+						<a class="btn btn-border btn-wide" href="@Url.Action("Campaigns")">Back</a>
+						<a class="btn btn-primary btn-wide" href="#" data-bind="disableAnchor: !CanSave(), click: Save">Save</a>
+					</div>
+					<!-- End Header Action -->
+					<div class="clearfix"></div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12">
+						<!-- Start Tab Content -->
+						<div class="interior-content">
+							<div class="alert alert-danger alert-dismissible" style="display: none;" role="alert" data-bind="visible: ErrorMessage() != null">
+								<button class="close" type="button" data-dismiss="alert">
+									<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+								</button>
+								<span data-bind="text: ErrorMessage" class="margin-right-10"></span>
+								<a class="link" data-bind="click: ErrorRetry">Retry</a>
+							</div>
+							<div class="headroom_less">
+								<div class="row">
+									<div class="col-sm-6">
+										<fieldset>
+											<!-- Select Basic -->
+											<div class="form-group">
+												<label class="control-label" for="locationeditlist">Campaign Name</label>
+												<div data-bind="css: {'error': !Name.isValid()}">
+													<input class="form-control" id="campaignNameTitle" type="text" placeholder="A short name for this campaign..." data-bind="value: Name">
+												</div>
+											</div>
+										</fieldset>
+									</div>
+									<div class="col-sm-2">
+										<!-- Select Basic -->
+										<div class="form-group">
+											<fieldset class="inline-block">
+												<label class="control-label" for="selectbasic">Orientation</label>
+												<div data-bind="css: {'error': !Orientation.isValid()}">
+													<select required="required" data-bind="kendoDropDownList: {data: Orientations, value: Orientation, filter: 'contains', dataTextField: 'Name', dataValueField: 'PKID', optionLabel: 'Select an orientation'}"></select>
+												</div>
+											</fieldset>
+										</div>
+									</div>
+									<div class="col-sm-4">
+										<!-- Select Basic -->
+										<div class="form-group">
+											<fieldset class="inline-block">
+												<label class="control-label" for="selectbasic">Default Display Scene</label>
+												<div data-bind="css: {'error': !FKDefaultScreen.isValid()}">
+													<select required="required" data-bind="kendoDropDownList: {data: FilteredScreens, value: FKDefaultScreen, filter: 'contains', dataTextField: 'Name', dataValueField: 'PKID', optionLabel: 'Select a scene'}"></select>
+												</div>
+											</fieldset>
+											<img width="30" class="img-responsive inline-block margin-left-10" alt="Layout" data-bind="attr:{src: DefaultScreen() != null ? DefaultScreen().LayoutImageUrl(): ''}">
+											@*<button class="btn btn-primary-light btn-sm inline-block pull-right" data-bind="click: AddScreen">Add New</button>*@
+											<a class="btn btn-primary-light btn-sm inline-block pull-right" href="@Url.Action("Screen")">Add Scene</a>
+										</div>
+									</div>
+								</div><!-- End Row -->
+								<div class="row">
+									<div class="col-sm-12 headroom_less">
+										<div class="panel panel-info panel-condensed">
+											<div class="panel-heading clearfix">
+												<h3 class="panel-title pull-left">Sessions</h3>
+												<div class="pull-right">
+													<a class="btn btn-info btn-sm" href="#" data-bind="click: AddException"><i class="fa fa-plus"></i> Add Session</a>
+												</div>
+											</div>
+											<ul class="list-group">
+												<li class="list-group-item panel-reduced-header">
+													<div class="row">
+														<div class="col-sm-3">
+															<p class="form-control-static small text-muted">Time</p>
+														</div>
+														<div class="col-sm-3 col-sm-offset-1">
+															<p class="form-control-static small text-muted">Display Scene</p>
+														</div>
+														<div class="col-sm-2 col-sm-offset-1">
+															<p class="form-control-static small text-muted">Layout</p>
+														</div>
+														<div class="col-sm-2">
+														</div>
+													</div>
+												</li>
+												<!-- ko if: ExceptionScreens().length == 0 -->
+												<li class="list-group-item">
+													<div class="row">
+														<div class="col-sm-12 text-center">
+															<p>No exceptions</p>
+														</div>
+													</div>
+												</li>
+												<!-- /ko -->
+												<!-- ko foreach: ExceptionScreens -->
+												<li class="list-group-item">
+													<div class="row">
+														<div class="col-sm-3">
+															<div class="form-group">
+																<div class="input-group">
+																	<div class="input-group-addon">
+																		<i class="fa fa-clock-o"></i>
+																	</div>
+																	<div class="form-control input-sm k-insert" data-bind="css: { 'error' : !Start.isValid() }">
+																		<input data-bind="kendoTimePicker: Start, event: { click : FocusPicker, focus : FocusPicker, blur : BlurPicker}">
+																	</div>
+																	<span class="input-group-btn" style="width: 0px;"></span>
+																	<div class="form-control input-sm k-insert" data-bind="css: { 'error' : !End.isValid() }">
+																		<input data-bind="kendoTimePicker: End, event: { click : FocusPicker, focus : FocusPicker, blur : BlurPicker}">
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-sm-3 col-sm-offset-1">
+															<div data-bind="css: { 'error' : !FKMarketingCampaignScreen.isValid() }">
+																<select name="selectbasic" class="required" id="selectbasic" data-bind="kendoDropDownList: {data: $root.FilteredScreens, value: FKMarketingCampaignScreen, filter: 'contains', dataTextField: 'Name', dataValueField: 'PKID', optionLabel: 'Select a scene'}"></select>
+															</div>
+														</div>
+														<div class="col-sm-2 col-sm-offset-1">
+															<img width="30" class="img-responsive" alt="Layout" data-bind="attr:{src: MarketingCampaignScreen() != null ?MarketingCampaignScreen().LayoutImageUrl(): ''}">
+														</div>
+														<div class="col-sm-2 text-right">
+															<!-- Button Dropdown -->
+															<div class="btn-group">
+																<div data-bind="listButton: ListViewListButtonViewModel, listButtonAlt: true"></div>
+															</div>
+															<!-- Button Dropdown -->
+														</div>
+													</div>
+												</li>
+												<!-- /ko -->
+											</ul>
+										</div>
+									</div>
+								</div><!-- End Row -->
+								<div class="row">
+									<div class="col-sm-12 headroom_less">
+										<div class="panel panel-default panel-condensed">
+											<div class="panel-heading clearfix">
+												<h3 class="panel-title pull-left">Location Aware Welcome Message</h3>
+												<div class="pull-right">
+												</div>
+											</div>
+											<div class="panel-body">
+												<div class="col-sm-4">
+													<!-- Select Basic -->
+													<div class="form-group">
+														<label class="control-label" for="locationeditlist">Welcome Alert Message</label>
+														<div>
+															<textarea class="form-control" id="campaignNameTitle" type="text" placeholder="A short welcome message..." data-bind="value: WelcomeMessage"></textarea>
+														</div>
+														<p>Use {Name} as template variable for User's Name</p>
+													</div>
+												</div>
+												<div class="col-sm-4">
+													<label class="control-label" for="welcomebackground">Welcome Message Background</label>
+													<div data-bind="template: {name: 'SingleImageTemplate', data: WelcomeMessageBackgroundImageUploader}"></div>
+												</div>
+												<div class="col-sm-2">
+												</div>
+												<div class="col-sm-2 text-right">
+													<!-- Button Dropdown -->
+													<!-- Button Dropdown -->
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-bind="with: DeletingScreen">
+						<div class="modal-dialog">
+							<div class="modal-content">
+
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+									<h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+								</div>
+
+								<div class="modal-body">
+									<div class="row">
+										<div class="col-sm-2 hidden-xs text-center">
+											<span class="text-danger"><i class="fa fa-exclamation-triangle fa-4x"></i></span>
+										</div>
+										<div class="col-sm-10 col-xs-12">
+											<p>You are about to delete a screen session, this is permanant.</p>
+											<p>Do you want to proceed?</p>
+										</div>
+									</div>
+								</div>
+
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+									<a id="confirm-delete-button" href="#" class="btn btn-danger danger" data-bind="click: ConfirmRemove">Delete</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		var data = @Html.Raw(ViewBag.Campaign ?? "null");
+		var screens = @Html.Raw(ViewBag.Screens ?? "null");
+		var vm = new ConnectCMS.MarketingCampaigns.CampaignViewModel(data, { Screens: screens });
+		ko.applyBindings(vm, $('#bindingDiv')[0]);
+		vm.Load();
+	});
+</script>

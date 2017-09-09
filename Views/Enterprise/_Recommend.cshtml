@@ -1,0 +1,13 @@
+﻿@using ConnectCMS.Resources
+<div data-bind="with: RecommendationEnterpriseRecommendViewModel">
+	<div class="toolBarContainer overflow">
+		<a class="linkButton" data-bind="click: ClickUpdate, css: ToolBarEnabled() ? '' : 'disabled'">@ConnectCMSResources.Save</a>
+	</div>
+	<div data-bind="progressBar: ProgressBarViewModel"></div>
+	<div data-bind="visible: Executed">
+		<div data-bind="informationMessage: BlacklistedInformationMessageViewModel"></div>
+		<div class="checkListBox" data-bind="foreach: Categories">
+			<div style="padding-top: 10px" data-bind="checkbox: { text: Name, checked: OnDevice }"></div>
+		</div>
+	</div>
+</div>

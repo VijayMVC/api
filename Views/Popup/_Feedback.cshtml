@@ -1,0 +1,29 @@
+﻿@using ConnectCMS.Resources
+<div class="alert-popup" style="text-align: left;width: 500px;">
+	<div style="margin:0" data-bind="with: Feedback">
+		<div style="margin-top:0;margin-bottom: 5px;">
+			<label style="display: block" for="FeedbackName">@ConnectCMSResources.Name</label>
+			<input style="display: block; width: 100%;" id="FeedbackName" type="text" data-bind="value: Name, valueUpdate:'input'" />
+		</div>
+		<div style="margin-top:0;margin-bottom: 5px;">
+			<label style="display: block" for="FeedbackEmail">@ConnectCMSResources.EmailAddress</label>
+			<input style="display: block; width: 100%;" id="FeedbackEmail" type="text" data-bind="value: EmailAddress" />
+		</div>
+		<div style="margin-top:0;margin-bottom: 5px;">
+			<label style="display: block" for="FeedbackSubject">@ConnectCMSResources.Subject</label>
+			<input style="display: block; width: 100%;" id="FeedbackSubject" type="text" data-bind="value: Subject, valueUpdate:'input'" />
+		</div>
+		<div style="margin-top:0;margin-bottom: 5px;">
+			<label style="display: block" for="FeedbackFeedbackType">@ConnectCMSResources.FeedbackType</label>
+			<select style="display: block; width: 100%;" id="FeedbackFeedbackType" data-bind="value: FeedbackType, options: FeedbackTypes, optionsText: 'Value', optionsValue: 'Key', optionsCaption: '@ConnectCMSResources.SelectFeedbackType'"></select>
+		</div>
+		<div style="margin-top:0;margin-bottom: 5px;">
+			<label style="display: block" for="FeedbackComments">@ConnectCMSResources.Comments</label>
+			<textarea style="display: block; width: 100%;" id="FeedbackComments" data-bind="value: Comments, valueUpdate:'input'"></textarea>
+		</div>
+	</div>
+	<div style="display: block; float: right; padding-bottom: 10px;">
+		<a class="linkButton white" data-bind="click: Close">@ConnectCMSResources.Cancel</a>
+		<a class="linkButton" data-bind="click: Ok, css: CanOk() ? '' : 'disabled' ">@ConnectCMSResources.SendFeedback</a>
+	</div>
+</div>

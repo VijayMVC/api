@@ -1,0 +1,86 @@
+﻿@using ConnectCMS.Resources
+<div class="Events_Group_Container">
+	@if( ViewBag.IsContentManager == true && ViewBag.HasSyncer == false )
+	{
+		<div class="contentSection">
+			<div class="flexContainer flexItemsCenter">
+				<input style="max-width: 400px; margin-right: 5px; width: 100%" type="text" data-bind="value: NewEventGroupName, valueUpdate: 'input'" />
+				<a class="linkButton lightBlue" data-bind="click: AddEventGroup, disableAnchor: !CanAddEventGroup()">@ConnectCMSResources.AddNew</a>
+			</div>
+		</div>
+	}
+
+	<div class="contentSection" data-bind="template: {name: 'EventGroupListItem', foreach: EventGroups}">
+	</div>
+</div>
+
+<script id="SingleImageTemplate" type="text/html">
+	@Html.Partial( "~/Views/Image/_SingleUploadableImage.cshtml" )
+</script>
+
+<script type="text/html" id="EventGroupListItem">
+	<div class="collapsablePanel" style="margin: 10px">
+		<div class="header" data-bind="event: { dblclick: ToggleCollapse }">
+			<a class="collapsable" data-bind="css: { collapsed: !Expanded() }, click: ToggleCollapse"></a>
+			<div class="titleContainer">
+				<div class="title" style="max-width: 400px;" data-bind="monsciergeEditableItem: {value: Name, type: 'text', editable: IsRenaming, hideActions: true}"></div>
+				<div class="subTitle" data-bind="visible: EventGroupManagerMaps().length > 0">
+					<span data-bind="text: EventManagerListStr"></span>
+				</div>
+			</div>
+			<div class="actions" data-bind="visible: $root.IsContentManager() && !$root.IsEnvisionDevice() && !IsRenaming()">
+				<a class="linkButton edit" data-bind="click: EditEventGroup"></a>
+				<a class="linkButton trash" data-bind="click: $parent.DeleteEventGroup"></a>
+			</div>
+			<div class="actions" data-bind="visible: $root.IsContentManager() && !$root.IsEnvisionDevice() && IsRenaming()">
+				<a class="linkButton check" data-bind="click: AcceptEventGroup, disableAnchor: !Name.CanSave()"></a>
+				<a class="linkButton cancel" data-bind="click: CancelEventGroup"></a>
+			</div>
+		</div>
+		<div class="content" data-bind="slideIn: Expanded">
+			<span class="contentHeader">@ConnectCMSResources.InviteUrl</span>
+			<div class="hrule" style="margin-top: 4px; margin-bottom: 0;"></div>
+			<div class="contentSection" style="margin-bottom: 20px; padding-bottom: 10px; padding-top: 10px;">
+				<span data-bind="text: EventUrl"></span>
+			</div>
+
+			<span class="contentHeader">@ConnectCMSResources.EventAccess</span>
+			<div class="hrule" style="margin-top: 4px; margin-bottom: 0;"></div>
+			<div class="contentSection" style="margin-bottom: 20px; padding-bottom: 10px; padding-top: 10px;">
+				<div data-bind="radioButton: {group: 'EventAccess', value: 0, selected: EventAccessPre, text: '@ConnectCMSResources.Public'}"></div>
+				<div data-bind="radioButton: {group: 'EventAccess', value: 1, selected: EventAccessPre, text: '@ConnectCMSResources.Private'}"></div>
+				<div data-bind="visible: EventAccess() == 1" style="margin-top: 10px;">
+					<span>@(ConnectCMSResources.EventCode):</span>
+					<div style="display: inline-block" data-bind="monsciergeEditableItem: { value: EventAccessCode, type: 'text' }"></div>
+				</div>
+			</div>
+
+			<span class="contentHeader">@ConnectCMSResources.EventPlanners</span>
+			<div class="hrule" style="margin-top: 4px; margin-bottom: 0;"></div>
+			<div class="contentSection" style="margin-bottom: 20px; padding-bottom: 10px; padding-top: 10px;">
+				<div data-bind="foreach: EventGroupManagerMaps">
+					<div class="contentSection flexContainer flexItemsCenter flexSpacer" style="width: auto; padding-top: 10px; padding-bottom: 10px">
+						<div class="flexSpacer" data-bind="monsciergeEditableItem: { value: Email, type: 'text',  }"></div>
+						<div class="actions">
+							<a class="linkButton email" style="margin: 5px;" data-bind="click: SendInvite, disableAnchor: !Email.CanSave() && PKID() == null"></a>
+							<a class="linkButton trash" style="margin: 5px;" data-bind="click: $parent.RemoveManager, disableAnchor: PKID() == null || (!CanRemoveManager() && !$root.IsContentManager())"></a>
+						</div>
+					</div>
+				</div>
+				<div style="margin: 10px;">
+					<a class="link add" data-bind="click: AddManager">@ConnectCMSResources.AssignEventPlanner</a>
+				</div>
+			</div>
+			<!-- ko if: HasReaderboard() -->
+			<span class="contentHeader">@ConnectCMSResources.ReaderboardBackgroundImage</span>
+			<div class="hrule" style="margin-top: 4px; margin-bottom: 0;"></div>
+			<div class="contentSection" style="margin-bottom: 20px; padding-bottom: 10px; padding-top: 10px;">
+				<div class="singleImageContainer">
+					<div data-bind="template: {name: 'SingleImageTemplate', data: ReaderboardBackgroundImageUploader}">
+					</div>
+				</div>
+			</div>
+			<!-- /ko -->
+		</div>
+	</div>
+</script>

@@ -1,0 +1,27 @@
+﻿@using ConnectCMS.Resources
+<div class="alert-popup">
+	<span style="font-size: 14px">@ConnectCMSResources.InactivityWarning</span>
+
+	<h1 style="margin: 10px;" id="timer"></h1>
+
+	<a class="linkButton" data-bind="click: Ok">@ConnectCMSResources.StayConnected</a>
+</div>
+
+<script>
+	$(document).ready(function () {
+		var counter = setInterval(timer, 1000); //1000 will  run it every 1 second
+
+		function timer() {
+			var count = ConnectCMS.MainViewModel.AuthRemaining();
+			if (count <= 0) {
+				clearInterval(counter);
+				return;
+			}
+			var t = document.getElementById("timer");
+			if (t == null)
+				clearInterval(counter);
+			else
+				t.innerHTML = moment(count).format("m:ss"); // watch for spelling
+		}
+	});
+</script>

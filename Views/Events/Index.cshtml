@@ -1,0 +1,129 @@
+﻿@model MonsciergeDataModel.ContactUser
+@using ConnectCMS.Resources
+@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout.cshtml";
+}
+
+@if( !Request.IsAjaxRequest() )
+{
+	<script type="text/javascript">
+		ConnectCMS.CurrentUser = { PKID: @(Model.PKID), Email: '@(Model.Email)', Name: '@(Model.ContactUserName)' };
+	</script>
+}
+
+<script type="text/html" id="tabHeaderTemplate">
+	@Html.Partial( "~/Views/Widget/_TabHeaderTemplate.cshtml" )
+</script>
+<script type="text/html" id="EventsAlert">
+	@Html.Partial( "~/Views/Popup/_AlertTemplate.cshtml" )
+</script>
+<script type="text/html" id="editEventTemplate">
+	@Html.Partial( "_EventEdit" )
+</script>
+
+<div id="EventsModule" class="flexSpacer pageContainer" data-bind="allowBindings: false">
+	<div id="bindingDiv" class="transitionPanelContainer" data-bind="transitionPanel: { panelId: 'EventSubTabs', selectedIndex: SelectedSubTabIndex, selector: '.eventContent' }">
+		<div id="rootDiv" class="eventContent">
+			<div style="position: relative">
+				<h1 class="bottomBorder paddingBottom">@ConnectCMSResources.Events</h1>
+				@if( ViewBag.IsContentManager )
+				{
+					<div class="Events_AddEvent_Container">
+						@if( ViewBag.HasEnvision != null && ViewBag.HasEnvision )
+						{
+							<a class="linkButton green" data-bind="click: ImportEnvisionEvent">@ConnectCMSResources.ImportEnvisionEvent</a>
+						}
+						else if(ViewBag.HasSyncer == null || !ViewBag.HasSyncer)
+						{
+							<a class="linkButton green" data-bind="click: AddEvent">@ConnectCMSResources.AddEvent</a>
+						}
+					</div>
+				}
+			</div>
+			<div data-bind="errorMessage: ErrorMessageViewModel"></div>
+			<div data-bind="template: { name: 'tabHeaderTemplate', data: Tabs }"></div>
+			<div class="transitionPanelContainer" data-bind="transitionPanel: { panelId: 'EventTabs', selectedIndex: SelectedTabIndex, selector: '.eventTab' }">
+				<div class="eventTab tabContent" style="position: relative">
+					<div class="ScheduleHeader">
+						<a class="DisplaySelector Calendar" data-bind="click: ShowScheduler, css: SelectedDisplayIndex() == 1 ? '' : 'selected'" title="@ConnectCMSResources.Calendar"><i class="fa fa-calendar-o"></i></a>
+						<a class="DisplaySelector ListView" data-bind="click: ShowListView, css: SelectedDisplayIndex() == 0 ? '' : 'selected'" title="@ConnectCMSResources.ListView"><i class="fa fa-th-list"></i></a>
+
+						<div class="HeaderContainer flexSpacer flexContainer">
+							<div class="flexSpacer"></div>
+							<a class="Arrow" data-bind="click: PreviousCalendarUnit"><i class="fa fa-chevron-left"></i></a>
+							<a class="Header" data-bind="text: SelectedDateString, click: ToggleDateSelector"></a>
+							<a class="Arrow" data-bind="click: NextCalendarUnit"><i class="fa fa-chevron-right"></i></a>
+							<div class="flexSpacer"></div>
+							<div class="CalendarContainer" style="display: none">
+								<div class="Calendar" data-bind="kendoCalendar: CalendarConfig"></div>
+							</div>
+						</div>
+
+						<a class="View Day" data-bind="click: ShowDayView, css: SelectedView().name == 'day' ? 'selected' : ''">@ConnectCMSResources.Day</a>
+						<a class="View Week" data-bind="click: ShowWeekView, css: SelectedView().name == 'week' ? 'selected' : ''">@ConnectCMSResources.Week</a>
+						<a class="View Month" data-bind="click: ShowMonthView, css: SelectedView().name == 'month' ? 'selected' : ''">@ConnectCMSResources.Month</a>
+					</div>
+					<div class="transitionPanelContainer" data-bind="transitionPanel: { panelId: 'EventDisplayTabs', selectedIndex: SelectedDisplayIndex, selector: '.eventDisplayTab' }">
+						<div class="eventDisplayTab tabContent">
+							@Html.Partial( "_Schedule" )
+						</div>
+						<div class="eventDisplayTab tabContent">
+							@Html.Partial( "_EventList" )
+						</div>
+					</div>
+				</div>
+				<div class="eventTab tabContent">
+					@Html.Partial( "_Groups" )
+				</div>
+				@if( ViewBag.IsContentManager )
+				{
+					<div class="eventTab tabContent">
+						@Html.Partial( "_Locations" )
+					</div>
+				}
+			</div>
+		</div>
+		<div id="eventNavigationDiv" class="eventContent"></div>
+	</div>
+</div>
+
+@if( !Request.IsAjaxRequest() )
+{
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var defaultView = @(ViewBag.DefaultViewIndex ?? 0);
+			var eventsVM = new ConnectCMS.Events.EventsViewModel(defaultView);
+			var id = @(ViewBag.DeviceId ?? "null");
+			if (id != null)
+				ConnectCMS.MainViewModel.SelectedDevice(new DeviceViewModel({ PKID: id }));
+
+			@if( ViewBag.HasSyncer || !ViewBag.IsContentManager )
+			{
+				<text>eventsVM.SchedulerConfig.editable = false;</text>
+			}
+
+			eventsVM.IsEnvisionDevice(@(ViewBag.HasSyncer == null ? "false" : ViewBag.HasSyncer.ToString().ToLower()));
+			eventsVM.IsContentManager(@ViewBag.IsContentManager.ToString().ToLower());
+			ko.applyBindings(eventsVM, $('#bindingDiv')[0]);
+			eventsVM.LoadInitial('#EventScheduler');
+		});
+	</script>
+}
+else
+{
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var defaultView = @(ViewBag.DefaultViewIndex ?? 0);
+			var eventsVM = new ConnectCMS.Events.EventsViewModel(defaultView);
+			@if( ViewBag.HasSyncer || !ViewBag.IsContentManager )
+			{
+				<text>eventsVM.SchedulerConfig.editable = false;</text>
+			}
+
+			eventsVM.IsEnvisionDevice(@(ViewBag.HasSyncer == null ? "false" : ViewBag.HasSyncer.ToString().ToLower()));
+			eventsVM.IsContentManager(@ViewBag.IsContentManager.ToString().ToLower());
+			ko.applyBindings(eventsVM, $('#bindingDiv')[0]);
+			eventsVM.LoadInitial('#EventScheduler');
+		});
+	</script>
+}

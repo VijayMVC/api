@@ -1,0 +1,13 @@
+﻿@using ConnectCMS.Resources
+<div class="alert-popup" style="text-align: left;width: 400px;">
+	<div class="flexContainer flexwrap" style="margin:0;" data-bind="foreach: SupportedCultures">
+		<div style="width: 50%;">
+			<a class="link" style="width:100%; font-size: 18px; font-weight: bold" data-bind="css: $parent.SelectedCulture() == $data ? 'selected' : '', text: Name, click: function(data, event) { $parent.SelectedCulture(data); }">
+			</a>
+		</div>
+	</div>
+	<div style="display: block; float: right; padding-bottom: 10px;">
+		<a class="linkButton white" data-bind="click: Close">@ConnectCMSResources.Cancel</a>
+		<a class="linkButton" data-bind="click: Ok, css: CanOk() ? '' : 'disabled' ">@ConnectCMSResources.Save</a>
+	</div>
+</div>

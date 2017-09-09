@@ -1,0 +1,93 @@
+﻿@using ConnectCMS.Resources
+
+<div id="setup-step3-bindingpoint" class="bindingpoint">
+	<div class="wizard-header auto-height flexContainer bottomBorder" style="padding-top: 0;">
+		<div class="flexSpacer"></div>
+		<div style="width: 400px" data-bind="with: Hotel">
+		</div>
+		<div class="flexSpacer"></div>
+	</div>
+	<div class="flexContainer" data-bind="with: Hotel">
+		<div style="width: 10%"></div>
+		<div class="flexSpacer" style="padding: 20px;">
+			<label class="setup-label" for="hotelDescription">@ConnectCMSResources.BriefSummaryOfYourProperty</label>
+			<div class="flexContainer">
+				<div class="flexSpacer" style="margin-bottom: 5px;" data-bind="with: HotelDetail">
+					<div class="setup-textarea" data-bind="monsciergeEditableItem: {value: Description, type: 'paragraph', id: 'hotelDescription'}"></div>
+				</div>
+				<div style="width: 200px;" class="Tips-Container">
+					<div class="Tips-Header">
+						<div class="Tips-Image"></div>
+						<span class="Tips-Header">@ConnectCMSResources.Tips</span>
+					</div>
+					<div data-bind="with: $root">
+						<div data-bind="transitionPanel: {panelId: 'SetupWizardStep3Tips', selector: '.tip-content', selectedIndex: SelectedTip}">
+							<div class="tip-content">
+								<p class="Tips-Body">@ConnectCMSResources.SetupWizardStep3Tip1</p>
+							</div>
+							<div class="tip-content">
+								<p class="Tips-Body">@ConnectCMSResources.SetupWizardStep3Tip2</p>
+							</div>
+							<div class="tip-content">
+								<p class="Tips-Body">@ConnectCMSResources.SetupWizardStep3Tip3</p>
+							</div>
+						</div>
+						<div class="tipButton-container">
+							<div style="position: relative; height: 20px">
+								<a class="navLink tipButton" data-bind="click: PreviousTip, visible: SelectedTip() > 0">@ConnectCMSResources.PreviousTip</a>
+								<a class="navLink tipButton right" data-bind="click: NextTip, visible: SelectedTip() < 2">@ConnectCMSResources.NextTip</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<span class="setup-span label">@ConnectCMSResources.YourPropertyOrBrandLogo</span>
+			<div class="flexContainer" data-bind="with: HotelDetail">
+				<div class="flexSelfStart" style="">
+					<div id="Setup-HotelLogoImage" data-bind="template: {name: 'SingleImageTemplate', data: LogoOnWhiteImageUploader}">
+						
+					</div>
+				</div>
+				<div class="flexContainer flexSpacer flexSelfEnd" style=" margin-left: 10px; padding: 5px;">
+					<a class="link add flexSelfEnd" data-bind="click: LogoOnWhiteImageUploader.InsertImage, text: LogoOnWhiteImage() == null ? '@ConnectCMSResources.UploadImage' : '@ConnectCMSResources.UpdateImage'">@ConnectCMSResources.UploadImage</a>
+				</div>
+				@*<div class="flexSelfStart" style="" data-bind="with:LogoImage">
+					<img style="max-height: 300px; max-width: 300px; padding: 10px; border: 1px solid #e3e3e3;" data-bind="visible: !IsLoading(), attr :{ src: ImageUrl }" alt="" />
+					<div class="loader" style="" data-bind="visible: IsLoading">
+						<div class='loadingText'>
+							<span class='header' data-bind="text: '@ConnectCMSResources.LoadingImage'">
+							</span>
+						</div>
+						<div class='loadingIcon'>
+						</div>
+						<div class='loadingText'>
+							<span class='footer' data-bind="text: '@ConnectCMSResources.PleaseWait'">
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="flexContainer flexSpacer flexSelfEnd" style=" margin-left: 10px; padding: 5px;" data-bind="with: $root">
+					<input style="display: none" type="file" data-bind="fileUploader: LogoImageUploadConfig(), attr: { id: 'LogoImageUploader' }" />
+					<a class="link add flexSelfEnd" data-bind="click: InsertLogoImage, text: Hotel().HotelDetail().LogoImage() == null ? '@ConnectCMSResources.UploadImage' : '@ConnectCMSResources.UpdateImage'">@ConnectCMSResources.UploadImage</a>
+				</div>*@
+			</div>
+		</div>
+		<div style="width: 10%"></div>
+	</div>
+</div>
+<div class="wizard-footer">
+	<div class="flexContainer">
+		<div class="flexSpacer"></div>
+		<div class="hrule"></div>
+		<div class="flexSpacer"></div>
+	</div>
+	<div class="flexContainer">
+		<div class="flexSpacer"></div>
+		<a data-bind="click: PreviousStep" class="linkButton marginRight">@ConnectCMSResources.Back</a>
+		<a data-bind="click: NextStep, css: StepIsValid() ? '' : 'disabled'" class="linkButton marginLeft">@ConnectCMSResources.Next</a>
+		<div style="width: 10%;"></div>
+	</div>
+</div>
+<script id="SingleImageTemplate" type="text/html">
+	@Html.Partial("~/Views/Image/_SingleUploadableImage.cshtml")
+</script>

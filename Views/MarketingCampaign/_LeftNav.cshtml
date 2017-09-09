@@ -1,0 +1,15 @@
+﻿@using ConnectCMS.Resources
+<div class="col-sm-3 col-md-3 hidden-xs connect-sidenav-wrapper">
+	<div class="js_fixedcontent1">
+		<div class="list-group connect-sidenav hidden-xs" id="sidenav">
+			<a class="list-group-item list-group-expanding active" id="navSignage" href="@Url.Action("Index")" >
+				<span class="nav-icon-wrapper"><span class="nav-icon nav-photoframe"></span></span>@ConnectCMSResources.DigitalSign
+			</a>
+			<div class="connect-sub collapse in" id="framecontrol">
+				<a class="list-group-item @(ViewBag.Page == "Properties" ? "active" : "")" id="navSignLocation" href="@Url.Action("Properties")">@ConnectCMSResources.Properties</a>
+				<a class="list-group-item @(ViewBag.Page == "Campaigns" ? "active" : "")" id="navSignCampaign" href="@Url.Action("Campaigns")">@ConnectCMSResources.Campaigns</a>
+				<a class="list-group-item @(ViewBag.Page == "Screens" ? "active" : "")" i id="navSignCampaign" href="@Url.Action( "Screens" )">@ConnectCMSResources.Scenes</a>
+			</div>
+		</div>
+	</div>
+</div>

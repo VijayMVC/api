@@ -1,0 +1,20 @@
+﻿<script id="event-template" type="text/x-kendo-template">
+	<div class="event-template" title="#: title #">
+		<div style="display: none" class="recurringIndicator"></div>
+		<span>#: title #</span>
+		<div class="actions">
+			<a class="linkButton yellow edit"></a>
+			@if( ViewBag.IsContentManager && !ViewBag.HasSyncer )
+			{
+				<a class="linkButton trash"></a>
+			}
+		</div>
+	</div>
+</script>
+
+<div class="Event_Schedule_Container">
+	<div class="Event_Schedule_Scheduler">
+		<div data-bind="kendoScheduler: SchedulerConfig" id="EventScheduler">
+		</div>
+	</div>
+</div>

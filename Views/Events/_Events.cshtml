@@ -1,0 +1,348 @@
+﻿@using ConnectCMS.Models.Events
+@using Kendo.Mvc.UI
+@model ConnectCMS.Models.Events.EventSchedulerModel
+<div class="wrapper">
+	<div class="header">
+	</div>
+	<div class="wrapright">
+		<div class="right">
+			@(Html.Kendo().Scheduler<SchedulerEvent>().Name("EventScheduler")
+                  .Date(DateTime.Now)
+                  .StartTime(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0))
+                  .HtmlAttributes(new { Class = "EventScheduler" })
+                  .Views(v =>
+                  {
+                      v.DayView();
+                      v.WeekView();
+                      v.MonthView();
+                  })
+                  .Timezone("Etc/UTC")
+                  .Editable(e => e.TemplateId("editor"))
+                  .DataSource(d =>
+                  {
+                      d.Batch(false);
+                      d.Model(m =>
+                      {
+                          m.Id(f => f.PKID);
+                          m.Field(f => f.EventGroupId);
+                          m.Field(f => f.EventLocationId);
+                          m.Field(f => f.DeviceId);
+                          m.Field(f => f.Start);
+                          m.Field(f => f.End);
+                          m.RecurrenceId(x => x.RecurrenceId);
+                      });
+                      d.Create("EventSchedulerCreate", "Events");
+                      d.Update("EventSchedulerUpdate", "Events");
+                      d.Destroy("EventSchedulerDestroy", "Events");
+                      d.Read(r => r.Action("EventSchedulerRead", "Events").Data("SchedulerData"));
+                      d.ServerOperation(true);
+                  })
+                  .AutoBind(true)
+                          .Resources(r =>
+                          {
+                              r.Add(detail => detail.EventGroupId).DataSource(s => s.Read(re => re.Action("EventResourcesRead", "Events", new { deviceId = Model.DeviceId, resourceType = "Group" }).Type(HttpVerbs.Post))).DataTextField("Name").DataValueField("PKID").Name("Group").Title("Group");
+                              r.Add(detail => detail.EventLocationId).DataSource(s => s.Read(re => re.Action("EventResourcesRead", "Events", new { deviceId = Model.DeviceId, resourceType = "Location" }).Type(HttpVerbs.Post))).DataTextField("Name").DataValueField("PKID").Name("Location").Title("Location");
+                          })
+                  .Events(e =>
+                  {
+                      e.Navigate("EventSchedulerNavigate");
+                      e.Save("EventSchedulerSave");
+                      e.Edit("EventSchedulerEdit");
+                      e.Cancel("EventSchedulerCancel");
+                      e.Add("EventSchedulerAdd");
+                      e.DataBinding("EventSchedulerDataBinding");
+                  })
+			)
+		</div>
+	</div>
+	<div class="left">
+		@(Html.Kendo().Calendar().Name("EventCalendar")
+              .HtmlAttributes(new { Class = "EventCalendar" })
+              .Value(DateTime.Now)
+              .Footer(false)
+              .Events(e => e.Change("EventCalendarChange"))
+		)
+		<input type="button" value="New Event" class="k-button EventButton" onclick="NewEvent()" />
+		<input type="button" value="Manage Groups" class="k-button EventButton" onclick="ManageResources('Group')" />
+		<input type="button" value="Manage Locations" class="k-button EventButton" onclick="ManageResources('Location')" />
+	</div>
+	<div class="footer">
+	</div>
+</div>
+@(Html.Kendo().Window().Name("EventResourceManagerWindow").Resizable(r => r.Enabled(false)).Draggable(false).Title(true).Visible(false).Modal(true))
+@(Html.Kendo().Window().Name("NewResourceWindow").Resizable(r => r.Enabled(false)).Draggable(false).Title(true).Visible(false).Modal(true).Events(e => e.Close("NewResourceWindowClose")))
+<script id="editor" type="text/x-kendo-template">
+	<style>
+	</style>
+	<div>
+		<input type="hidden" id="hidStartDate" value="#=start#" />
+		<input type="hidden" id="hidEndDate" value="#=end#" />
+		<div>
+			<label for="SubjectText" class="EventEditLabel">Subject</label>
+			<input name="Subject" required class="EventText k-textbox" data-bind="value:title" type="text" id="SubjectText" data-required-msg="A subject is required." />
+		</div>
+		<div class="LeftDiv">
+			<label for="StartDate" class="EventEditLabel">Start Date</label>
+			@(Html.Kendo().DatePicker().Name("StartDate")
+                  .HtmlAttributes(new Dictionary<string, object> { { "class", "EventDatePicker" }, { "data-bind", "value:start" }, { "required", "" }, { "data-required-msg", "A start date is required." } })
+                  .ToClientTemplate())
+			@(Html.Kendo().TimePicker().Name("StartTime")
+                  .HtmlAttributes(new Dictionary<string, object> { { "class", "EventTimePicker" }, { "data-bind", "value:start" }, { "required", "" }, { "data-required-msg", "A start time is required." } })
+                  .ToClientTemplate())
+		</div>
+		<div class="RightDiv">
+			<label for="GroupSelect" class="EventEditLabel">Group</label>
+			<div id="GroupContainer"></div>
+			@(Html.Kendo().DropDownList().Name("GroupSelect")
+                  .HtmlAttributes(new Dictionary<string, object> { { "class", "EventDropDown" }, { "data-bind", "value:EventGroupId" }, { "required", "" }, { "data-required-msg", "A group is required." } })
+                  .DataSource(d =>
+                      d.Read(r =>
+                                  r.Action("EventResourcesRead", "Events", new { deviceId = Model.DeviceId, resourceType = "Group" }).Type(HttpVerbs.Post)))
+                  .DataTextField("Name")
+                  .DataValueField("PKID")
+                  .OptionLabel("Select Group")
+                  .ToClientTemplate())
+			<a class="k-button EventButton Modal" id="GroupNew" onclick="NewResourceClick('Group')">New Group</a>
+		</div>
+		<div class="LeftDiv">
+			<label for="EndDate" class="EventEditLabel">End Date</label>
+			@(Html.Kendo().DatePicker().Name("EndDate")
+                  .HtmlAttributes(new Dictionary<string, object> { { "class", "EventDatePicker" }, { "data-bind", "value:end" }, { "required", "" }, { "data-required-msg", "A end date is required." } })
+                  .ToClientTemplate())
+			@(Html.Kendo().TimePicker().Name("EndTime")
+                  .HtmlAttributes(new Dictionary<string, object> { { "class", "EventTimePicker" }, { "data-bind", "value:end" }, { "required", "" }, { "data-required-msg", "A end time is required." } })
+                  .ToClientTemplate())
+		</div>
+		<div class="RightDiv">
+			<label for="LocationSelect" class="EventEditLabel">Location</label>
+			@(Html.Kendo().DropDownList().Name("LocationSelect")
+                  .HtmlAttributes(new Dictionary<string, object> { { "class", "EventDropDown" }, { "data-bind", "value:EventLocationId" }, { "required", "" }, { "data-required-msg", "A location is required." } })
+                  .DataSource(d =>
+                      d.Read(r =>
+                                  r.Action("EventResourcesRead", "Events", new { deviceId = Model.DeviceId, resourceType = "Location" }).Type(HttpVerbs.Post)))
+                  .DataTextField("Name")
+                  .DataValueField("PKID")
+                  .OptionLabel("Select Location")
+                  .ToClientTemplate())
+			<a class="k-button EventButton Modal" id="LocationNew" onclick="NewResourceClick('Location')">New Group</a>
+		</div>
+		<div>
+			<input type="checkbox" id="AllDayCheck" class="k-checkbox EventCheckbox" onclick="AllDayClicked()" data-bind="checked:isAllDay" />
+			<label for="AllDayCheck">All day</label>
+		</div>
+		<div>
+			<label for="DescriptionText" class="EventEditLabel">Description</label>
+			<textarea class="EventText k-textbox" id="DescriptionText" rows="5" data-bind="value:description" />
+		</div>
+		<div>
+			<input type="checkbox" id="RecurrenceCheck" class="k-checkbox EventCheckbox" onclick="RecurrenceClicked()" />
+			<label for="RecurrenceCheck">Recurrence</label>
+		</div>
+		<div id="RecurrenceDiv">
+			<div class="LeftRecurrence">
+				<div class="RecurrenceHeader k-state-selected" style="padding-right:5px;"><div class="RecurrenceHeaderSpan"><span>Repeat</span></div></div>
+				<div class="RecurrenceType">
+					<input id="DailyRadio" class="RecurrenceTypeRadio" type="radio" name="RecurrenceType" value="Daily" onclick="RecurrenceChanged(this.value)" />
+					<label for="DailyRadio">Daily</label>
+				</div>
+				<div class="RecurrenceType">
+					<input id="WeeklyRadio" class="RecurrenceTypeRadio" checked="checked" type="radio" name="RecurrenceType" value="Weekly" onclick="RecurrenceChanged(this.value)" />
+					<label for="WeeklyRadio">Weekly</label>
+				</div>
+				<div class="RecurrenceType">
+					<input id="MonthlyRadio" class="RecurrenceTypeRadio" type="radio" name="RecurrenceType" value="Monthly" onclick="RecurrenceChanged(this.value)" />
+					<label for="MonthlyRadio">Monthly</label>
+				</div>
+				<div class="RecurrenceType">
+					<input id="YearlyRadio" class="RecurrenceTypeRadio" type="radio" name="RecurrenceType" value="Yearly" onclick="RecurrenceChanged(this.value)" />
+					<label for="YearlyRadio">Yearly</label>
+				</div>
+			</div>
+			<div class="RightRecurrence">
+				<div class="RecurrenceHeader k-state-selected"><div class="RecurrenceHeaderSpan"><span>Repeat On</span></div></div>
+				<div id="DailyDetails" class="RecurrenceDetailsDiv" style="display:none">
+					<div>
+						<span>Every</span>
+						@(Html.Kendo().NumericTextBox().Name("DailyInterval").Decimals(0).Min(0).Value(1).Format("n0").HtmlAttributes(new Dictionary<string, object> { { "style", "width:60px;" } }).ToClientTemplate())
+						<input type="radio" checked="checked" value="Days" name="DailyIntervalType" id="DayRadio" />
+						<label for="DayRadio">day(s)</label>
+						<input type="radio" value="WeekDays" name="DailyIntervalType" id="WeekdayRadio" />
+						<label for="WeekdayRadio">weekday(s)</label>
+					</div>
+				</div>
+				<div id="WeeklyDetails" class="RecurrenceDetailsDiv">
+					<div>
+						<span>Every</span>
+						@(Html.Kendo().NumericTextBox().Name("WeeklyInterval").Decimals(0).Min(0).Value(1).Format("n0").HtmlAttributes(new Dictionary<string, object> { { "style", "width:60px;" } }).ToClientTemplate())
+						<span>week(s)</span>
+					</div>
+					<div style="margin-left:15px;margin-top:15px;margin-bottom:15px;">
+						<span>on</span>
+					</div>
+					<div>
+						<label for="WD0" class="EventRecurrenceLabel">
+							<input type="checkbox" name="WeeklyDaysSunday" class="WeeklyDays" id="WD0" value="SU" onchange="WeeklyDaysChanged()" />
+							Sunday
+						</label>
+						<label for="WD1" class="EventRecurrenceLabel">
+							<input type="checkbox" name="WeeklyDaysMonday" class="WeeklyDays" id="WD1" value="MO" onchange="WeeklyDaysChanged()" />
+							Monday
+						</label>
+						<label for="WD2" class="EventRecurrenceLabel">
+							<input type="checkbox" name="WeeklyDaysTuesday" class="WeeklyDays" id="WD2" value="TU" onchange="WeeklyDaysChanged()" />
+							Tuesday
+						</label>
+						<label for="WD3" class="EventRecurrenceLabel">
+							<input type="checkbox" name="WeeklyDaysWednesday" class="WeeklyDays" id="WD3" value="WE" onchange="WeeklyDaysChanged()" />
+							Wednesday
+						</label>
+						<label for="WD4" class="EventRecurrenceLabel">
+							<input type="checkbox" name="WeeklyDaysThursday" class="WeeklyDays" id="WD4" value="TH" onchange="WeeklyDaysChanged()" />
+							Thursday
+						</label>
+						<label for="WD5" class="EventRecurrenceLabel">
+							<input type="checkbox" name="WeeklyDaysFriday" class="WeeklyDays" id="WD5" value="FR" onchange="WeeklyDaysChanged()" />
+							Friday
+						</label>
+						<label for="WD6" class="EventRecurrenceLabel">
+							<input type="checkbox" name="WeeklyDaysSaturday" class="WeeklyDays" id="WD6" value="SA" onchange="WeeklyDaysChanged()" />
+							Saturday
+						</label>
+					</div>
+				</div>
+				<div id="MonthlyDetails" style="display:none" class="RecurrenceDetailsDiv">
+					<div>
+						<span>Every</span>
+						@(Html.Kendo().NumericTextBox().Name("MonthlyInterval").Decimals(0).Min(0).Value(1).Format("n0").HtmlAttributes(new Dictionary<string, object> { { "style", "width:60px;" } }).ToClientTemplate())
+						<span>month(s)</span>
+					</div>
+					<div style="margin-left:15px;margin-top:15px;margin-bottom:15px;">
+						<span>on</span>
+					</div>
+					<div>
+						<label><input id="MonthlyTypeDay" checked="checked" type="radio" name="MonthlyType" value="Day" onclick="MonthlyTypeChanged(this.value)" /> Day</label>
+						@(Html.Kendo().NumericTextBox().Name("MonthlyDayCount").Decimals(0).Min(0).Value(1).Format("n0").HtmlAttributes(new Dictionary<string, object> { { "style", "width:60px;" } }).ToClientTemplate())
+					</div>
+					<div style="margin-top:10px;">
+						<input type="radio" id="MonthlyTypeCombo" name="MonthlyType" value="Combo" onclick="MonthlyTypeChanged(this.value)" />
+						@(Html.Kendo().DropDownList().Name("MonthlyTypeComboFirst").Items(i =>
+                          {
+                              i.Add().Text("First").Value("1");
+                              i.Add().Text("Second").Value("2");
+                              i.Add().Text("Third").Value("3");
+                              i.Add().Text("Fourth").Value("4");
+                              i.Add().Text("Last").Value("-1");
+                          }).Enable(false).HtmlAttributes(new { Style = "width:100px;" }).ToClientTemplate())
+						@(Html.Kendo().DropDownList().Name("MonthlyTypeComboSecond").Items(i =>
+                          {
+                              i.Add().Text("Day").Value("SU,MO,TU,WE,TH,FR,SA");
+                              i.Add().Text("Weekday").Value("MO,TU,WE,TH,FR");
+                              i.Add().Text("Weekend Day").Value("SU,SA");
+                              i.Add().Text("Sunday").Value("SU");
+                              i.Add().Text("Monday").Value("MO");
+                              i.Add().Text("Tuesday").Value("TU");
+                              i.Add().Text("Wednesday").Value("WE");
+                              i.Add().Text("Thursday").Value("TH");
+                              i.Add().Text("Friday").Value("FR");
+                              i.Add().Text("Saturday").Value("SA");
+                          }).Enable(false).HtmlAttributes(new { Style = "width:150px;" }).ToClientTemplate())
+					</div>
+				</div>
+				<div id="YearlyDetails" class="RecurrenceDetailsDiv" style="display:none">
+					<div>
+						<span>Every</span>
+						@(Html.Kendo().NumericTextBox().Name("YearlyInterval").Decimals(0).Min(0).Value(1).Format("n0").HtmlAttributes(new Dictionary<string, object> { { "style", "width:60px;" } }).ToClientTemplate())
+						<span>year(s)</span>
+					</div>
+					<div style="margin-left:15px;margin-top:15px;margin-bottom:15px;">
+						<span>on</span>
+					</div>
+					<div>
+						<input checked="checked" type="radio" name="YearlyType" id="YearlyTypeDay" value="Day" onclick="YearlyTypeChanged(this.value)" />
+						@(Html.Kendo().DropDownList().Name("YearlyTypeDayFirst").Items(i =>
+                          {
+                              i.Add().Text("January").Value("1");
+                              i.Add().Text("Feburary").Value("2");
+                              i.Add().Text("March").Value("3");
+                              i.Add().Text("April").Value("4");
+                              i.Add().Text("May").Value("5");
+                              i.Add().Text("June").Value("6");
+                              i.Add().Text("July").Value("7");
+                              i.Add().Text("August").Value("8");
+                              i.Add().Text("September").Value("9");
+                              i.Add().Text("October").Value("10");
+                              i.Add().Text("November").Value("11");
+                              i.Add().Text("December").Value("12");
+                          }).HtmlAttributes(new { Style = "width:100px;" }).ToClientTemplate())
+						@(Html.Kendo().NumericTextBox().Name("YearlyDayCount").Decimals(0).Min(0).Value(1).Format("n0").HtmlAttributes(new Dictionary<string, object> { { "style", "width:60px;" } }).ToClientTemplate())
+					</div>
+					<div style="margin-top:10px;">
+						<input type="radio" id="YearlyTypeCombo" name="YearlyType" value="Combo" onclick="YearlyTypeChanged(this.value)" />
+						@(Html.Kendo().DropDownList().Name("YearlyTypeComboFirst").Items(i =>
+                          {
+                              i.Add().Text("First").Value("1");
+                              i.Add().Text("Second").Value("2");
+                              i.Add().Text("Third").Value("3");
+                              i.Add().Text("Fourth").Value("4");
+                              i.Add().Text("Last").Value("-1");
+                          }).Enable(false).HtmlAttributes(new { Style = "width:100px;" }).ToClientTemplate())
+						@(Html.Kendo().DropDownList().Name("YearlyTypeComboSecond").Items(i =>
+                          {
+                              i.Add().Text("Day").Value("SU,MO,TU,WE,TH,FR,SA");
+                              i.Add().Text("Weekday").Value("MO,TU,WE,TH,FR");
+                              i.Add().Text("Weekend Day").Value("SU,SA");
+                              i.Add().Text("Sunday").Value("SU");
+                              i.Add().Text("Monday").Value("MO");
+                              i.Add().Text("Tuesday").Value("TU");
+                              i.Add().Text("Wednesday").Value("WE");
+                              i.Add().Text("Thursday").Value("TH");
+                              i.Add().Text("Friday").Value("FR");
+                              i.Add().Text("Saturday").Value("SA");
+                          }).Enable(false).HtmlAttributes(new { Style = "width:150px;" }).ToClientTemplate())
+						<span style="margin-left:5px;magin-right:5px;">of</span>
+						@(Html.Kendo().DropDownList().Name("YearlyTypeComboThird").Items(i =>
+                          {
+                              i.Add().Text("January").Value("1");
+                              i.Add().Text("Feburary").Value("2");
+                              i.Add().Text("March").Value("3");
+                              i.Add().Text("April").Value("4");
+                              i.Add().Text("May").Value("5");
+                              i.Add().Text("June").Value("6");
+                              i.Add().Text("July").Value("7");
+                              i.Add().Text("August").Value("8");
+                              i.Add().Text("September").Value("9");
+                              i.Add().Text("October").Value("10");
+                              i.Add().Text("November").Value("11");
+                              i.Add().Text("December").Value("12");
+                          }).Enable(false).HtmlAttributes(new { Style = "width:100px;" }).ToClientTemplate())
+					</div>
+				</div>
+			</div>
+			<div class="BottomRecurrence">
+				<div class="RecurrenceHeader k-state-selected"><div class="RecurrenceHeaderSpan"><span>End On</span></div></div>
+				<div>
+					<div class="RecurrenceEnd">
+						<label><input type="radio" checked="checked" class="k-radio" name="EndType" value="Never" onclick="EndTypeChanged(this.value)" /> Never</label>
+					</div>
+					<div class="RecurrenceEnd">
+						<label><input id="EndTypeAfter" type="radio" class="k-radio" name="EndType" value="After" onclick="EndTypeChanged(this.value)" /> After</label>
+						@(Html.Kendo().NumericTextBox().Name("EndAfterCount").Decimals(0).Min(0).Value(1).Format("n0").HtmlAttributes(new Dictionary<string, object> { { "style", "width:60px;" } }).Enable(false).ToClientTemplate())
+						<span>occurrence(s)</span>
+					</div>
+					<div class="RecurrenceEnd">
+						<label><input id="EndTypeUntil" type="radio" class="k-radio" name="EndType" value="On" onclick="EndTypeChanged(this.value)" /> On</label>
+						@(Html.Kendo().DatePicker().Name("EndOnDate").HtmlAttributes(new { Class = "EventDatePicker" }).Enable(false).ToClientTemplate())
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<script>
+    $(document).ready(function () {
+        _scheduler = $('#EventScheduler').data('kendoScheduler');
+        _calendar = $('#EventCalendar').data('kendoCalendar');
+        _eventResourceWindow = $('#EventResourceManagerWindow').data('kendoWindow');
+        _newResourceWindow = $('#NewResourceWindow').data('kendoWindow');
+    });
+</script>

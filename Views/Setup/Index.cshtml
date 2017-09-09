@@ -1,0 +1,61 @@
+﻿@using System.Web.Script.Serialization
+@using ConnectCMS.Resources
+@using ConnectCMS.Utils
+@using Newtonsoft.Json
+@model MonsciergeDataModel.Device
+
+	<div data-bind="allowBindings: false" style="width: 100%; height: 100%;">
+		<div class="wizard-container bindingPoint">
+			<div class="wizard-header">
+				<div class="wizard-navigation">
+					<div class="flexSpacer"></div>
+					@*<div id="setup-tab1" class="wizard-step single" data-bind="css: SelectedStepIndex() >= 0 ? 'active' : ''"><span>1</span></div>*@
+					<div id="setup-tab2" class="wizard-step left" data-bind="css: SelectedStepIndex() >= 0 ? 'active' : ''"><span>1</span></div>
+					<div id="setup-tab3" class="wizard-step middle" data-bind="css: SelectedStepIndex() >= 1 ? 'active' : ''"><span>2</span></div>
+					<div id="setup-tab5" class="wizard-step right" data-bind="css: SelectedStepIndex() >= 2 ? 'active' : ''"><span>3</span></div>
+					<div class="flexSpacer"></div>
+				</div>
+				<div class="wizard-step-title-container">
+					<span data-bind="text: SelectedStepTitle"></span>
+				</div>
+			</div>
+			<div class="wizard-content-container">
+				<div class='containerLoader' data-bind='with: SetupLoader, visible: SetupLoader.Visible'>
+					<div class='overlay'></div>
+					<div class='flexSpacer'>
+					</div>
+					<div class='modal'>
+						<div class='loadingText'>
+							<span class='header' data-bind='text: HeaderText'>
+							</span>
+						</div>
+						<div class='loadingIcon'>
+						</div>
+						<div class='loadingText'>
+							<span class='footer' data-bind='text: FooterText'>
+							</span>
+						</div>
+					</div>
+					<div class='flexSpacer'>
+					</div>
+				</div>
+				<div id="setup-step2" class="wizard-content" style="display: none" data-bind="if: SelectedStepIndex() == 0">
+					@Html.Partial( "~/Views/Setup/_setupStep2.cshtml" )
+				</div>
+				<div id="setup-step3" class="wizard-content" style="display: none" data-bind="if: SelectedStepIndex() == 1">
+					@Html.Partial( "~/Views/Setup/_setupStep3.cshtml" )
+				</div>
+				<div id="setup-step4" class="wizard-content" style="display: none" data-bind="if: SelectedStepIndex() == 2">
+					@Html.Partial( "~/Views/Setup/_setupStep4.cshtml" )
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		$(document).ready(function () {
+			//var js = JSON.parse('@Html.Raw(ViewBag.ModelJson)');
+			ConnectCMS.MainViewModel.SelectedDevice(new DeviceViewModel({ PKID: @Model.PKID, Name: '@Model.Name' }));
+			ko.applyBindings(new ConnectCMS.Setup.SetupViewModel({ CurrentStep: 0 }), $('.bindingPoint')[0]);
+		});
+	</script>

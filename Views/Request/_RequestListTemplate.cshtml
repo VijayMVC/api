@@ -1,0 +1,37 @@
+﻿@using ConnectCMS.Resources
+<script type="text/html" id="request-list-template">
+	<li class="clickable mons-rq-list-item-container" data-bind="click: $parent.chooseRequest">
+		<article class="mons-rq-list-item" data-bind="css: actionReadClass">
+			<div class="side-info rq-list-side-info">
+				<p>
+					<span data-bind="text: hotelName"></span>
+				</p>
+				<p>
+					<label class="item-label">@(ConnectCMSResources.RequestListRoomLabel):</label>
+					<span data-bind="text: guestUserRoomNumber"></span>
+				</p>
+				<div data-bind="visible: displayEta">
+					<p data-bind="visible: !isOverdue()">
+						<label class="item-label">@(ConnectCMSResources.RequestListEtaLabel):</label><span data-bind="timeAgo: eta"></span>
+					</p>
+					<div class="overdue" data-bind="visible: isOverdue">
+						<span>@ConnectCMSResources.RequestListOverduePrefix <span data-bind="timeAgo: eta, hideTimeAgoText: true"></span></span>
+					</div>
+				</div>
+			</div>
+			<div>
+				<header>
+					<h2 data-bind="text: requestTypeName"></h2>
+				</header>
+				<div>
+					<p class="rq-type-desc bold" style="min-height: 18.4px" data-bind="text: requestUserName "></p>
+				</div>
+				<footer>
+					<label class="item-label">@(ConnectCMSResources.RequestListCreatedLabel):</label><span data-bind="timeAgo: earliestActionTime"></span>
+					<span class="seperator">&bull;</span>
+					<label class="item-label">@(ConnectCMSResources.RequestListLastUpdateLabel):</label><span data-bind="timeAgo: lastActionTime"></span>
+				</footer>
+			</div>
+		</article>
+	</li>
+</script>

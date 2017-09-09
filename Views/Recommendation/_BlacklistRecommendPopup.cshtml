@@ -1,0 +1,11 @@
+﻿@using ConnectCMS.Resources
+<div class="alert-popup">
+	<span data-bind="text: ConnectCMS.Globalization.BlacklistQuestionMark"></span>
+	<div data-bind="informationMessage: RecommendedInformationMessageViewModel"></div>
+	<p data-bind="text: ConnectCMS.Globalization.AreYouCertainYouWantThisBlacklistedThisWillNoLongerBeDisplayedByYourProperty"></p>
+	<div class="flexContainer">
+		<div class="flexSpacer"></div>
+		<a class="linkButton marginRight white" data-bind="click: Close">@ConnectCMSResources.Cancel</a>
+		<a class="linkButton marginLeft" data-bind="text: ConnectCMS.Globalization.Blacklist, click: Ok"></a>
+	</div>
+</div>

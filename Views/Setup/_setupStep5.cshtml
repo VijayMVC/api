@@ -1,0 +1,24 @@
+﻿@using ConnectCMS.Resources
+
+<div id="setup-step5-bindingpoint" class="bindingpoint">
+	<div class="wizard-header auto-height flexContainer bottomBorder" style="padding-top: 0;">
+		<div class="flexSpacer"></div>
+		<div style="width: 400px" data-bind="with: Hotel">
+		</div>
+		<div class="flexSpacer"></div>
+	</div>
+	<div></div>
+	<div class="wizard-footer">
+		<div class="flexContainer">
+			<div class="flexSpacer"></div>
+			<div class="hrule"></div>
+			<div class="flexSpacer"></div>
+		</div>
+		<div class="flexContainer">
+			<div class="flexSpacer"></div>
+			<a data-bind="click: PreviousStep" class="linkButton">@ConnectCMSResources.Back</a>
+			<a data-bind="click: NextStep" class="linkButton">@ConnectCMSResources.Finished</a>
+			<div style="width: 10%;"></div>
+		</div>
+	</div>
+</div>

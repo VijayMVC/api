@@ -1,0 +1,6 @@
+﻿@using ConnectCMS.Resources
+<div data-bind="with: RecommendationEnterpriseLocationViewModel">
+	<div data-bind="with: RecommendationEnterpriseViewModel.Enterprise">
+		<div data-bind="template: { name: 'enterpriseLocationEnterpriseTemplate', foreach: EnterpriseLocations }"></div>
+	</div>
+</div>

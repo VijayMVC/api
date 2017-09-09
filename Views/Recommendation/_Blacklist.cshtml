@@ -1,0 +1,31 @@
+﻿@using ConnectCMS.Resources
+<script type="text/html" id="enterpriseLocationBlacklistTemplate">
+	@Html.Partial( "~/Views/EnterpriseLocation/_BlacklistTemplate.cshtml" )
+</script>
+<script type="text/html" id="enterpriseBlacklistTemplate">
+	@Html.Partial( "~/Views/Enterprise/_BlacklistTemplate.cshtml" )
+</script>
+<div data-bind="with: RecommendationBlacklistViewModel">
+	<div class="toolBarContainer" data-bind="css: !MapVisible() ? 'overflow' : ''">
+		<div class="flexSpacer">
+			<select class="marginRight" data-bind="options: RecommendationViewModel.CategoriesOnDevice(), optionsCaption: '@(ConnectCMSResources.AllCategories)', optionsText: 'Name', value: SelectedCategory, enable: SearchEnabled"></select>
+			<input class="marginLeft marginRight" type="text" data-bind="value: Text, enable: SearchEnabled, valueUpdate: 'input'" />
+			<a class="linkButton marginLeft" data-bind="click: ClickSearch, css: SearchEnabled() ? '' : 'disabled'">@ConnectCMSResources.Search</a>
+		</div>
+		<div>
+			<label class="horizontal marginRight" for="sortBySelect">@ConnectCMSResources.SortBy</label>
+			<select class="marginLeft marginRight" id="sortBySelect" data-bind="value: Sort, enable: SearchEnabled">
+				<option value="1">@ConnectCMSResources.Nearest</option>
+				<option value="2">@ConnectCMSResources.Alphabetical</option>
+			</select>
+			<div class="vr marginLeft marginRight"></div>
+			<a class="imageButton horizontal map marginLeft" data-bind="text: MapText, click: ClickMap, css: MapVisible() ? 'hide' : 'show'"></a>
+		</div>
+	</div>
+	<div id="blacklistBingMap" class="bingMap bottomBorder paddingBottom paddingTop" data-bind="bingMap: Map, css: MapVisible() ? 'overflow' : '', visible: MapVisible"></div>
+	<div data-bind="progressBar: ProgressBarViewModel"></div>
+	<div data-bind="visible: Executed">
+		<div data-bind="template: { name: 'noDataTemplate', data: NoDataViewModel }"></div>
+		<div data-bind="template: { name: 'enterpriseBlacklistTemplate', foreach: Enterprises }"></div>
+	</div>
+</div>

@@ -1,0 +1,47 @@
+﻿@using ConnectCMS.Resources
+
+<div>
+    <div data-bind="if: HeaderCategoryViewModel() != null">
+        <div data-bind="template: { name: 'categoryHeaderTemplate', data: HeaderCategoryViewModel }"></div>
+    </div>
+
+    <div data-bind="errorMessage: ErrorMessageViewModel"></div>
+
+    <div class="toolBarContainer overflow">
+        <a class="linkButton" data-bind="click: ClickUpdate">@ConnectCMSResources.Save</a>
+    </div>
+
+    <div class="paddingGroup">
+        <h2 class="marginBottom">@ConnectCMSResources.CategoryDetail</h2>
+
+        <div data-bind="with: CategoryEditViewModel">
+            <div class="input" data-bind="text: Name"></div>
+
+            <div class="flexContainer">
+                <div class="flexSpacer">
+                    <span class="label marginTop vertical">@ConnectCMSResources.BackgroundColor</span>
+                    <img class="detailImage" data-bind="style: { backgroundColor: !ConnectCMS.Strings.IsNullOrWhitespace(BackgroundColor) ? FormattedBackgroundColor() : '' }" />
+                </div>
+
+                <div class="flexSpacer">
+                    <span class="label marginTop vertical">@ConnectCMSResources.DefaultImage</span>
+                    <img class="detailImage" data-bind="attr: { src: DefaultImage().DetailImageUrl }, style: { backgroundColor: !ConnectCMS.Strings.IsNullOrWhitespace(BackgroundColor) ? FormattedBackgroundColor() : '' }" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="marginTop">
+        <h2>@ConnectCMSResources.CustomImage</h2>
+
+        <div class="toolBarContainer" data-bind="if: CategoryEditViewModel() != null">
+            <a class="linkButton green" data-bind="click: ClickAddImage, visible: !CategoryEditViewModel().ImagesDiffer()">@ConnectCMSResources.Add</a>
+            <a class="linkButton green" data-bind="click: ClickDeleteImage, visible: CategoryEditViewModel().ImagesDiffer">@ConnectCMSResources.Remove</a>
+        </div>
+
+        <div data-bind="template: { name: 'noDataTemplate', data: ImageNoDataViewModel }"></div>
+        <div data-bind="with: CategoryEditViewModel">
+            <img class="detailImage marginTop" data-bind="attr: { src: Image().DetailImageUrl }, style: { backgroundColor: !ConnectCMS.Strings.IsNullOrWhitespace(BackgroundColor) ? FormattedBackgroundColor() : '' }, visible: ImagesDiffer" />
+        </div>
+    </div>
+</div>

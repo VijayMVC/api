@@ -1,0 +1,22 @@
+﻿@using ConnectCMS.Resources
+<div id="MobileBackgroundPreview">
+    <div>
+        <span>@ConnectCMSResources.ImageOnly</span>
+        <div class="mobileBackground" data-bind="style: { backgroundImage: HotelImage() == null ? 'url(content/monscierge/images/DefaultMobileBackground.png)' : 'url('+HotelImage().ImageUrl()+')' }">
+        </div>
+    </div>
+    <div>
+        <span>@ConnectCMSResources.WithOverlay</span>
+        <div class="positionRelative">
+            <div class="mobileBackground" data-bind="style: { backgroundImage: HotelImage() == null ? 'url(content/monscierge/images/DefaultMobileBackground.png)' : 'url('+HotelImage().CustomImageUrl(640, 1136, 'zoom')+')' }">
+            </div>
+            <div class="mobileBackground overlay">
+            </div>
+            @*<div class="logoOverlay" data-bind="style: { backgroundImage: HotelLogo() == null ? 'url(images/DefaultLogo.png)' : 'url('+HotelLogo().CustomImageUrl(260, 160, 'zoom')+')' }"></div>*@
+            <div class="propertyOverlay">
+                <span>@ConnectCMSResources.WelcomeTo</span>
+                <span class="propertyName" data-bind="text: PropertyName() == null || PropertyName() == '' ? 'Monscierge Hotel and Inn' : PropertyName()"></span>
+            </div>
+        </div>
+    </div>
+</div>

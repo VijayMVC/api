@@ -1,0 +1,27 @@
+﻿@model MonsciergeDataModel.ContactUser
+@using ConnectCMS.Resources
+@{
+	Layout = null;
+}
+<div id="EventsImportModule" class="flexSpacer pageContainer" data-bind="allowBindings: false">
+	<div id="bindingDiv">
+		<label for="importFile">@ConnectCMSResources.ImportFile</label>
+		<input id="importFile" type="file" data-bind="fileUploader: AttachmentUploadConfig(), attr: { id: 'AttachmentsUploader', name: 'attachments[]' }" />
+
+		<div data-bind="kendoGrid: EventGroups">
+		</div>
+
+		<a class="linkButton" data-bind="click: Import">@ConnectCMSResources.Import</a>
+
+		<div data-bind="visible: Result">
+			<p data-bind="text: Result"></p>
+		</div>
+	</div>
+</div>
+
+		<script type="text/javascript">
+			$(document).ready(function () {
+				var vm = new ConnectCMS.Events.EventsImportFileViewModel();
+				ko.applyBindings(vm, $('#bindingDiv')[0]);
+			});
+		</script>

@@ -1,0 +1,78 @@
+﻿@using ConnectCMS.Resources
+
+<div>
+	<div class="wizard-header auto-height flexContainer bottomBorder" style="padding-top: 0;">
+		<div class="flexSpacer"></div>
+		<div style="width: 800px" data-bind="with: Hotel">
+		</div>
+		<div class="flexSpacer"></div>
+	</div>
+
+	<div class="flexContainer" data-bind="with: Hotel" style="padding: 20px; box-sizing: border-box">
+		<div style="width: 10%"></div>
+		<div class="flexSpacer" style="padding:20px;">
+			<div class="flexContainer setup-column">
+				<span class="setup-span header">@ConnectCMSResources.LetGetStarted</span>
+			</div>
+			<div class="flexContainer" style="margin-top: 20px;">
+				<div class="setup-column" style="width: 225px;">
+					<label class="setup-label inline" for="PropertyName">@ConnectCMSResources.TheNameOfYourProperty</label>
+				</div>
+				<div class="setup-column flexSpacer">
+					<div style="width:400px;" data-bind="monsciergeEditableItem: {value: Name, type: 'text', id: 'PropertyName'}"></div>
+				</div>
+			</div>
+			<div class="flexContainer" style="margin-top: 20px;">
+				<div class="setup-column" style="width: 225px;">
+					<label class="setup-label inline" for="PropertyPhone">@ConnectCMSResources.PropertyTelephoneNumber</label>
+				</div>
+				<div class="setup-column flexSpacer" data-bind="with: HotelDetail">
+					<div style="width:200px;" data-bind="monsciergeEditableItem: {value: Phone, type: 'text', id: 'PropertyPhone'}"></div>
+				</div>
+			</div>
+			<div data-bind="with: HotelDetail().Location" style="margin-top:10px;">
+				<div>
+					<div class="flexContainer">
+						<div class="setup-column" style="width: 450px">
+							<label for="Address1" class="setup-label">@ConnectCMSResources.Address</label>
+							<div class="setup-text" data-bind="monsciergeEditableItem: {value: Address1, type: 'text', id: 'Address1'}"></div>
+							<div class="setup-text" style="margin-top: 5px;" data-bind="monsciergeEditableItem: {value: Address2, type: 'text', id: 'Address2'}"></div>
+						</div>
+						<div class="setup-column" style="width:auto" data-bind="if: AvailableCountries().length > 0">
+							<label for="Country" class="setup-label">@ConnectCMSResources.Country</label>
+							<div class="setup-select" data-bind="monsciergeEditableItem: {value: FKCountry, type: 'select', id: 'Country', options: 'AvailableCountries', optionsText: 'Name', optionsValue: 'PKID', optionsCaption: '@ConnectCMSResources.SelectACountry'}"></div>
+						</div>
+					</div>
+					<div class="flexContainer">
+						<div class="setup-column" style="width: 150px">
+							<label for="PostalCode" class="setup-label">@ConnectCMSResources.PostalCode</label>
+							<div class="setup-text" data-bind="monsciergeEditableItem: {value: PostalCode, type: 'text', id: 'PostalCode'}"></div>
+						</div>
+						<div class="setup-column" style="width:250px;">
+							<label for="City" class="setup-label">@ConnectCMSResources.City</label>
+							<div class="setup-text" data-bind="monsciergeEditableItem: {value: City, type: 'text', id: 'City'}"></div>
+						</div>
+						<div class="setup-column" style="width:auto" data-bind="if: FKCountry() != null, visible: FKCountry() == 225">
+							<label for="State" class="setup-label">@ConnectCMSResources.State</label>
+							<div class="setup-select" data-bind="monsciergeEditableItem: {value: FKState, type: 'select', id: 'State', options: 'AvailableStates', optionsText: 'Name', optionsValue: 'PKID', optionsCaption: '@ConnectCMSResources.SelectACountry'}"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div style="width: 10%"></div>
+	</div>
+
+	<div class="wizard-footer">
+		<div class="flexContainer">
+			<div class="flexSpacer"></div>
+			<div class="hrule"></div>
+			<div class="flexSpacer"></div>
+		</div>
+		<div class="flexContainer">
+			<div class="flexSpacer"></div>
+			<a data-bind="click: NextStep, css: StepIsValid() ? '' : 'disabled'" class="linkButton">@ConnectCMSResources.Next</a>
+			<div style="width: 10%;"></div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,359 @@
+﻿@using ConnectCMS.Resources
+@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+	div.table-header {
+		padding: 15px;
+		border: 1px solid #ddd;
+		background-color: #008080;
+		margin-top: 20px;
+	}
+
+		div.table-header > h1 {
+			color: white;
+		}
+
+	.contentTable .contentRow .contentColumn {
+		padding-top: 6px;
+		padding-bottom: 6px;
+	}
+
+	.contentTable .contentColumn.valignTop {
+		vertical-align: top;
+	}
+
+	.contentTable .contentColumn.labels {
+		padding-right: 20px;
+	}
+
+	.contentTable .contentRow .contentColumn .contentLabel {
+	}
+
+	.contentTable .contentRow .contentColumn input[type="text"].contentInput {
+		min-width: 300px;
+	}
+
+	.contentTable .contentRow .contentColumn textarea.contentInput {
+		width: 100%;
+		height: 50px;
+	}
+
+		.contentTable .contentRow .contentColumn textarea.contentInput.tall {
+			height: 100px;
+		}
+
+	.contentTable .contentRow .contentColumn .navLink {
+		margin-left: 20px;
+	}
+
+	.detailsContainer {
+		margin-top: 20px;
+		margin-bottom: 20px;
+	}
+
+	p > a.MessageEllipse {
+		cursor: pointer;
+		margin-left: 5px;
+		font-weight: bold;
+	}
+</style>
+
+@section Scripts{
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+
+		});
+	</script>
+}
+
+<div id="SMSBlastModule" class="flexSpacer pageContainer" data-bind="allowBindings: false">
+	<div id="bindingDiv">
+		<div style="padding-bottom: 20px;" data-bind="visible: SelectedJob() == null">
+			<div class="mons-rq-header">
+				<a class="hdr-link-button linkButton green" href="#" data-bind="click: NewJob, disableAnchor: !IsConfigured">
+					@ConnectCMSResources.SMSJobsCreateButton
+				</a>
+				<h1>@ConnectCMSResources.SMSJobsHeader</h1>
+				<h2 data-bind="visible: !IsConfigured">This device is not configured correctly for SMS messaging.</h2>
+			</div>
+			<div class="flex table-header flexItemsCenter">
+				<h1 class="flexSpacer">Active Jobs</h1>
+			</div>
+			<div data-bind="kendoGrid: ActiveGridConfig">
+			</div>
+			<div class="flex table-header flexItemsCenter">
+				<h1 class="flexSpacer">Upcoming Jobs</h1>
+			</div>
+			<div data-bind="kendoGrid: UpcomingGridConfig">
+			</div>
+			<div class="flex table-header flexItemsCenter">
+				<h1 class="flexSpacer">Completed Jobs</h1>
+			</div>
+			<div data-bind="kendoGrid: CompletedGridConfig">
+			</div>
+		</div>
+		<div style="padding-bottom: 20px;" data-bind="with: SelectedJob()">
+			<!-- ko if: PKID() != null -->
+			<div class="mons-rq-header">
+				<a class="hdr-link-button linkButton white" href="#" data-bind="click: BackToList">
+					@ConnectCMSResources.SMSJobsBackButton
+				</a>
+				<h1>@ConnectCMSResources.SMSJobHeader</h1>
+			</div>
+			<fieldset class="detailsContainer">
+				<span class="EventDetailHeader">Job Details</span>
+				<div class="hrule" style="margin-top: 4px;"></div>
+				<div class="contentTable">
+					<div class="contentRow">
+						<div class="contentColumn labels">
+							<label class="contentLabel">Name :</label>
+						</div>
+						<div class="contentColumn">
+							<span class="contentText" data-bind="text: Name"></span>
+						</div>
+					</div>
+					<div class="contentRow">
+						<div class="contentColumn labels">
+							<label class="contentLabel">Status :</label>
+						</div>
+						<div class="contentColumn">
+							<span class="contentText" data-bind="text: Status"></span>
+						</div>
+					</div>
+					<div class="contentRow">
+						<div class="contentColumn labels">
+							<label class="contentLabel">Created By :</label>
+						</div>
+						<div class="contentColumn">
+							<span class="contentText" data-bind="text: CreatedBy"></span>
+						</div>
+					</div>
+					<div class="contentRow">
+						<div class="contentColumn labels">
+							<label class="contentLabel">Created On :</label>
+						</div>
+						<div class="contentColumn">
+							<span class="contentText" data-bind="text: moment(CreatedOn()).format('M/D/YY h:mm:ss A')"></span>
+						</div>
+					</div>
+					<div class="contentRow">
+						<div class="contentColumn labels">
+							<label class="contentLabel">Last Updated On :</label>
+						</div>
+						<div class="contentColumn">
+							<span class="contentText" data-bind="text: moment(LastUpdatedOn()).format('M/D/YY h:mm:ss A')"></span>
+						</div>
+					</div>
+					<div class="contentRow" data-bind="visible: NotifyEmail() != null">
+						<div class="contentColumn labels">
+							<label class="contentLabel">Notification Emails :</label>
+						</div>
+						<div class="contentColumn">
+							<p class="contentText" data-bind="text: NotifyEmail"></p>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+			<div class="flex table-header flexItemsCenter">
+				<h1 class="flexSpacer">Tasks</h1>
+				<a class="linkButton red" data-bind="visible: Status() == 'Scheduled', click: $root.CancelJob">Cancel All</a>
+			</div>
+			<div data-bind="kendoGrid: GridConfig">
+			</div>
+			<!-- /ko -->
+			<!-- ko if: PKID() == null -->
+			<div class="mons-rq-header">
+				<a class="hdr-link-button linkButton marginLeft" href="#" data-bind="click: $parent.SaveJob,disableAnchor: !CanSave()">
+					@ConnectCMSResources.Create
+				</a>
+				<a class="hdr-link-button linkButton white" href="#" data-bind="click: BackToList">
+					@ConnectCMSResources.Cancel
+				</a>
+
+				<h1>@ConnectCMSResources.SMSNewJobHeader</h1>
+			</div>
+			<fieldset class="detailsContainer">
+				<span class="EventDetailHeader">Job Details</span>
+				<div class="hrule" style="margin-top: 4px;"></div>
+				<div class="contentTable">
+					<div class="contentRow">
+						<div class="contentColumn labels">
+							<label class="contentLabel">Name :</label>
+						</div>
+						<div class="contentColumn">
+							<input type="text" class="contentInput" data-bind="value: Name" />
+						</div>
+					</div>
+					<div class="contentRow">
+						<div class="contentColumn labels">
+							<label class="contentLabel">Date :</label>
+						</div>
+						<div class="contentColumn">
+							<input data-bind="kendoDateTimePicker: ScheduledFor" />
+						</div>
+					</div>
+					<div class="contentRow">
+						<div class="contentColumn labels">
+							<label class="contentLabel">Estimated Completion :</label>
+						</div>
+						<div class="contentColumn">
+							<span data-bind="text: EstimatedCompletionTime"></span>
+						</div>
+					</div>
+
+					<div class="contentRow">
+						<div class="contentColumn labels">
+							<label class="contentLabel">Send Notification :</label>
+						</div>
+						<div class="contentColumn">
+							<input type="checkbox" class="contentInput" data-bind="checked: SendNotification" />
+						</div>
+					</div>
+					<div class="contentRow" data-bind="visible: SendNotification">
+						<div class="contentColumn labels valignTop">
+							<label class="contentLabel">Email Recipients :</label>
+						</div>
+						<div class="contentColumn">
+							<textarea class="contentInput" data-bind="value: NotifyEmail"></textarea>
+						</div>
+					</div>
+					<div class="contentRow">
+						<div class="contentColumn labels">
+							<label class="contentLabel">Message :</label>
+						</div>
+						<div class="contentColumn">
+							<select data-bind="options: $parent.AvailableMessages, value: SelectedMessage, optionsText: 'Name'"></select>
+							<a class="linkButton" data-bind="click: $parent.AddMessage">@ConnectCMSResources.Add</a>
+						</div>
+					</div>
+					<div class="contentRow">
+						<div class="contentColumn labels">
+						</div>
+						<div class="contentColumn">
+							<div data-bind="with: SelectedMessage">
+								<!-- ko if: PKID() != 0 && PKID() != -1 -->
+								<label class="contentLabel">@ConnectCMSResources.Name</label>
+								<input class="contentInput block marginBottom" type="text" data-bind="value: Name, prop: {'readonly': !IsEditable()}, valueUpdate:'input'" />
+								<!-- /ko -->
+								<label class="contentLabel">@ConnectCMSResources.Message</label>
+								<textarea class="contentInput block tall" data-bind="value: Message, prop: {'readonly': !IsEditable()}, valueUpdate:'input'"></textarea>
+								<p>@ConnectCMSResources.SMSWelcomeMessageBody</p>
+								<div data-bind="visible: IsEditable && PKID() != 0 && PKID() != -1">
+									<a class="linkButton" data-bind="click: $parents[1].SaveMessage,disableAnchor: !CanSave() || !HasChanges() || $parents[1].IsSavingMessage()">@ConnectCMSResources.Save</a>
+									<a class="linkButton white" data-bind="click: $parents[1].CancelMessage,disableAnchor: (PKID() != null && !HasChanges()) || $parents[1].IsSavingMessage()">@ConnectCMSResources.Cancel</a>
+									<a class="linkButton red" data-bind="visible: PKID() != null,  click: $parents[1].DeleteMessage,disableAnchor: $parents[1].IsSavingMessage(),">@ConnectCMSResources.Delete</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset class="detailsContainer">
+				<span class="EventDetailHeader">Message Recipients</span>
+				<div class="hrule" style="margin-top: 4px;"></div>
+				<div>
+					<div data-bind="radioButton:{ text: '@ConnectCMSResources.Import', selected: AddType, value: 0}"></div>
+					<div data-bind="radioButton:{ text: '@ConnectCMSResources.Manual', selected: AddType, value: 1}"></div>
+				</div>
+				<div data-bind="if: AddType() == 0">
+					<p class="headerBody">@ConnectCMSResources.SMSBlastHeaderBody</p>
+					<div class="importContainer">
+						<label class="importLabel" for="importFile">@(ConnectCMSResources.File):</label>
+						<input id="importFile" type="file" style="display: none" data-bind="fileUploader: SMSBlastCSVUploadConfig(), attr: { id: 'SMSBlastCSVUploader', name: 'SMSBlastCSVfile[]' }" />
+						<input class="importFile" type="text" data-bind="value: FileName" disabled="disabled" />
+						<a class="linkButton importSelect" data-bind="click: SelectFile">@ConnectCMSResources.SelectFile</a>
+					</div>
+				</div>
+				<div data-bind="if: AddType() == 1">
+					<div class="inputsContainer">
+						<div class="inputContainer">
+							<label class="label">@ConnectCMSResources.FirstName</label>
+							<input class="input" type="text" data-bind="value: FirstName, valueUpdate: 'input'" />
+						</div>
+						<div class="inputContainer">
+							<label class="label">@ConnectCMSResources.LastName</label>
+							<input class="input" type="text" data-bind="value: LastName, valueUpdate: 'input'" />
+						</div>
+						<div class="inputContainer">
+							<label class="label">@ConnectCMSResources.PhoneNumber</label>
+							<input class="input" type="text" data-bind="value: PhoneNumber, valueUpdate: 'input'" />
+						</div>
+					</div>
+
+					<div class="buttonsContainer">
+						<a class="linkButton" data-bind="click: AddNumber, disableAnchor: !CanAddNumber()">@ConnectCMSResources.Add</a>
+					</div>
+				</div>
+				<div class="areaCodeContainer" style="position: relative">
+					<div class="areaCodeCheck" data-bind="checkbox: {checked: PrefixAreaCode, text: '@ConnectCMSResources.SMSBlastPrefixAreaCodeLabel'}"></div>
+					<input class="areaCodeValue" type="text" data-bind="value: AreaCode, valueUpdate: 'input', enable: PrefixAreaCode" size="3" />
+					<a class="linkButton red" style="position: absolute; right: 0px; top: 10px;" data-bind="click: ClearList, disableAnchor: Tasks().length == 0">@ConnectCMSResources.ClearList</a>
+				</div>
+				<div class="resultGrid" data-bind="kendoGrid: TaskGridConfig">
+				</div>
+			</fieldset>
+			<!-- /ko -->
+		</div>
+	</div>
+</div>
+
+@if( Request.IsAjaxRequest() )
+{
+	<script type="text/javascript">
+		function getSelectedDeviceId() {
+			return ConnectCMS.MainViewModel.SelectedDevice().PKID();
+		};
+	</script>
+}
+else
+{
+	// This is a hard-coded replacement for the deviceId used
+	// if the page is ran outside of the CMS container.
+	<script type="text/javascript">
+
+		function getSelectedDeviceId() {
+			return @(ViewBag.DemoDeviceId ?? 22093);
+		};
+	</script>
+}
+
+<script type="text/javascript">
+	var pageVM = null;
+	function cancelTask(id) {
+		if (pageVM === null) return;
+		pageVM.CancelTask(id);
+	}
+
+	function retryTask(id) {
+		if (pageVM === null) return;
+		pageVM.RetryTask(id);
+	}
+
+	function showMessage(id) {
+		if (pageVM === null) return;
+		pageVM.ShowMessage(id);
+	}
+
+	function showStatusMessage(id) {
+		if (pageVM === null) return;
+		pageVM.ShowStatusMessage(id);
+	}
+
+	$(document).ready(function() {
+
+		var hotelId = @(ViewBag.HotelId);
+		var welcomeMessage = '@HttpUtility.JavaScriptStringEncode(ViewBag.WelcomeMessage)';
+		var smsStockMessages = @Html.Raw( ViewBag.SMSStockMessages ?? "null" );
+		var smsNumberCount = @Html.Raw( ViewBag.SMSNumberCount ?? "0" );
+		var isConfigured = @Html.Raw(ViewBag.IsConfigured ? "true" : "false");
+		pageVM = new ConnectCMS.Requests.SMSBlastJobsViewModel(getSelectedDeviceId(), hotelId, welcomeMessage, smsStockMessages, smsNumberCount,isConfigured);
+		ko.applyBindings(pageVM, $('#bindingDiv')[0]);
+
+		window.onhashchange = function() {
+			pageVM.SelectJob(window.location.hash);
+		};
+	});
+</script>

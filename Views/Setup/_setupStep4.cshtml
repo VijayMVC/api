@@ -1,0 +1,58 @@
+﻿@using ConnectCMS.Resources
+
+<div id="setup-step4-bindingpoint">
+	<div class="wizard-header auto-height flexContainer bottomBorder" style="padding-top: 0;">
+		<div class="flexSpacer"></div>
+		<div style="width: 400px" data-bind="with: Hotel">
+		</div>
+		<div class="flexSpacer"></div>
+	</div>
+
+	<div class="flexContainer" data-bind="with: Hotel">
+		<div style="width: 10%"></div>
+		<div class="flexSpacer" style="padding: 20px;" data-bind="with: HotelDetail">
+			<span class="setup-span">@ConnectCMSResources.YourMobileBackground</span>
+			<div class="flexContainer" data-bind="with: MobileBackgroundImage">
+				<div style="" class="flexSelfStart">
+					<img style="max-height: 300px; max-width: 300px; padding: 10px; border: 1px solid #e3e3e3;" data-bind="visible: !IsLoading(), attr :{ src: ImageUrl }" alt="" />
+					<div class="loader" style="" data-bind="visible: IsLoading">
+						<div class='loadingText'>
+							<span class='header' data-bind="text: '@ConnectCMSResources.LoadingImage'">
+							</span>
+						</div>
+						<div class='loadingIcon'>
+						</div>
+						<div class='loadingText'>
+							<span class='footer' data-bind="text: '@ConnectCMSResources.PleaseWait'">
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<div style="margin-left: 10px; width: 300px; min-height: 200px;" class="flexContainer flexColumn" data-bind="with: $root">
+					<p class="setup-info">@ConnectCMSResources.MobileBackgroundDesc1 <a class="navLink" data-bind="click: ShowExample">@ConnectCMSResources.ViewExample</a> @ConnectCMSResources.MobileBackgroundDesc2</p>
+					<p class="setup-info">@ConnectCMSResources.MobileBackgroundReqs</p>
+					<div class="flexContainer flexSpacer flexSelfEnd" style=" margin-left: 10px; padding: 5px;">
+						<input style="display: none" type="file" data-bind="fileUploader: MobileBackgroundImageUploadConfig(), attr: { id: 'MobileBackgroundImageUploader' }" />
+						<a class="link add flexSelfEnd" data-bind="click: InsertMobileBackgroundImage, text: Hotel().HotelDetail().MobileBackgroundImage() == null ? '@ConnectCMSResources.UploadImage' : '@ConnectCMSResources.UpdateImage'">@ConnectCMSResources.UploadImage</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div style="width: 10%"></div>
+	</div>
+
+	<div class="wizard-footer">
+		<div class="flexContainer">
+			<div class="flexSpacer"></div>
+			<div class="hrule"></div>
+			<div class="flexSpacer"></div>
+		</div>
+		<div class="flexContainer">
+			<div class="flexSpacer"></div>
+			<a data-bind="click: PreviousStep" class="linkButton marginRight">@ConnectCMSResources.Back</a>
+			<a data-bind="click: FinishSetup, css: StepIsValid() ? '' : 'disabled'" class="linkButton marginLeft">@ConnectCMSResources.Finished</a>
+			<div style="width: 10%;"></div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,14 @@
+﻿@using ConnectCMS.Resources
+
+<div class="listItemContainer paddingTop">
+    <a class="listItemOrderCircle marginRight" data-bind="text: Order"></a>
+
+    <img class="listItemImage marginLeft marginRight" data-bind="attr: { src: Image() != null ? Image().ListItemImageUrl : null }, style: { backgroundColor: !ConnectCMS.Strings.IsNullOrWhitespace(BackgroundColor) ? FormattedBackgroundColor() : '' }" />
+
+    <span class="listItemHeader center flexSpacer marginLeft marginRight" data-bind="text: Name"></span>
+
+    <div class="block marginLeft">
+        <div class="imageButton reorder up" data-bind="click: ClickUp, visible: UpVisible"></div>
+        <div class="imageButton reorder down" data-bind="click: ClickDown, visible: DownVisible"></div>
+    </div>
+</div>

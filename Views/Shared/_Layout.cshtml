@@ -1,0 +1,323 @@
+﻿@using System.Globalization
+@using System.Reflection
+@using ConnectCMS.Repositories
+@using ConnectCMS.Resources
+@using MonsciergeWebUtilities.Utilities
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>@ConnectCMSResources.MonsciergeConnectCMS</title>
+
+	<link rel="shortcut icon" href="~/favicon.ico?ver=5" />
+
+	@Scripts.Render( "~/bundles/jquery" )
+	@Scripts.Render( "~/bundles/bootstrap" )
+
+	@if( !HttpContext.Current.IsDebuggingEnabled )
+	{
+		<script type="text/javascript" src="~/Scripts/raygun.min.js"></script>
+		<script> Raygun.init('gSZ9ZaKhuBLFAHUXGjMNmQ==', { excludedHostnames: ['localhost'] }).attach(); </script>
+	}
+	else
+	{
+		<script> var Raygun = null; </script>
+	}
+
+	@Scripts.Render( "~/bundles/knockout" )
+	@Scripts.Render( "~/bundles/utility" )
+	@Scripts.Render( "~/bundles/kendo" )
+	@Scripts.Render( "~/bundles/underscore" )
+	@Styles.Render( "~/Content/FontAwesome" )
+	@Scripts.Render( "~/bundles/ConnectCMS" )
+	<script src="~/signalr/hubs"></script>
+
+	<script type="text/javascript">
+		ConnectCMS.Globalization = @Html.Raw(ResourceUtils.RenderResourceString(ConnectCMSClientResources.ResourceManager));
+		ConnectCMS.Version = '@Assembly.GetAssembly(typeof(MvcApplication)).GetName().Version.ToString()';
+		kendo.culture("us-EN");
+		$(document).ready(function () {
+
+			// Global ajax configuration
+			$.ajaxSetup({
+				error: function (x, status, error) {
+					// Add additional error codes as needed.
+					if (x.status == '403') {
+						window.location = '@Url.Action("Login", "Account")?returnurl=' + window.location.pathname;
+					}
+				}
+			});
+
+			ConnectCMS.SelectedLanguage('@MvcApplication.GetCurrentCulture()');
+
+			// Initialize the locale of moment.js with the current culture.
+			moment.locale('@System.Threading.Thread.CurrentThread.CurrentCulture');
+
+			$.ajax({
+				url: "/ConnectCMS/Utility/GetCountries",
+				type: "POST",
+				success: function (result, textStatus, jqXHR) {
+					ConnectCMS.AvailableCountries($.map(result, function (countryModel) {
+						return new ConnectCMS.Locations.CountryViewModel(countryModel);
+					}));
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					ConnectCMS.LogError(jqXHR, textStatus, errorThrown);
+				}
+			});
+
+			$.ajax({
+				url: "/ConnectCMS/Utility/GetSupportedCultures",
+				type: "POST",
+				success: function (result, textStatus, jqXHR) {
+					ConnectCMS.SupportedCultures($.map(result, function (cultureModel) {
+						return new CultureViewModel(cultureModel);
+					}));
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					ConnectCMS.LogError(jqXHR, textStatus, errorThrown);
+				}
+			});
+		});
+	</script>
+	@*@Styles.Render("~/Content/bootstrap")*@
+	@Styles.Render( "~/Content/basecss" )
+
+	@Styles.Render( "~/Content/monscierge/css" )
+	@Styles.Render( "~/Content/themes/base/jqueryui" )
+
+	@Styles.Render( "~/Content/kendo/2016.1.226/css" )
+
+	@Scripts.Render( "~/bundles/modernizr" )
+
+	@Scripts.Render( "~/bundles/CMS" )
+	@Styles.Render( "~/Content/Plugins/css" )
+
+	@RenderSection( "PageStyles", false )
+
+	<style>
+	</style>
+</head>
+<body>
+	<div class="master Container">
+		<div class="navbar">
+			<div class="navbar-home">
+				<button class="menu collapsed" data-bind="monsciergeMenu: { menuSelector: '#navbar-home-panel'}"></button>
+				<div id="navbar-home-panel" class="menu-panel left">
+					@if( Request.IsAuthenticated )
+					{
+						<ul>
+							@if( ViewBag.AllowDeviceNetwork != null && ViewBag.AllowDeviceNetwork == true )
+							{
+								<li data-bind="click: $root.Navigate.bind($data, null, false, true, 'DeviceNetwork')"><a title="@ConnectCMSResources.DeviceNetwork">@ConnectCMSResources.DeviceNetwork</a></li>
+							}
+							<li data-bind="click: ShowAboutCMS"><a title="@ConnectCMSResources.AboutConnectCMS">@ConnectCMSResources.AboutConnectCMS</a></li>
+							@*<li>@ConnectCMSResources.GettingStarted</li>*@
+							@*<li>@ConnectCMSResources.SupportForum</li>*@
+							<li data-bind="click: ShowFeedback"><a title="@ConnectCMSResources.Feedback">@ConnectCMSResources.Feedback</a></li>
+						</ul>
+					}
+					else
+					{
+						<ul>
+							<li data-bind="click: ShowAboutCMS"><a title="@ConnectCMSResources.AboutConnectCMS">@ConnectCMSResources.AboutConnectCMS</a></li>
+							<li data-bind="click: ShowFeedback"><a title="@ConnectCMSResources.Feedback">@ConnectCMSResources.Feedback</a></li>
+						</ul>
+					}
+				</div>
+			</div>
+			<div class="navbar-spacer"></div>
+			@if( Request.IsAuthenticated )
+			{
+				<div class="navbar-login">
+					<button class="menu collapsed" data-bind="monsciergeMenu: { menuSelector: '#navbar-login-panel'}">
+						<div>
+							@if( Request.IsAuthenticated )
+							{
+								<span>@(ConnectCMSResources.Welcome), @User.Identity.Name</span>
+							}
+							<div class="icon"></div>
+							<div class="arrow"></div>
+						</div>
+					</button>
+
+					<div id="navbar-login-panel" class="menu-panel right">
+						@using( Html.BeginForm( "LogOff", "Account", FormMethod.Post, new { id = "logoutForm" } ) )
+						{
+							@Html.AntiForgeryToken()
+							<ul>
+								<li data-bind="click: $root.Navigate.bind($data, null, false, true, 'AccountSettings')"><a title="@ConnectCMSResources.AccountSettings">@ConnectCMSResources.AccountSettings</a></li>
+								@if( ViewBag.ManageUsers != null && ViewBag.ManageUsers == true )
+								{
+									<li data-bind="click: $root.Navigate.bind($data, null, false, true, 'ManageUsers')"><a title="@ConnectCMSResources.ManageUsers">@ConnectCMSResources.ManageUsers</a></li>
+								}
+								<li data-bind="click: ShowLanguages"><a title="@ConnectCMSResources.Language">@ConnectCMSResources.Language</a></li>
+								@*<li>@ConnectCMSResources.SetupWizard</li>*@
+								<li data-bind="click: Logout"><a title="@ConnectCMSResources.Logout">@ConnectCMSResources.Logout</a></li>
+							</ul>
+						}
+					</div>
+				</div>
+			}
+			else
+			{
+				<div class="language button" title="@ConnectCMSResources.Language" data-bind="click: ShowLanguages">
+					<a title="@ConnectCMSResources.Language">@ConnectCMSResources.Language</a>
+				</div>
+			}
+			@if( Request.IsAuthenticated )
+			{
+				@*<div class="navbar-devicemanager button" title="@(ConnectCMSResources.DeviceNetwork)" data-bind="monsciergeTooltip: {placement: 'bottom'}"></div>*@
+			}
+			<div class="navbar-help button" data-bind="visible: AvailableBeacons().length > 0, click: ShowNearbyUsers"></div>
+			<div id="helpPanel" style="right: -327px;">
+				<div class="helpInterior">
+					<span>@ConnectCMSResources.Beacon</span>
+					<select data-bind="options: AvailableBeacons, value: SelectedBeacon, optionsText: 'Name', optionsValue: 'PKID', optionsCaption: '@ConnectCMSResources.SelectABeacon'"></select>
+					<hr />
+					<h2 style="margin: 15px 0px 10px; font-size: 24px; font-weight: 100;">Nearby Guests</h2>
+					<!-- ko foreach: NearbyGuests -->
+					<div class="pull-left text-center nearby-block">
+						<span class="badge" style="color: rgb(153, 153, 153); font-size: 12px; text-transform: uppercase" data-bind="text: Title, style: { 'background-color' : BackgroundColor, 'color' : Color }"></span>
+						<h4 style="margin: 2px 0px 7px 0; font-size: 16px;" data-bind="text: Name"></h4>
+						<div>
+							<img width="80" class="img-circle img-responsive img-avatar center-block" src="" data-bind="attr: { 'src' : ImageUrl }">
+						</div>
+					</div>
+					<!-- /ko -->
+				</div>
+			</div>
+		</div>
+		<div class="flex Container">
+			@RenderBody()
+		</div>
+	</div>
+
+	<div class="popup-overlay" data-bind="visible: ShowOverlay" style="display: none">
+		<div>
+			<div id="popup-window" class="popup-window" data-bind="visible: ShowOverlay, with: PopupViewModel">
+				<div class="popup-header title">
+					<span class="flexSpacer" data-bind="text: Title"></span>
+					<a class="popup-close-button" data-bind="click: Close"></a>
+				</div>
+				<div class="popup-content" data-bind="allowBindings: false">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="popup-overlay" data-bind="visible: ShowUnsupportedBrowser" style="display: none">
+		<div>
+			<div id="unsupportedBrowser-window" class="popup-window">
+				<div class="popup-header title">
+					<span class="flexSpacer"></span>
+					<a class="popup-close-button" data-bind="click: function(){ ShowUnsupportedBrowser(false); }"></a>
+				</div>
+				<div class="popup-content">
+					<div style="width: 800px;">
+						<div>
+							<span class="header" style="margin-bottom: 15px;">
+								@ConnectCMSResources.BrowserUnsupportedHeader
+							</span>
+						</div>
+						<div>
+							<span class="subHeader">
+								@ConnectCMSResources.BrowserUnsupportedSubHeader
+							</span>
+						</div>
+						<div class="flexContainer flexItemsCenter flexContentCenter" style="margin-top: 15px;">
+							<div class="flexSpacer"></div>
+							<div class="positionRelative ">
+								<a class="browserImageButton chrome" href="@ConnectCMSResources.GoogleChromeUrl" title="@ConnectCMSResources.GoogleChrome"></a>
+							</div>
+							<div class="positionRelative ">
+								<a class="browserImageButton firefox" href="@ConnectCMSResources.FirefoxUrl" title="@ConnectCMSResources.Firefox"></a>
+							</div>
+							@if( HttpContext.Current.Request.Browser.Platform == "WinNT" )
+							{
+								<div class="positionRelative ">
+									<a class="browserImageButton internetExplorer" href="@ConnectCMSResources.InternetExplorerUrl" title="@ConnectCMSResources.InternetExplorer"></a>
+								</div>
+							}
+							<div class="positionRelative ">
+								<a class="browserImageButton opera" href="@ConnectCMSResources.OperaUrl" title="@ConnectCMSResources.Opera"></a>
+							</div>
+							@if( HttpContext.Current.Request.Browser.Platform != "WinNT" )
+							{
+								<div class="positionRelative ">
+									<a class="browserImageButton safari" href="@ConnectCMSResources.SafariUrl" title="@ConnectCMSResources.Safari"></a>
+								</div>
+							}
+							<div class="flexSpacer"></div>
+						</div>
+						<div style="display: block; padding-bottom: 10px; margin-top: 50px;">
+							<span class="details">@ConnectCMSResources.NotReadyToUpgrade</span>
+							<a class="linkButton" data-bind="click: function(){ ShowUnsupportedBrowser(false); }">@ConnectCMSResources.DismissThisMessage</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="popup-overlay opaque windowTop" data-bind="visible: ShowAlreadySignedIn" style="display: none">
+		<div>
+			<div id="alreadySignedIn-window" class="popup-window" data-bind="">
+				<div class="popup-content">
+					<div class="cover-popup" style="width: 400px;">
+						<div class="flexContainer">
+							<div class="flexSpacer"></div>
+							<div class="keyImage"></div>
+							<div class="flexSpacer"></div>
+						</div>
+						<div>
+							<span class="header">
+								@ConnectCMSResources.AlreadySignedInHeader
+							</span>
+						</div>
+						<div>
+							<p class="details">
+								@ConnectCMSResources.AlreadySignedInDetails1
+							</p>
+							<p class="details">
+								@ConnectCMSResources.AlreadySignedInDetails2
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="popup-overlay" data-bind="visible: ShowImageGallery" style="display: none">
+		<div>
+			<div id="imageGallery" class="popup-window" data-bind="visible: ShowImageGallery, with: ImageGalleryViewModel">
+				<div class="popup-header title">
+					<span class="flexSpacer" data-bind="text: Title"></span>
+					<a class="popup-close-button" data-bind="click: Close"></a>
+				</div>
+				<div class="popup-content">
+					@Html.Partial( "_ImageGallery" )
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="popup-overlay pleaseWait" data-bind="visible: ShowPleaseWait" style="display: none">
+		<div>
+			<div id="pleaseWait" class="popup-window" data-bind="visible: ShowPleaseWait">
+				<div class="pleaseWaitMessage">@ConnectCMSResources.PleaseWait </div>
+			</div>
+		</div>
+	</div>
+
+	@Scripts.Render( "~/bundles/plugins" )
+	@RenderSection( "scripts", false )
+
+	<script type="text/html" id="validationErrorTemplate">
+		<label data-bind="attr: { for: field.id }">X</label>
+	</script>
+</body>
+</html>

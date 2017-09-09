@@ -1,0 +1,16 @@
+﻿@using ConnectCMS.Resources
+<div class="listItemContainer marginTop">
+	<div class="flexSpacer block">
+		<div class="block">
+			<div class="block marginBlock">
+				<img class="listItemLabelImage" src="Content/monscierge/images/distance.png" />
+				<span class="listItemLabel black bold" data-bind="text: FormattedDistanceInMiles"></span>
+				<span class="listItemLabel black bold">@ConnectCMSResources.Miles</span>
+			</div>
+			<div data-bind="if: Location() != null">
+				<span class="listItemLabel block gray marginBlock" data-bind="text: Location().FullAddress()"></span>
+			</div>
+			<span class="listItemLabel block gray" data-bind="text: Phone"></span>
+		</div>
+	</div>
+</div>

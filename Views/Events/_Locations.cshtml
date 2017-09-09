@@ -1,0 +1,32 @@
+﻿@using ConnectCMS.Resources
+<div class="Events_Group_Container">
+	@if( ViewBag.IsContentManager == true && ViewBag.HasSyncer == false )
+	{
+		<div class="contentSection">
+			<div class="flexContainer flexItemsCenter">
+				<input style="max-width: 400px; margin-right: 5px; width: 100%" type="text" data-bind="value: NewEventLocationName, valueUpdate: 'input'" />
+				<a class="linkButton lightBlue" data-bind="click: AddEventLocation, disableAnchor: !CanAddEventLocation()">@ConnectCMSResources.AddNew</a>
+			</div>
+		</div>
+	}
+	<div class="contentSection" data-bind="template: {name: 'EventLocationListItem', foreach: EventLocations}">
+	</div>
+</div>
+
+<script type="text/html" id="EventLocationListItem">
+	<div class="collapsablePanel" style="margin: 10px">
+		<div class="header">
+			<div class="titleContainer">
+				<div class="title" style="max-width: 400px;" data-bind="monsciergeEditableItem: {value: Name, type: 'text', editable: IsRenaming, hideActions: true}"></div>
+			</div>
+			<div class="actions" data-bind="visible: $root.IsContentManager() && !$root.IsEnvisionDevice() && !IsRenaming()">
+				<a class="linkButton edit" data-bind="click: EditEventLocation"></a>
+				<a class="linkButton trash" data-bind="click: $parent.DeleteEventLocation"></a>
+			</div>
+			<div class="actions" data-bind="visible: $root.IsContentManager() && !$root.IsEnvisionDevice() && IsRenaming()">
+				<a class="linkButton check" data-bind="click: AcceptEventLocation, disableAnchor: !Name.CanSave()"></a>
+				<a class="linkButton cancel" data-bind="click: CancelEventLocation"></a>
+			</div>
+		</div>
+	</div>
+</script>

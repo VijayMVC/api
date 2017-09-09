@@ -1,0 +1,47 @@
+﻿@using ConnectCMS.Resources
+<div class="overlay"></div>
+<div class="content">
+	<div style="position: relative; padding: 100px;">
+		<h1>
+			@ConnectCMSResources.BrowserUnsupportedHeader
+		</h1>
+		<h3>
+			@ConnectCMSResources.BrowserUnsupportedSubHeader
+		</h3>
+		<a href="@ConnectCMSResources.GoogleChromeUrl">
+			<img src="/ConnectCMS/Content/monscierge/images/Chrome.png" />
+			<p>@ConnectCMSResources.GoogleChrome</p>
+		</a>
+		<a href="@ConnectCMSResources.FirefoxUrl">
+			<img src="/ConnectCMS/Content/monscierge/images/Firefox.png" />
+			<p>@ConnectCMSResources.Firefox</p>
+		</a>
+		@if( HttpContext.Current.Request.Browser.Platform == "WinNT" )
+		{
+			<a href="@ConnectCMSResources.InternetExplorerUrl">
+				<img src="/ConnectCMS/Content/monscierge/images/InternetExplorer.png" />
+				<p>@ConnectCMSResources.InternetExplorer</p>
+			</a>
+		}
+		<a href="@ConnectCMSResources.OperaUrl">
+			<img src="/ConnectCMS/Content/monscierge/images/Opera.png" />
+			<p>@ConnectCMSResources.Opera</p>
+		</a>
+		@if( HttpContext.Current.Request.Browser.Platform != "WinNT" )
+		{
+			<a href="@ConnectCMSResources.SafariUrl">
+				<img src="/ConnectCMS/Content/monscierge/images/Safari.png" />
+				<p>@ConnectCMSResources.Safari</p>
+			</a>
+		}
+
+		<div>
+			<span>@ConnectCMSResources.NotReadyToUpgrade</span>
+		</div>
+		<div style="text-align: center">
+			<a class="btn btn-md btn-primary btn-block btn-custom" onclick=" ShowUnsupportedBrowser(false) ">
+				@ConnectCMSResources.DismissThisMessage
+			</a>
+		</div>
+	</div>
+</div>

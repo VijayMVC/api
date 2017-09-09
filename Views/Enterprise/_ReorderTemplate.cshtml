@@ -1,0 +1,27 @@
+﻿@using ConnectCMS.Resources
+<div>
+	<div class="listItemContainer marginTop">
+		<a class="listItemOrderCircle marginRight" data-bind="text: Order"></a>
+		<div class="flexSpacer block marginLeft marginRight">
+			<span class="listItemHeader center marginBlock" data-bind="text: Name"></span>
+			<div class="block" data-bind="visible: EnterpriseLocationsLength() != 1">
+				<span class="listItemLabel block gray marginBlock" data-bind="text: FormattedEnterpriseLocationsLength"></span>
+			</div>
+			<div class="block" data-bind="visible: EnterpriseLocationsLength() == 1, with: FirstEnterpriseLocation">
+				<div class="block marginBlock">
+					<img class="listItemLabelImage" src="Content/monscierge/images/distance.png" />
+					<span class="listItemLabel black bold" data-bind="text: FormattedDistanceInMiles"></span>
+					<span class="listItemLabel black bold">@ConnectCMSResources.Miles</span>
+				</div>
+				<div data-bind="if: Location() != null">
+					<span class="listItemLabel block gray marginBlock" data-bind="text: Location().FullAddress"></span>
+				</div>
+			</div>
+		</div>
+		<div class="block marginLeft">
+			<div class="imageButton reorder up" data-bind="click: ClickUp, visible: UpVisible"></div>
+			<div class="imageButton reorder down" data-bind="click: ClickDown, visible: DownVisible"></div>
+		</div>
+	</div>
+	<div class="marginListItemOrderCircle" data-bind="sortable: SortableViewModel, template: { name: 'enterpriseLocationReorderTemplate', foreach: EnterpriseLocations }, visible: EnterpriseLocationsLength() != 1 && FirstEnterpriseLocation().RecommendedCategoriesLength() > 0"></div>
+</div>

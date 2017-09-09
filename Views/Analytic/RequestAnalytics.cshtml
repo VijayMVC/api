@@ -1,0 +1,108 @@
+﻿@model ConnectCMS.Models.Analytic.RequestAnalyticModel
+@using ConnectCMS.Resources
+@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout.cshtml";
+}
+<script id="toolbarTemplate" type="text/html">
+	<div class="toolbar">
+		<h2>Monscierge Request Analytics</h2>
+		<span data-bind="text: GroupingText"></span>
+	</div>
+
+</script>
+
+<script id="RequestCategoryTemplate" type="text/html">
+	<div>
+		<label for="RequestCategories" data-bind="text: Label"></label>
+		<select id="RequestCategories" data-bind="options: $parent.AvailableRequestCategories, value: $parent.SelectedRequestCategory, optionsText: 'Name', optionsValue: 'PKID', optionsCaption: '@ConnectCMSResources.AllRequestCategories'"></select>
+		<a data-bind="click: $parent.RemoveGrouping" class="linkButton trash"></a>
+	</div>
+</script>
+
+<script id="RequestTypeTemplate" type="text/html">
+	<div>
+		<label for="RequestTypes" data-bind="text: Label"></label>
+		<select id="RequestTypes" data-bind="options: $parent.AvailableRequestTypes, value: $parent.SelectedRequestType, optionsText: 'Name', optionsValue: 'PKID', optionsCaption: '@ConnectCMSResources.AllRequestTypes'"></select>
+		<a data-bind="click: $parent.RemoveGrouping" class="linkButton trash"></a>
+	</div>
+</script>
+
+<script id="RequestUserTemplate" type="text/html">
+	<div>
+		<label for="RequestUsers" data-bind="text: Label"></label>
+		<select id="RequestUsers" data-bind="options: $parent.AvailableRequestUsers, value: $parent.SelectedRequestUser, optionsText: 'Name', optionsValue: 'PKID', optionsCaption: '@ConnectCMSResources.AllRequestUsers'"></select>
+		<a data-bind="click: $parent.RemoveGrouping" class="linkButton trash"></a>
+	</div>
+</script>
+
+<script id="GuestNameTemplate" type="text/html">
+	<div>
+		<label for="GuestName" data-bind="text: Label"></label>
+		<textarea id="GuestName" data-bind="value: $parent.GuestName"></textarea>
+		<a data-bind="click: $parent.RemoveGrouping " class="linkButton trash"></a>
+	</div>
+</script>
+
+<script id="RoomNumberTemplate" type="text/html">
+	<div>
+		<label for="RoomNumber" data-bind="text: Label"></label>
+		<input id="RoomNumber" type="text" data-bind="value: $parent.RoomNumber" />
+		<a data-bind="click: $parent.RemoveGrouping" class="linkButton trash"></a>
+	</div>
+</script>
+
+<div id="RequestAnalytics" class="flexSpacer pageContainer" data-bind="allowBindings: false">
+	<div id="bindingDiv">
+		<div id="RequestAnalyticsHeader">
+			<div class="dateRange">
+				<label for="RAFromDate">@ConnectCMSResources.FromDate</label>
+				<input id="RAFromDate" type="date" data-bind="kendoDatePicker: FromDate" class="datePicker" />
+				<label style="margin-left:20px;" for="RAToDate">@ConnectCMSResources.ToDate</label>
+				<input id="RAToDate" type="date" data-bind="kendoDatePicker: ToDate" class="datePicker" />
+			</div>
+			<div class="groupingSelect">
+				<select data-bind="options: AvailableGroupings, value: SelectedGrouping, optionsText: 'Label', optionsCaption: '@ConnectCMSResources.SelectAGrouping'"></select>
+				<a class="linkButton add" data-bind="click: AddGrouping, disableAnchor: SelectedGrouping() == null"></a>
+			</div>
+			<div class="groupings" data-bind="template: {name: GroupingTemplate, foreach: Groupings}">
+			</div>
+			<div class="buttonContainer">
+				<a class="linkButton" data-bind="click: Query, disableAnchor: IsRunning() == true">@ConnectCMSResources.RunReport</a>
+				<a class="linkButton" data-bind="disableAnchor: IsRunning() == true || GridResults().length == 0, click: ExportToPdf">@ConnectCMSResources.ExportToPdf</a>
+				<a class="linkButton" data-bind="disableAnchor: IsRunning() == true || GridResults().length == 0, click: ExportToExcel">@ConnectCMSResources.ExportToExcel</a>
+			</div>
+			<div>
+				<p>@Html.Raw(string.Format(ConnectCMSResources.AnalyticsBetaDisclaimer, string.Format("<a href=\"mailto:{0}\" target=\"_top\">{1}</a>", ConnectCMSResources.SupportEmail, ConnectCMSResources.Support)))</p>
+			</div>
+		</div>
+		<div id="RequestAnalyticsGrid" data-bind="kendoGrid: GridConfig">
+		</div>
+		<div id="RequestAnalyticsGrid" style="display: none" data-bind="kendoGrid: GridExportConfig">
+		</div>
+	</div>
+</div>
+
+@if( !Request.IsAjaxRequest() )
+{
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var parameters = @Html.Raw(Model.JsonParameters);
+			var analyticsVM = new ConnectCMS.Analytics.RequestAnalyticsViewModel(parameters);
+			var id = parameters.PKID;
+			if (id != null)
+				ConnectCMS.MainViewModel.SelectedDevice(new DeviceViewModel({ PKID: id }));
+
+			ko.applyBindings(analyticsVM, $('#bindingDiv')[0]);
+		});
+	</script>
+}
+else
+{
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var parameters = @Html.Raw(Model.JsonParameters);
+			var analyticsVM = new ConnectCMS.Analytics.RequestAnalyticsViewModel(parameters);
+			ko.applyBindings(analyticsVM, $('#bindingDiv')[0]);
+		});
+	</script>
+}

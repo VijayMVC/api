@@ -1,0 +1,11 @@
+﻿@model ConnectCMS.Models.Popup.AlertViewModel
+<div class="alert-popup">
+	<span>@Model.Header</span>
+	<p>@Model.Body</p>
+
+	@if (Model.StackTrace != null)
+	{
+		<textarea>@Model.StackTrace</textarea>
+	}
+	<a class="linkButton white" data-bind="click: Close">@Model.Button</a>
+</div>

@@ -1,0 +1,9 @@
+﻿@using ConnectCMS.Resources
+<div class="listItemContainer flexContainer marginTop">
+	<img class="listItemImage marginRight" data-bind="attr: { src: ListItemImageUrl }" />
+	<div class="flexSpacer marginLeft marginRight">
+		<span class="listItemHeader" data-bind="css: Small() ? 'marginBlock' : '', visible: Thumbnail">@ConnectCMSResources.CurrentThumbnail</span>
+		<span class="listItemLabel block gray" data-bind="visible: Small">@ConnectCMSResources.ImageMustBe720x720ToBeShownInTheGuestFacingImageGalleries</span>
+	</div>
+	<div data-bind="listButton: ListButtonViewModel"></div>
+</div>

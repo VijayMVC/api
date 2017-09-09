@@ -1,0 +1,10 @@
+﻿@model ConnectCMS.Models.Popup.DialogViewModel
+<div class="alert-popup">
+	<span>@Model.Header</span>
+	<p>@Model.Body</p>
+	<div class="flexContainer">
+		<div class="flexSpacer"></div>
+		<a class="linkButton marginRight white" data-bind="click: Close">@Model.CancelButton</a>
+		<a class="linkButton marginLeft" data-bind="click: Ok">@Model.OkButton</a>
+	</div>
+</div>

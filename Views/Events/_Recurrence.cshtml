@@ -1,0 +1,152 @@
+﻿@using ConnectCMS.Resources
+<div style="width: 600px">
+	<div class="recurrenceTable">
+		<div class="recurrenceRow">
+			<div class="recurrenceLabelColumn">
+				<label for="frequencySelect">@ConnectCMSResources.Repeats</label>
+			</div>
+			<div class="recurrenceInputColumn">
+				<select data-bind="options: FrequencyOptions, value: SelectedFrequency , optionsText: 'Name'"></select>
+			</div>
+		</div>
+
+		<!-- ko template:{ name: SelectedFrequency().Template }-->
+		<!-- /ko -->
+
+		<div class="recurrenceRow">
+			<div class="recurrenceLabelColumn">
+				<label>@ConnectCMSResources.StartsOn</label>
+			</div>
+			<div class="recurrenceInputColumn">
+				<span data-bind="text: StartsOnString"></span>
+			</div>
+		</div>
+
+		<div class="recurrenceRow">
+			<div class="recurrenceLabelColumn">
+				<label>@ConnectCMSResources.Ends</label>
+			</div>
+			<div class="recurrenceInputColumn">
+				<div class="endsOnContainer">
+					<div data-bind="radioButton: {group: 'EndsOptions', value: 0, selected: SelectedEndsOption, text: '@ConnectCMSResources.NoEndDate'}"></div>
+				</div>
+				<div class="endsOnContainer">
+					<div data-bind="radioButton: {group: 'EndsOptions', value: 1, selected: SelectedEndsOption, text: '@ConnectCMSResources.After'}"></div>
+					<input type="number" style="margin-right: 5px; margin-left: 5px; width: 50px" data-bind="value: EndsAfter, " />
+					<span>@ConnectCMSResources.Occurrences</span>
+				</div>
+				<div class="endsOnContainer">
+					<div data-bind="radioButton: {group: 'EndsOptions', value: 2, selected: SelectedEndsOption, text: '@ConnectCMSResources.On'}" style="margin-right:19px;"></div>
+					<input type="date" style="width: 150px;" data-bind="kendoDatePicker: EndsOn" />
+				</div>
+			</div>
+		</div>
+		
+		<div class="recurrenceRow">
+			<div class="recurrenceLabelColumn">
+				<label>@ConnectCMSResources.Summary</label>
+			</div>
+			<div class="recurrenceInputColumn">
+				<span data-bind="text: RecurrenceSummary"></span>
+			</div>
+		</div>
+	</div>
+	<div class="flexContainer" style="padding-bottom: 20px;">
+		<div class="flexSpacer"></div>
+		<a class="linkButton marginRight white" data-bind="click: Close" style="width: 200px;">@ConnectCMSResources.Cancel</a>
+		<a class="linkButton marginLeft" data-bind="click: Ok" style="width: 200px;">@ConnectCMSResources.Save</a>
+		<div class="flexSpacer"></div>
+	</div>
+</div>
+<script type="text/html" id="recurrenceDailyTemplate">
+	<div class="recurrenceRow">
+		<div class="recurrenceLabelColumn">
+			<label for="interval">@ConnectCMSResources.Every</label>
+		</div>
+		<div class="recurrenceInputColumn">
+			<select data-bind="options: AvailableIntervals, value: Interval, id: 'interval'" style="margin-right: 5px;"></select>
+			<span>@ConnectCMSResources.Days</span>
+		</div>
+	</div>
+</script>
+
+<script type="text/html" id="recurrenceWeekDaysTemplate">
+</script>
+
+<script type="text/html" id="recurrenceWeeklyTemplate">
+	<div class="recurrenceRow">
+		<div class="recurrenceLabelColumn">
+			<label for="interval">@ConnectCMSResources.Every</label>
+		</div>
+		<div class="recurrenceInputColumn">
+			<select data-bind="options: AvailableIntervals, value: Interval, id: 'interval'" style="margin-right: 5px;"></select>
+			<span>@ConnectCMSResources.Weeks</span>
+		</div>
+	</div>
+	<div class="recurrenceRow">
+		<div class="recurrenceLabelColumn">
+			<label for="days">@ConnectCMSResources.RepeatsOn</label>
+		</div>
+		<div class="recurrenceInputColumn">
+			<div data-bind="foreach: DaysOfWeek.Days">
+				<div data-bind="checkbox: { checked: IsSelected, text: Label }"></div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script type="text/html" id="recurrenceMonthlyTemplate">
+	<div class="recurrenceRow">
+		<div class="recurrenceLabelColumn">
+			<label for="interval">@ConnectCMSResources.Every</label>
+		</div>
+		<div class="recurrenceInputColumn">
+			<select data-bind="options: AvailableIntervals, value: Interval, id: 'interval'" style="margin-right: 5px;"></select>
+			<span>@ConnectCMSResources.Months</span>
+		</div>
+	</div>
+	<div class="recurrenceRow">
+		<div class="recurrenceLabelColumn">
+			<label>@ConnectCMSResources.RepeatBy</label>
+		</div>
+		<div class="recurrenceInputColumn">
+			<div data-bind="radioButton: {group: 'RepeatByOptions', value: 0, selected: SelectedRepeatByOption, text: '@ConnectCMSResources.DayOfTheMonth'}"></div>
+			<div data-bind="radioButton: {group: 'RepeatByOptions', value: 1, selected: SelectedRepeatByOption, text: '@ConnectCMSResources.DayOfTheWeek'}"></div>
+			<div data-bind="radioButton: {group: 'RepeatByOptions', value: 2, selected: SelectedRepeatByOption, text: '@ConnectCMSResources.Advanced'}"></div>
+
+			<div data-bind="visible: AdvancedRepeatByOptionsVisible" style="padding: 10px;">
+				<select data-bind="options: AdvancedFirstOptions, value: AFO, optionsText: 'value'" style="margin-right: 5px;"></select>
+				<select data-bind="options: AdvancedSecondOptions, value: ASO, optionsText: 'value'"></select>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script type="text/html" id="recurrenceYearlyTemplate">
+	<div class="recurrenceRow">
+		<div class="recurrenceLabelColumn">
+			<label for="interval">@ConnectCMSResources.Every</label>
+		</div>
+		<div class="recurrenceInputColumn">
+			<select data-bind="options: AvailableIntervals, value: Interval, id: 'interval'" style="margin-right: 5px;"></select>
+			<span>@ConnectCMSResources.Years</span>
+		</div>
+	</div>
+	<div class="recurrenceRow">
+		<div class="recurrenceLabelColumn">
+			<label>@ConnectCMSResources.RepeatBy</label>
+		</div>
+		<div class="recurrenceInputColumn">
+			<div data-bind="radioButton: {group: 'RepeatByOptions', value: 0, selected: SelectedRepeatByOption, text: '@ConnectCMSResources.DayOfTheWeek'}"></div>
+			<div data-bind="radioButton: {group: 'RepeatByOptions', value: 1, selected: SelectedRepeatByOption, text: '@ConnectCMSResources.DayOfTheYear'}"></div>
+			<div data-bind="radioButton: {group: 'RepeatByOptions', value: 2, selected: SelectedRepeatByOption, text: '@ConnectCMSResources.Advanced'}"></div>
+
+			<div data-bind="visible: AdvancedRepeatByOptionsVisible" style="padding: 10px;">
+				<select data-bind="options: AdvancedFirstOptions, value: AFO, optionsText: 'value'" style="margin-right: 5px;"></select>
+				<select data-bind="options: AdvancedSecondOptions, value: ASO, optionsText: 'value'" style="margin-right: 5px;"></select>
+				<span>@ConnectCMSResources.Of</span>
+				<select data-bind="options: AdvancedThirdOptions, value: ATO, optionsText: 'value'" style="margin-left: 5px;"></select>
+			</div>
+		</div>
+	</div>
+</script>

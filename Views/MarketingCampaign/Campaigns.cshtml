@@ -1,0 +1,151 @@
+﻿@using ConnectCMS.Resources
+@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout.cshtml";
+}
+@section PageStyles{
+	@Styles.Render( "~/Content/kendo/2016.1.226/bootstrap-css" )
+	@Styles.Render( "~/Content/monscierge/bootstrappy/css" )
+}
+<div id="equalizer" data-bind="allowBindings: false" class="connect_cms">
+	<div class="container-fluid" id="bindingDiv">
+		<div class="row" id="campaigns">
+			@Html.Partial( "_LeftNav" );
+			<div class="col-sm-9 col-md-9 col-sm-offset-3 col-md-offset-3 col-xs-12 base-content">
+				<div class="page-header headroom">
+					<!-- Please change this functionality if needed -->
+					<h1 class="pull-left" id="page_section_title">Campaigns</h1>
+					<!-- Start Header Action -->
+					<div class="header_btn_holder pull-right">
+						<a class="btn btn-secondary btn-wide" href="@Url.Action("Campaign")">Create Campaign</a>
+					</div>
+					<!-- End Header Action -->
+					<div class="clearfix"></div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<!-- Start Tab Content -->
+						<div class="interior-content">
+							<div class="alert alert-help alert-dismissible" role="alert">
+								<button class="close" type="button" data-dismiss="alert">
+									<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+								</button>
+								<span class="text-muted">Campaigns consist of screens and can be created and assigned to properties.</span>
+							</div>
+							<div class="alert alert-danger alert-dismissible" style="display: none;" role="alert" data-bind="visible: ErrorMessage() != null">
+								<button class="close" type="button" data-dismiss="alert">
+									<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+								</button>
+								<span data-bind="text: ErrorMessage" class="margin-right-10"></span>
+								<a class="link" data-bind="click: ErrorRetry">Retry</a>
+							</div>
+							<div class="headroom_less">
+								<div class="row" style="padding-bottom: 100px;">
+									<div class="col-sm-12">
+										<form class="form-horizontal">
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="panel panel-info panel-property">
+														<div class="panel-heading">
+															<div class="row">
+																<div class="col-sm-8 col-sm-offset-2">
+																	<div id="locationFilter">
+																		<div class="form-group">
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<ul class="list-group result-list frame-list">
+															<li class="list-group-item result-item">
+																<div class="row">
+																	<div class="col-sm-5">
+																		<span class="small text-muted">Campaign</span>
+																	</div>
+																	<div class="col-sm-2">
+																		<span class="small text-muted">Campaign Scenes</span>
+																	</div>
+																	<div class="col-sm-2">
+																		<span class="small text-muted">Devices</span>
+																	</div>
+																</div>
+															</li>
+															<li class="list-group-item" data-bind="visible: Loading">
+																<div class="row">
+																	<div class="col-sm-12">
+																		<div class="loading">
+																			<i class="fa fa-spinner fa-pulse fa-2x"></i>
+																		</div>
+																	</div>
+																</div>
+															</li>
+															<!-- ko foreach: FilteredMarketingCampaigns -->
+															<li class="list-group-item result-item">
+																<div class="row">
+																	<div class="col-sm-5">
+																		<h3 class="nonlink" data-bind="text: Name"></h3>
+																		<span class="orientation" data-bind="text: OrientationString"></span>
+																	</div>
+																	<div class="col-sm-2">
+																		<p class="form-control-static text-muted" data-bind="text: ScreenCount"></p>
+																	</div>
+																	<div class="col-sm-2">
+																		<p class="form-control-static text-muted" data-bind="text: Usage()"></p>
+																	</div>
+																	<div class="col-sm-3 col-xs-12 text-right">
+																		<!-- Button Dropdown -->
+																		<div class="btn-group">
+																			<div data-bind="listButton: ListViewListButtonViewModel, listButtonAlt: true"></div>
+																		</div>
+																		<!-- Button Dropdown -->
+																	</div>
+																</div>
+															</li>
+															<!-- /ko -->
+														</ul>
+													</div>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-bind="with: DeletingCampaign">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							<h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+						</div>
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-sm-2 hidden-xs text-center">
+									<span class="text-danger"><i class="fa fa-exclamation-triangle fa-4x"></i></span>
+								</div>
+								<div class="col-sm-10 col-xs-12">
+									<p>You are about to delete a campaign, this is permanant.</p>
+									<p class="text-danger" data-bind="visible: Usage() > 0, text: 'This campaign is currently in use by ' + Usage() + ' Digital Signs. These will be unset.'"></p>
+									<p>Do you want to proceed?</p>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+							<a id="confirm-delete-button" href="#" class="btn btn-danger danger" data-bind="click: ConfirmRemove">Delete</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function () {
+		var vm = new ConnectCMS.MarketingCampaigns.MarketingCampaignsViewModel();
+		ko.applyBindings(vm, $('#bindingDiv')[0]);
+		vm.Load();
+	});
+</script>

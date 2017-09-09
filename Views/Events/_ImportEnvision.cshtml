@@ -1,0 +1,46 @@
+﻿@using ConnectCMS.Resources
+<div>
+	<div class="importEnvision-popup" data-bind="validationOptions: { insertMessages: false, decorateElement: false }, visible: State() != 'Exists'">
+		<div class="input-container">
+			<label for="bookingNumber" class="editor-label">@ConnectCMSResources.BookingNumber</label>
+			<input id="bookingNumber" type="text" data-bind="value: BookingNumber, css: BookingNumberClass" placeholder="@ConnectCMSResources.BookingNumberExample" />
+			<div id="bookingNumberIcon" data-bind="css: BookingNumberClass"></div>
+		</div>
+		<div class="input-container">
+			<label for="eventPlanner">@ConnectCMSResources.AssignEventPlannerOptional</label>
+			<input id="eventPlanner" type="text" data-bind="value: EventPlanner, css: EventPlannerClass" placeholder="@ConnectCMSResources.EmailExample" />
+			<div id="eventPlannerIcon" data-bind="css: EventPlannerClass"></div>
+			<span style="display: block" data-bind="css: EventPlannerClass, visible: EventPlannerClass() == 'newUser'">@ConnectCMSResources.CreateNewEventPlanner</span>
+		</div>
+		<div class="input-container" data-bind="validationOptions: { insertMessages: true, decorateElement: false }">
+			<label for="eventAccessCode">@ConnectCMSResources.AssignEventAccessCodeOptional</label>
+			<input id="eventAccessCode" type="text" data-bind="value: EventAccessCode, css: EventAccessCodeClass" placeholder="@ConnectCMSResources.EventAccessCodeExample" />
+		</div>
+		<div class="button-container" data-bind="visible: State() == 'Validating'">
+			<a class="linkButton disabled">@ConnectCMSResources.Validating</a>
+		</div>
+		<div class="button-container" data-bind="visible: State() == ''">
+			<a class="linkButton" data-bind="click: Import, disableAnchor: !CanImport()">@ConnectCMSResources.Import</a>
+			<a class="linkButton white" data-bind="click: Cancel">@ConnectCMSResources.Cancel</a>
+		</div>
+		<div class="button-container" data-bind="visible: State() == 'EventAccessCodeDupeError'">
+			<a class="linkButton" data-bind="click: Import, disableAnchor: !CanImport()">@ConnectCMSResources.Retry</a>
+			<a class="linkButton white" data-bind="click: Cancel">@ConnectCMSResources.Cancel</a>
+		</div>
+		<div class="button-container" data-bind="visible: State() == 'NewUser'">
+			<a class="linkButton green" data-bind="click: SendInvite">@ConnectCMSResources.SendInvite</a>
+			<a class="linkButton white" data-bind="click: Skip">@ConnectCMSResources.Skip</a>
+		</div>
+		<div class="button-container" data-bind="visible: State() == 'Success'">
+			<a class="linkButton green" data-bind="click: Success">@ConnectCMSResources.Success</a>
+		</div>
+	</div>
+	<div class="importEnvision-popup" data-bind="visible: State() == 'Exists'">
+		<div class="text-container">
+			<p>@ConnectCMSResources.BookingNumberExistsBody</p>
+		</div>
+		<div class="button-container">
+			<a class="linkButton green" data-bind="click: Success">@ConnectCMSResources.BookingNumberExists</a>
+		</div>
+	</div>
+</div>

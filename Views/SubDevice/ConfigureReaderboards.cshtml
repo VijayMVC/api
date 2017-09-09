@@ -1,0 +1,88 @@
+﻿@using ConnectCMS.Resources
+@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="ReaderboardModule" class="flexSpacer pageContainer" data-bind="allowBindings: false">
+	<div id="bindingDiv">
+		<div class="HeaderContainer">
+			<h1 class="bottomBorder paddingBottom">@ConnectCMSResources.ConfigureReaderboards</h1>
+		</div>
+		<div class="BodyContainer">
+			<div class="FilterContainer">
+				<label>@(ConnectCMSResources.FilterBy):</label>
+				<input type="text" data-bind="value: ReaderboardFilter, valueUpdate: 'input'" />
+				<div data-bind="checkbox: { checked: ShowSelectedOnly, text: '@ConnectCMSResources.ShowSelectedOnly'}"></div>
+			</div>
+			<div class="TableContainer">
+				<table class="table">
+					<thead class="thContainer">
+						<tr class="tr header">
+							<td class="td header">
+								<div data-bind="checkbox: {checked: SelectAll}"></div>
+							</td>
+							<td class="td header" style="width: 300px">@ConnectCMSResources.Name</td>
+							<td class="td header last">@ConnectCMSResources.BackgroundImage</td>
+						</tr>
+					</thead>
+					<tbody class="trContainer" style="max-height: 300px;">
+						<!-- ko template: { name: 'ReaderboardConfigRowTemplate', foreach: FilteredReaderboards } -->
+						<!-- /ko -->
+					</tbody>
+				</table>
+			</div>
+			<div data-bind="with: BatchImageUploader" class="ButtonsContainer">
+				<div class="SingleImageUploaderDropZone ButtonContainer" data-bind="attr:{id: 'ImageUploaderDropZone_' + UniqueId }">
+					<input style="display: none" type="file"
+						   data-bind="fileUploader: ImageUploadConfig(), attr: { id: 'ImageUploader_' + UniqueId, name: 'photos_'+ UniqueId +'[]' }" />
+					<a class="linkButton" data-bind="click: InsertImages">@ConnectCMSResources.ChangeSelectedImages</a>
+				</div>
+				<div class="ButtonContainer">
+					<a class="linkButton red" data-bind="click: RemoveImages">@ConnectCMSResources.RemoveSelectedImages</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/html" id="ReaderboardConfigRowTemplate">
+	<tr class="tr" data-bind="css: { alt: $index()%2 == 0 ? '' : 'alt' }">
+		<td class="td">
+			<div data-bind="checkbox: { checked: IsSelected}"></div>
+		</td>
+		<td class="td">
+			<div data-bind="monsciergeEditableItem: Name"></div>
+		</td>
+		<td class="td">
+			<div data-bind="template: {name: 'SingleImageTemplate', data: ReaderboardBackgroundImageUploader}"></div>
+		</td>
+	</tr>
+</script>
+
+<script id="SingleImageTemplate" type="text/html">
+	@Html.Partial( "~/Views/Image/_SingleUploadableImage.cshtml" )
+</script>
+
+@if( !Request.IsAjaxRequest() )
+{
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var id = @(ViewBag.DeviceId ?? "null");
+			if (id != null)
+				ConnectCMS.MainViewModel.SelectedDevice(new DeviceViewModel({ PKID: id }));
+
+			var vm = new ConnectCMS.SubDevices.ReaderboardConfigurationViewModel();
+
+			ko.applyBindings(vm, $('#bindingDiv')[0]);
+		});
+	</script>
+}
+else
+{
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var vm = new ConnectCMS.SubDevices.ReaderboardConfigurationViewModel();
+			ko.applyBindings(vm, $('#bindingDiv')[0]);
+		});
+	</script>
+}

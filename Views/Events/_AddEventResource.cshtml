@@ -1,0 +1,53 @@
+﻿﻿@model ConnectCMS.Models.Events.EventResourceModel
+<script type="text/javascript">
+    function NewResourceSave() {
+        var validator = $('#NewResourceForm').kendoValidator().data("kendoValidator");
+
+        var resource = JSON.stringify({
+            PKID: '0',
+            Name: $('#NewResourceText').val(),
+            ResourceType: '@Model.ResourceType',
+            DeviceId: '@Model.DeviceId',
+        });
+
+        if (validator.validate()) {
+            $.ajax({
+                url: '@Url.Action("EventResourceCreate", "Events")',
+                contentType: 'application/json; charset=utf-8',
+                data: resource,
+                type: 'post',
+                traditional: true,
+                success: function (data, textStatus, jqXHR) {
+                    _newResourceType = data.Data[0].ResourceType;
+                    _newResourceId = data.Data[0].PKID;
+                    $('#NewResourceText').val('');
+                    _newResourceWindow.close();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                },
+                complete: function (jqXHR, textStatus) {
+                }
+            });
+        }
+    }
+
+    function NewResourceCancel() {
+        _newResourceId = 0;
+        _newResourceType = '';
+        _newResourceWindow.close();
+    }
+
+    function NewResourceSubmit() {
+        NewResourceSave();
+        return false;
+    }
+</script>
+<div>
+	<form id="NewResourceForm" onsubmit="return NewResourceSubmit()">
+		<input id="NewResourceText" class="k-textbox EventResourceNewText" required />
+		<div>
+			<a class="k-button EventResourceNewButton" id="NewResource" onclick="NewResourceSave()">Save</a>
+			<a class="k-button EventResourceNewButton" id="NewResource" onclick="NewResourceCancel()">Cancel</a>
+		</div>
+	</form>
+</div>

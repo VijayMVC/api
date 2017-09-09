@@ -1,0 +1,46 @@
+﻿@using ConnectCMS.Resources
+<div data-bind="allowBindings: false" style="width: 100%">
+	<div class="introduction container bindingPoint">
+		<div class="introduction-content container" data-bind="transitionPanel: { panelId: 'introduction', selectedIndex: SelectedIndex, selector: '.introStep'}">
+			<div id="intro-step1" class="introStep">
+				@Html.Partial( "_introStep1" )
+			</div>
+			<div id="intro-step2" class="introStep">
+				@Html.Partial( "_introStep2" )
+			</div>
+			<div id="intro-step3" class="introStep">
+				@Html.Partial( "_introStep3" )
+			</div>
+			<div id="intro-step4" class="introStep">
+				@Html.Partial( "_introStep4" )
+			</div>
+			<div id="intro-step5" class="introStep">
+				@Html.Partial( "_introStep5" )
+			</div>
+		</div>
+		<div class="introduction-navigation container">
+			<div id="intro-nav1" data-bind="css: SelectedIndex() == 0 ? 'selected' : ''"></div>
+			<div id="intro-nav2" data-bind="css: SelectedIndex() == 1 ? 'selected' : ''"></div>
+			<div id="intro-nav3" data-bind="css: SelectedIndex() == 2 ? 'selected' : ''"></div>
+			<div id="intro-nav4" data-bind="css: SelectedIndex() == 3 ? 'selected' : ''"></div>
+			<div id="intro-nav5" data-bind="css: SelectedIndex() == 4 ? 'selected' : ''"></div>
+		</div>
+		<div class="introduction-paging container">
+			<div class="flexSpacer"></div>
+			<div class="introPage-Div" data-bind="visible: SelectedIndex() != 4">
+				<a class="linkButton" data-bind="click: Next, text: SelectedIndex() == 0 ? '@ConnectCMSResources.LearnMore' : '@ConnectCMSResources.NextProduct'"></a>
+				<span>@ConnectCMSResources.Or</span>
+				<a class="navLink" data-bind="click: FinishIntro">@ConnectCMSResources.SkipIntroduction</a>
+			</div>
+			<div class="introPage-Div" data-bind="visible: SelectedIndex() == 4">
+				<a class="linkButton" data-bind="click: FinishIntro">@ConnectCMSResources.Continue</a>
+			</div>
+			<div class="flexSpacer"></div>
+		</div>
+	</div>
+</div>
+<script>
+	$(document).ready(function () {
+		ko.applyBindings(new ConnectCMS.Setup.SetupIntroViewModel(ConnectCMS.MainViewModel), $('.introduction.bindingPoint')[0]);
+	});
+</script>

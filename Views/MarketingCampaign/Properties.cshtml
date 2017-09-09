@@ -1,0 +1,199 @@
+﻿@using ConnectCMS.Resources
+@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout.cshtml";
+}
+@section PageStyles{
+	@Styles.Render( "~/Content/kendo/2016.1.226/bootstrap-css" )
+	@Styles.Render( "~/Content/monscierge/bootstrappy/css" )
+}
+<div id="equalizer" data-bind="allowBindings: false" class="connect_cms">
+	<div class="container-fluid" id="bindingDiv">
+		<div class="row" id="locations">
+			@Html.Partial( "_LeftNav" )
+			<div class="col-sm-9 col-md-9 col-sm-offset-3 col-md-offset-3 col-xs-12 base-content">
+				<div class="page-header headroom">
+					<!-- Please change this functionality if needed -->
+					<h1 class="pull-left" id="page_section_title">Properties</h1>
+					<div class="clearfix"></div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<!-- Start Tab Content -->
+						<div class="interior-content">
+							<div class="alert alert-help alert-dismissible" role="alert">
+								<button class="close" type="button" data-dismiss="alert">
+									<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+								</button>
+								<span class="text-muted">This is the list of properties and their assigned digital sign campaigns.</span>
+							</div>
+							<div class="alert alert-danger alert-dismissible" style="display: none;" role="alert" data-bind="visible: ErrorMessage() != null">
+								<button class="close" type="button" data-dismiss="alert">
+									<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+								</button>
+								<span data-bind="text: ErrorMessage" class="margin-right-10"></span>
+								<a class="link" data-bind="click: ErrorRetry">Retry</a>
+							</div>
+							<div class="headroom_less">
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="row">
+											<div class="col-sm-12">
+												<div class="panel panel-info panel-property" style="margin-bottom: 0">
+													<div class="panel-heading">
+														<div class="row">
+															<div style="margin: 5px">
+																<select id="locationFilter" data-bind="kendoMultiSelect: TagSelect"></select>
+															</div>
+														</div>
+													</div>
+													<ul class="list-group result-list frame-list">
+														<li class="list-group-item result-item">
+															<div class="row">
+																<div class="col-sm-1 text-center">
+																	<div data-bind="checkbox: {checked: Selected, indeterminate: SelectedIndeterminate }"></div>
+																</div>
+																<div class="col-sm-4">
+																	<span class="small text-muted">Property Name</span>
+																</div>
+																<div class="col-sm-1 text-muted text-center">
+																	<span class="small text-muted">Status</span>
+																</div>
+																<div class="col-sm-3">
+																	<span class="small text-muted">Campaign</span>
+																</div>
+																<div class="col-sm-2 hidden-xs">
+																	<span class=" small text-muted">Location</span>
+																</div>
+																<div class="col-sm-1 text-right">
+																	<span class=" text-muted"><i class="fa fa-chevron-left transition" data-bind="css: { 'rotate90counterclockwise': AllExpanded}, click: AllExpanded() ? CollapseAll : ExpandAll"></i></span>
+																</div>
+															</div>
+														</li>
+														<li class="list-group-item result-item" data-bind="visible: Loading">
+															<div class="row">
+																<div class="col-sm-12">
+																	<div class="loading">
+																		<i class="fa fa-spinner fa-pulse fa-2x"></i>
+																	</div>
+																</div>
+															</div>
+														</li>
+														<!-- ko foreach: FilteredHotels-->
+														<li class="list-group-item result-item">
+															<div class="row" id="dropdown-detail-1" data-toggle="detail-1" data-bind="click: AdBoards().length > 1 ? Expand : '', css: {'toggle': AdBoards().length > 1}">
+																<div class="col-sm-1 text-center">
+																	<div data-bind="checkbox: {checked: Selected, indeterminate: SelectedIndeterminate}"></div>
+																</div>
+																<div class="col-sm-4">
+																	<!-- ko if: AdBoards().length == 1 -->
+																	
+																	<a class="link result-item remove-padding" target="_blank" data-bind="text: Name, attr: {href: AdBoardUrl}"></a>
+																	<span class="orientation" data-bind="text: OrientationString"></span>
+																	<!-- /ko -->
+																	<!-- ko if: AdBoards().length > 1 -->
+																	<h3 class="nonlink" data-bind="text: Name"></h3>
+																	<!-- /ko -->
+																	<span class="local_brand" data-bind="text: HotelBrandName"></span>
+																</div>
+																<div class="col-sm-1 text-center">
+																	<img style="width: 32px; height: 32px;" data-bind="attr: { 'src' : StatusImageUrl }" />
+																</div>
+																<!-- ko if: AdBoards().length == 1 && !$root.Loading() -->
+																<div class="col-sm-3">
+																	<a class="link editable editable-click editable-open" data-bind="text: MarketingCampaignsString, click: $root.EditSelectedHotelMarketingCampaign"></a>
+																	<span class="editable-container editable-inline" style="display: none">
+																		<div>
+																			<div class="editableform-loading" style="display: none;">
+																			</div>
+																			<form class="form-inline editableform">
+																				<div class="control-group form-group">
+																					<div>
+																						<div class="editable-input">
+																							<select class="form-control input-sm" data-bind="options: $root.FilteredMarketingCampaigns, value: AdBoards()[0].FKMarketingCampaign, optionsText: 'Name', optionsValue: 'PKID', optionsCaption: 'None Selected'"></select>
+																						</div>
+																					</div><div class="editable-error-block help-block" style="display: none;"></div>
+																				</div>
+																			</form>
+																		</div>
+																	</span>
+																</div>
+																<!-- /ko -->
+																<!-- ko if: AdBoards().length > 1 && !$root.Loading() -->
+																<div class="col-sm-3">
+																	<span class="local_marketingCampaigns" data-bind="text: MarketingCampaignsString"></span>
+																</div>
+																<!-- /ko -->
+																<div class="col-sm-2 hidden-xs"><span class="local_city" data-bind="text:City"></span><span class="local_country" data-bind="text: Country"></span></div>
+																<div class="col-sm-1 text-right" data-bind="visible: AdBoards().length > 1">
+																	<i class="fa fa-chevron-left transition" data-bind="css: { 'rotate90counterclockwise': Expanded}"></i>
+																</div>
+															</div>
+															<div class="row inner-device" id="detail-1" data-bind="visibleAnimated: Expanded, duration: 250, toggle: 'slide'">
+																<!-- ko foreach: AdBoards -->
+																<div class="divider top headroom_less clearfix">
+																	<div class="fluid-row">
+																		<div class="col-sm-1 text-center">
+																			<div data-bind="checkbox: {checked: Selected}"></div>
+																		</div>
+																		<div class="col-sm-4">
+																			<a class="link result-item" target="_blank" data-bind="text: Name, attr: {href: AdBoardUrl}"></a>
+																		</div>
+																		<div class="col-sm-1 text-center">
+																			<img style="width: 32px; height: 32px;" data-bind="attr: { 'src' : StatusImageUrl }" />
+																		</div>
+																		<div class="col-sm-6">
+																			<a class="link editable editable-click editable-open" data-bind="text: MarketingCampaignsString, click: $root.EditSelectedAdboardMarketingCampaign"></a>
+																			<span class="editable-container editable-inline" style="display: none">
+																				<div>
+																					<div class="editableform-loading" style="display: none;">
+																					</div>
+																					<form class="form-inline editableform">
+																						<div class="control-group form-group" data-bind="if: !$root.Loading()">
+																							<div>
+																								<div class="editable-input">
+																									<div data-bind="monsciergeEditableItem: {value: FKMarketingCampaign, type: 'select', id: 'AdBoardMarketingCampaign_' + PKID() , options: '$root.FilteredMarketingCampaigns', optionsText: 'Name', optionsValue: 'PKID', optionsCaption: '@ConnectCMSResources.NoneSelected', css: 'form-control input-sm'}"></div>
+																								</div>
+																							</div><div class="editable-error-block help-block" style="display: none;"></div>
+																						</div>
+																					</form>
+																				</div>
+																			</span>
+																		</div>
+																	</div>
+																</div>
+																<!-- /ko -->
+															</div>
+														</li>
+														<!-- /ko -->
+													</ul>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div style="padding-bottom: 20px; margin-bottom: 20px">
+												<div class="form-group">
+													<div class="col-md-2" data-bind="checkbox: {checked: Selected, indeterminate: SelectedIndeterminate, text: 'Select All'}" style="margin-top: 4px"></div>
+													<div class="col-md-10 form-inline">
+														<select class="form-control input-sm chosen" data-bind="options: $root.FilteredMarketingCampaigns, value: SelectedCampaign, optionsText: 'Name', optionsValue: 'PKID', optionsCaption: 'None Selected'"></select>
+														<button class="btn btn-primary-light btn-sm disabled" data-bind="disableAnchor: SelectedAdBoards().length == 0 || SelectedCampaign() == null, click: ApplyCampaign">Assign</button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function () {
+		var vm = new ConnectCMS.MarketingCampaigns.PropertiesViewModel();
+		ko.applyBindings(vm, $('#bindingDiv')[0]);
+		vm.Load();
+	});
+</script>

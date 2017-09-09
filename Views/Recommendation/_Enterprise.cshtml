@@ -1,0 +1,28 @@
+﻿@using ConnectCMS.Resources
+<div id="bindingDiv" class="transitionPanelContainer" data-bind="transitionPanel: { panelId: 'RecommendationEnterpriseContent', selectedIndex: SelectedContentIndex, selector: '.recommendationEnterpriseContent' }">
+	<div class="recommendationEnterpriseContent">
+		<div class="bottomBorder flexContainer paddingBottom" data-bind="visible: NavigationType() == RecommendationEnterpriseNavigationType.ADD">
+			<h1 class="flexSpacer">@ConnectCMSResources.CreateNewMerchant</h1>
+			<a class="linkButton white" data-bind="click: ClickBack">@ConnectCMSResources.Back</a>
+		</div>
+		<div data-bind="visible: NavigationType() != RecommendationEnterpriseNavigationType.ADD, with: HeaderEnterprise">
+			<div data-bind="template: { name: 'enterpriseHeaderTemplate' }"></div>
+		</div>
+		<div data-bind="template: { name: 'tabHeaderTemplate', data: Tabs }"></div>
+		<div class="transitionPanelContainer" data-bind="transitionPanel: { panelId: 'EnterpriseTabs', selectedIndex: SelectedTabIndex, selector: '.enterpriseTab' }">
+			<div class="enterpriseTab tabContent">
+				@Html.Partial( "~/Views/Enterprise/_Edit.cshtml" )
+			</div>
+			<div class="enterpriseTab tabContent">
+				@Html.Partial( "~/Views/Enterprise/_Location.cshtml" )
+			</div>
+			<div class="enterpriseTab tabContent">
+				@Html.Partial( "~/Views/Enterprise/_Recommend.cshtml" )
+			</div>
+			<div class="enterpriseTab tabContent">
+				@Html.Partial( "~/Views/Enterprise/_Tip.cshtml" )
+			</div>
+		</div>
+	</div>
+	<div id="enterpriseNavigationDiv" class="recommendationEnterpriseContent"></div>
+</div>

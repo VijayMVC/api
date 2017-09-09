@@ -1,0 +1,189 @@
+﻿@using System.Activities.Statements
+@using ConnectCMS.Enumerations
+@using ConnectCMS.Extensions
+@using ConnectCMS.Models.Account
+@using ConnectCMS.Repositories
+@using ConnectCMS.Resources
+@using MonsciergeWebUtilities.Extensions
+@model LoginModel
+@{
+	Layout = null;
+}
+<!DOCTYPE html>
+<html class="hide-on-load">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="shortcut icon" href="~/favicon.ico?ver=5" />
+
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<title>@ConnectCMSResources.MonsciergeConnectCMS</title>
+	@Styles.Render( "~/Content/login/css" )
+	@Scripts.Render( "~/bundles/modernizr" )
+
+	<style>
+		#submitButton {
+			background-color: @Html.Raw(Model.ThemeColor1);
+			border-color: @Html.Raw(Model.ThemeColor2);
+		}
+	</style>
+</head>
+<body>
+	<div id="unsupportedBrowser" style="display: none">
+		@Html.Partial( "_BrowserUnsupported" )
+	</div>
+	@Html.Partial( "_LoginToolbar" )
+
+	<div id="viewport" class="container">
+		<div class="row">
+			<div class="col-sm-offset-3 col-sm-6 col-lg-4 col-lg-offset-4">
+				<div class="account-wall">
+					<img id="signin-logo" class="img-responsive center-block" src="~/Content/monscierge/images/MonsciergeLogo.png" width="200" alt="@ConnectCMSResources.MonsciergeConnectCMS">
+					<h2>Connect CMS</h2>
+					@using( Html.BeginForm( "Login", "Account", new RouteValueDictionary { { "ReturnUrl", Model.ReturnUrl } }, FormMethod.Post, new Dictionary<string, object> { { "class", "form-signin" }, { "id", "login-form" } } ) )
+					{
+						@Html.AntiForgeryToken()
+						@Html.HiddenFor( m => m.ReturnUrl )
+
+						@Html.DisplayFor( m => m.MessageType )
+
+						<input name="UserName" id="UserName" type="email" class="form-control top-input" placeholder="@ConnectCMSResources.Email" value="@(Model.UserName)" required autofocus />
+						<input name="password" id="password" type="password" class="form-control bottom-input" placeholder="@ConnectCMSResources.Password" required />
+
+						<div class="btn-group btn-block">
+							<button id="submitButton" type="submit" class="btn btn-primary btn-lg btn-block btn-custom">
+								@ConnectCMSResources.SignIn
+							</button>
+						</div>
+						<span class="clearfix"></span>
+						<div class="checkbox pull-left">
+							<label>
+								@Html.CheckBoxFor( m => m.RememberMe ) @ConnectCMSResources.KeepMeSignedIn
+							</label>
+						</div>
+						<a href="#" class="pull-right need-help toggle-panel">@ConnectCMSResources.ResetPasswordLink</a>
+						<span class="clearfix"></span>
+					}
+				</div>
+				<div>
+					<a href="@Model.CreateAccountUrl" class="text-center new-account">@ConnectCMSResources.CreateAnAccount</a>
+				</div>
+			</div>
+		</div>
+		<div id="reset-password">
+			<div class="row">
+				<div class="col-sm-offset-3 col-sm-6 col-lg-4 col-lg-offset-4">
+					<div class="account-wall account-reset">
+						<img class="img-responsive center-block brand-logo" src="~/Content/monscierge/images/MonsciergeLogo.png" width="200" alt="@ConnectCMSResources.MonsciergeConnectCMS">
+						@using( Html.BeginForm( "ForgotPassword", "Account", new RouteValueDictionary { { "ReturnUrl", Model.ReturnUrl } }, FormMethod.Post, new Dictionary<string, object> { { "class", "form-signin" }, { "id", "forgotPassword_container" } } ) )
+						{
+							@Html.AntiForgeryToken()
+							@Html.HiddenFor( m => m.ReturnUrl )
+						<!-- Start -->
+							<p class="text-muted">@ConnectCMSResources.ForgotPasswordInstructions</p>
+							<input type="email" name="Username" class="form-control single-input" placeholder="@ConnectCMSResources.Email" required autofocus>
+						<!-- Start Button -->
+							<button type="submit" class="btn btn-md btn-primary btn-block btn-custom">@ConnectCMSResources.ResetPasswordButton</button>
+						<!-- End Button -->
+						<!-- End -->
+						}
+					</div>
+					<div>
+						<a href="#" class="text-center new-account revert-panel">@ConnectCMSResources.ReturnToLogin</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	@Html.Partial( "_LoginModals" )
+
+	@Scripts.Render( "~/bundles/login" )
+	<script type="text/javascript">
+
+		$('#reset-password').scotchPanel({
+			containerSelector: '#viewport', // As a jQuery Selector
+			direction: 'left', // Make it toggle in from the left
+			duration: 300, // Speed in ms how fast you want it to be
+			transition: 'ease', // CSS3 transition type: linear, ease, ease-in, ease-out, ease-in-out, cubic-bezier(P1x,P1y,P2x,P2y)
+			clickSelector: '.toggle-panel, .revert-panel', // Enables toggling when clicking elements of this class
+			distanceX: '100%', // Size fo the toggle
+			enableEscapeKey: true // Clicking Esc will close the panel
+		});
+		var Browser = '@HttpContext.Current.Request.Browser.Browser';
+		var BrowserVersion = '@HttpContext.Current.Request.Browser.Version';
+
+		function ShowUnsupportedBrowser(value) {
+			//Commented out until style is finalized
+			$("#unsupportedBrowser").toggle(value);
+		};
+
+		$(function () {
+			if (Browser != null) {
+				switch (Browser) {
+					case 'InternetExplorer':
+						if (BrowserVersion < 10)
+							ShowUnsupportedBrowser(true);
+						break;
+					case 'Chrome':
+						if (BrowserVersion < 36)
+							ShowUnsupportedBrowser(true);
+						break;
+					case 'Safari':
+						if (BrowserVersion < 7)
+							ShowUnsupportedBrowser(true);
+						break;
+					case 'Firefox':
+						if (BrowserVersion < 31)
+							ShowUnsupportedBrowser(true);
+						break;
+					case 'Opera':
+						if (BrowserVersion < 23)
+							ShowUnsupportedBrowser(true);
+						break;
+					default:
+						ShowUnsupportedBrowser(true);
+						break;
+				}
+			}
+
+			$('a.lang-option').each(function () {
+				$(this).on('click', function () {
+					var culture = $(this).data('culture');
+
+					$.ajax({
+						type: 'POST',
+						url: '/ConnectCMS/Utility/SetCultureWithString',
+						data: JSON.stringify({ culture: culture }),
+						dataType: 'json',
+						contentType: 'application/json',
+						success: function (data) {
+							window.location = '@Url.Action("Login", "Account", Request.QueryString.ToRouteValues())';
+						}
+					});
+				});
+			});
+
+			// Remove the .hide-on-load class
+			$('html').removeClass('hide-on-load');
+		});
+	</script>
+
+	<script type="text/javascript">
+		$(function () {
+			$.backstretch([
+				@for (var i = 0; i < Model.ThemeImages.Count; i++)
+			{
+				var image = Model.ThemeImages[i];
+				@Html.Raw(string.Format("\"{0}\"{1}", ImageRepository.BuildImagePath(image), i == Model.ThemeImages.Count - 1 ? "" : ","))
+				;
+			}
+			], { duration: 7000, fade: 750 });
+
+			$('#signin-logo').attr('src', '@Html.Raw(ImageRepository.BuildImagePath(Model.LogoOnWhiteImage))');
+		});
+	</script>
+</body>
+</html>

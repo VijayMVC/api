@@ -1,0 +1,12 @@
+﻿@using ConnectCMS.Resources
+<div>
+	<div class="bottomBorder flexContainer paddingBottom">
+		<h1 class="flexSpacer marginRight">@ConnectCMSResources.ViewImage</h1>
+		<a class="linkButton marginLeft white" data-bind="click: ClickBack">@ConnectCMSResources.Back</a>
+	</div>
+	<div class="flexContainer marginTop" data-bind="with: ImageViewModel">
+		<div class="flexSpacer textCenter">
+			<img data-bind="attr: { src: ImageUrl }" />
+		</div>
+	</div>
+</div>

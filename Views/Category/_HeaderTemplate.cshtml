@@ -1,0 +1,11 @@
+﻿@using ConnectCMS.Resources
+
+<div class="listItemContainer">
+    <div data-bind="if: Image() != null">
+        <img class="listItemImage marginRight" data-bind="attr: { src: Image() != null ? Image().ListItemImageUrl : null }, style: { backgroundColor: !ConnectCMS.Strings.IsNullOrWhitespace(BackgroundColor) ? FormattedBackgroundColor() : '' }" />
+    </div>
+
+    <span class="listItemHeader center flexSpacer marginLeft marginRight" data-bind="text: Name"></span>
+
+    <a class="linkButton marginLeft white" data-bind="click: ClickBack">@ConnectCMSResources.Back</a>
+</div>

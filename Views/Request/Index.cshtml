@@ -1,0 +1,528 @@
+﻿@using ConnectCMS.Resources
+@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout.cshtml";
+}
+<div class="flexSpacer pageContainer @(ViewBag.ShowDevSideBar ? "include-dev-sidebar" : "")" data-bind="allowBindings: false">
+	<div id="bindingDiv" class="transitionPanelContainer">
+		@if( ViewBag.HidePlaceHolder == null || ViewBag.HidePlaceHolder == false )
+		{
+			<div id="dev-sidebar">
+				Sidebar Placeholder (dev only)
+				<p>
+					Demo Device Id: @ViewBag.DemoDeviceId
+				</p>
+			</div>
+		}
+		<audio>
+			<source src="~/Content/audio/xylophone.mp3" type="audio/mpeg" />
+		</audio>
+		<div id="page-content">
+			<div data-bind="visible: selectedPage() === 'list', with: listPageModel">
+				<div data-bind="visible: showRequestList">
+					<div class="mons-rq-header">
+						<a class="hdr-link-button linkButton green" href="#" data-bind="click: $parent.showCreatePage">
+							@ConnectCMSResources.CreateRequestButtonText
+						</a>
+						<h1>@ConnectCMSResources.RequestHandlingTitle</h1>
+					</div>
+					<div style="position: relative">
+						<div class="tabHeaderContainer" data-bind="foreach: tabs">
+							<a class="tabHeader" data-bind="click: Click, css: IsSelected() ? 'selected' : (Enabled() ? '' : 'disabled'), visible: Visible">
+								<span data-bind="text: Label"></span>
+								<span class="status-count" data-bind="text: statusCount"></span>
+							</a>
+						</div>
+						<div style="position: absolute; right:0; bottom: 10px;">
+							<select data-bind="value: selectedRequestSort">
+								<option value="oldestfirst">Oldest First</option>
+								<option value="newestfirst">Newest First</option>
+							</select>
+						</div>
+					</div>
+					<section>
+						<div data-bind="visible: error() != null">
+							<div class='message error'>
+								<span class='flexSpacer flexSelfCenter' data-bind='text: error'></span>
+								<a class="hyperlink" style="margin-right: 10px;" data-bind='click: retry'>@ConnectCMSResources.Retry</a>
+							</div>
+						</div>
+						<div class="progressBar" data-bind="visible: requestsLoading"></div>
+						<p data-bind="visible: filteredRequestList().length < 1 && !requestsLoading()">
+							@ConnectCMSResources.RequestListNoResults
+						</p>
+						<ol class="flat tiled" data-bind="template: { name: 'request-list-template', foreach: filteredRequestList, afterAdd: showElement, beforeRemove: hideElement }"></ol>
+					</section>
+				</div>
+				<div data-bind="visible: showRequestDetails">
+					<div class="mons-rq-header">
+						<a class="hdr-link-button linkButton gray" href="#" data-bind="click: backToList">
+							@ConnectCMSResources.BackToRequestListButtonText
+						</a>
+						<h1>@ConnectCMSResources.RequestDetailTitle</h1>
+					</div>
+					<section class="rq-detail">
+						<aside class="rq-detail-details" data-bind="with: selectedRequest">
+							<header class="rq-header rq-side-header">
+								<h1>@ConnectCMSResources.RequestInformationHeader</h1>
+							</header>
+							<article>
+								<p class="data-lbl info-title" data-bind="text: hotelName"></p>
+								<p>
+									<label>Estimated Time:</label>
+									<span class="data-lbl" data-bind="timeAgo: eta, hideTimeAgoText: !isOverdue(), css:{ attention: isOverdue() }"></span>
+								</p>
+								<p>&nbsp;</p>
+								<p class="data-lbl info-title" style="min-height: 18.4px" data-bind="text: requestUserName"></p>
+								<p>
+									<label>@(ConnectCMSResources.RoomNumberLabel):</label>
+									<span class="data-lbl" data-bind="text: guestUserRoomNumber"></span>
+								</p>
+							</article>
+							<article class="rq-option-container">
+								<p class="data-lbl info-title" data-bind="text: requestTypeName"></p>
+								<p class="info-action-time" data-bind="text: earliestActionTimeDisplay"></p>
+								<ul class="flat rq-options" data-bind="foreach: initialActionOptions">
+									<li data-bind="text: $data"></li>
+								</ul>
+							</article>
+						</aside>
+						<section class="rq-action-view">
+							<header class="rq-header rq-main-header"><h1 data-bind="text: detailHeaderText"></h1></header>
+							<section class="rq-action-container">
+								<aside class="rq-action-menu">
+									<ul class="flat vert-link-menu">
+
+										<li data-bind="visible: showApprovalAction">
+											<a href="#" data-bind="click: approveRequest">
+												@ConnectCMSResources.ApproveRequestLinkText
+											</a>
+										</li>
+										<li data-bind="visible: showPendingAction">
+											<a href="#" data-bind="click: clickAccept">
+												@ConnectCMSResources.AcceptRequestLinkText
+											</a>
+										</li>
+										<li data-bind="fadeVisible: showAcceptForm">
+											<div class="mons-rq-sideform">
+												<h4>Accept?</h4>
+												<div>
+													<p>@ConnectCMSResources.AcceptRequestMessageLabel</p>
+													<input type="text" data-bind="value: newActionMessage" />
+												</div>
+												<div>
+													<p>@ConnectCMSResources.AcceptRequestNewEtaLabel</p>
+													<select data-bind="options: availableEtaMinutes, optionsText: function(item) {  return item + ' minutes'; }, value: selectedEtaMinutes, optionsCaption: ''"></select>
+												</div>
+												<div>
+													<a href="#" class="linkButton check" data-bind="click: confirmAccept"
+													   title="@ConnectCMSResources.AcceptRequestSubmitButtonText">
+														@ConnectCMSResources.AcceptRequestSubmitButtonText
+													</a>
+													<a href="#" class="linkButton cancel" data-bind="click: closeAccept"
+													   title="@ConnectCMSResources.AcceptRequestCancelButtonText">
+														@ConnectCMSResources.AcceptRequestCancelButtonText
+													</a>
+												</div>
+											</div>
+										</li>
+										<li data-bind="visible: showAcceptedAction">
+											<a href="#" data-bind="click: clickComplete">
+												@ConnectCMSResources.CompleteRequestLinkText
+											</a>
+										</li>
+										<li data-bind="fadeVisible: showCompleteForm">
+											<div class="mons-rq-sideform">
+												<h4>@ConnectCMSResources.CompleteRequestConfirmText</h4>
+												<div>
+													<p>@ConnectCMSResources.CompleteRequestMessageLabel</p>
+													<input type="text" data-bind="value: newActionMessage" />
+												</div>
+												<div>
+													<a href="#" class="linkButton check" data-bind="click: confirmComplete"
+													   title="@ConnectCMSResources.CompleteRequestSubmitButtonText">
+														@ConnectCMSResources.CompleteRequestSubmitButtonText
+													</a>
+													<a href="#" class="linkButton cancel" data-bind="click: closeComplete"
+													   title="@ConnectCMSResources.CompleteRequestCancelButtonText">
+														@ConnectCMSResources.CompleteRequestCancelButtonText
+													</a>
+												</div>
+											</div>
+										</li>
+										<li data-bind="visible: showApprovalAction">
+											<a href="#" data-bind="click: clickDeny">
+												@ConnectCMSResources.DenyRequestLinkText
+											</a>
+										</li>
+										<li data-bind="visible: showDenyForm">
+											<div class="mons-rq-sideform">
+												<h4>@ConnectCMSResources.DenyRequestConfirmText</h4>
+												<div>
+													<a href="#" class="linkButton check" data-bind="click: confirmDeny"
+													   title="@ConnectCMSResources.DenyRequestSubmitButtonText">
+														@ConnectCMSResources.DenyRequestSubmitButtonText
+													</a>
+													<a href="#" class="linkButton cancel" data-bind="click: closeDeny"
+													   title="@ConnectCMSResources.DenyRequestCancelButtonText">
+														@ConnectCMSResources.DenyRequestCancelButtonText
+													</a>
+												</div>
+											</div>
+										</li>
+										<li data-bind="visible: showApprovalAction">
+											<a href="#" data-bind="click: clickBlock">
+												@ConnectCMSResources.BlockGuestLinkText
+											</a>
+										</li>
+										<li data-bind="visible: showBlockForm">
+											<div class="mons-rq-sideform">
+												<h4>@ConnectCMSResources.BlockGuestConfirmText</h4>
+												<div>
+													<a href="#" class="linkButton check" data-bind="click: confirmBlock"
+													   title="@ConnectCMSResources.BlockGuestSubmitButtonText">
+														@ConnectCMSResources.BlockGuestSubmitButtonText
+													</a>
+													<a href="#" class="linkButton cancel" data-bind="click: closeBlock"
+													   title="@ConnectCMSResources.BlockGuestCancelButtonText">
+														@ConnectCMSResources.BlockGuestCancelButtonText
+													</a>
+												</div>
+											</div>
+										</li>
+										<li>
+											<a href="#" data-bind="visible: showOtherAction, click: clickAddUser">
+												@ConnectCMSResources.AddUserLinkText
+											</a>
+										</li>
+										<li data-bind="fadeVisible: showAddUserForm">
+											<div class="mons-rq-sideform">
+												<h4>@ConnectCMSResources.AddUserTitle</h4>
+												<div>
+													<p>@ConnectCMSResources.AddUserChooseUserLabel</p>
+													<select data-bind="options: filteredHotelRequestParticipants, optionsText: 'value', optionsValue: 'key', value: selectedParticipantToAddId, optionsCaption: ''"></select>
+												</div>
+												<div>
+													<a href="#" class="linkButton check" data-bind="click: confirmAddUser"
+													   title="@ConnectCMSResources.AddUserSubmitButtonText">
+														@ConnectCMSResources.AddUserSubmitButtonText
+													</a>
+													<a href="#" class="linkButton cancel" data-bind="click: closeAddUser"
+													   title="@ConnectCMSResources.AddUserCancelButtonText">
+														@ConnectCMSResources.AddUserCancelButtonText
+													</a>
+												</div>
+											</div>
+										</li>
+										<li>
+											<a href="#" data-bind="visible: showOtherAction, click: clickRemoveUser">
+												@ConnectCMSResources.RemoveUserLinkText
+											</a>
+										</li>
+										<li data-bind="fadeVisible: showRemoveUserForm">
+											<div class="mons-rq-sideform">
+												<h4>@ConnectCMSResources.RemoveUserTitle</h4>
+												<div data-bind="visible: requestHasParticipants">
+													<p>@ConnectCMSResources.RemoveUserChooseUserLabel</p>
+													<select data-bind="options: requestParticipants, optionsText: 'value', optionsValue: 'key', value: selectedParticipantToRemoveId, optionsCaption: ''"></select>
+												</div>
+												<div data-bind="visible: !requestHasParticipants()">
+													<span>@ConnectCMSResources.RemoveUserNoneAssignedText</span>
+												</div>
+												<div>
+													<a href="#" class="linkButton check" data-bind="click: confirmRemoveUser, visible: requestHasParticipants"
+													   title="@ConnectCMSResources.RemoveUserSubmitButtonText">
+														@ConnectCMSResources.RemoveUserSubmitButtonText
+													</a>
+													<a href="#" class="linkButton cancel" data-bind="click: closeRemoveUser" title="@ConnectCMSResources.RemoveUserCancelButtonText">
+														@ConnectCMSResources.RemoveUserCancelButtonText
+													</a>
+												</div>
+											</div>
+										</li>
+										<li>
+											<a href="#" data-bind="visible: showOtherAction, click: clickForward">
+												@ConnectCMSResources.ForwardRequestLinkText
+											</a>
+										</li>
+										<li data-bind="fadeVisible: showForwardForm">
+											<div class="mons-rq-sideform">
+												<h4>@ConnectCMSResources.ForwardRequestTitle</h4>
+												<div>
+													<p>@ConnectCMSResources.ForwardRequestChooseGroupLabel</p>
+													<select data-bind="options: filteredRequestGroups, optionsText: 'value', optionsValue: 'key', value: selectedRequestGroupId"></select>
+												</div>
+												<div>
+													<a href="#" class="linkButton check" data-bind="click: confirmForward"
+													   title="@ConnectCMSResources.ForwardRequestSubmitButtonText">
+														@ConnectCMSResources.ForwardRequestSubmitButtonText
+													</a>
+													<a href="#" class="linkButton cancel" data-bind="click: closeForward"
+													   title="@ConnectCMSResources.ForwardRequestCancelButtonText">
+														@ConnectCMSResources.ForwardRequestCancelButtonText
+													</a>
+												</div>
+											</div>
+										</li>
+										<li data-bind="visible: showUpdateEta">
+											<div class="update-eta">
+												<label>@ConnectCMSResources.UpdateEtaLabel</label>
+												<select data-bind="options: availableEtaMinutes, optionsText: function(item) {  return item + ' minutes'; }, value: selectedEtaMinutes, optionsCaption: '@(ConnectCMSResources.UpdateEtaCaption)'"></select>
+												<div>
+													<a href="#" class="linkButton check" data-bind="click: updateEta, visible: canUpdateEta"
+													   title="@ConnectCMSResources.UpdateEtaSubmit">
+														@ConnectCMSResources.UpdateEtaSubmit
+													</a>
+													<a href="#" class="linkButton cancel" data-bind="click: cancelUpdateEta, visible: canUpdateEta"
+													   title="@ConnectCMSResources.UpdateEtaCancel">
+														@ConnectCMSResources.UpdateEtaCancel
+													</a>
+												</div>
+											</div>
+										</li>
+										<li data-bind="visible: showDeleteAction">
+											<a href="#" data-bind="click: clickDelete">
+												@ConnectCMSResources.DeleteRequestLinkText
+											</a>
+										</li>
+										<li data-bind="fadeVisible: showDeleteForm">
+											<div class="mons-rq-sideform">
+												<h4>@ConnectCMSResources.DeleteRequestConfirmText</h4>
+												<div>
+													<a href="#" class="" style="margin-right: 10px;" data-bind="click: confirmDelete"
+													   title="@ConnectCMSResources.DeleteRequestSubmitButtonText">
+														@ConnectCMSResources.DeleteRequestSubmitButtonText
+													</a>
+													<a href="#" class="" data-bind="click: closeDelete"
+													   title="@ConnectCMSResources.DeleteRequestCancelButtonText">
+														@ConnectCMSResources.DeleteRequestCancelButtonText
+													</a>
+												</div>
+											</div>
+										</li>
+										<li>
+											<div class="progressBar" data-bind="visible: showUpdateProgress"></div>
+										</li>
+									</ul>
+								</aside>
+								<article id="rq-sms-view" data-bind="with: selectedRequest">
+									<ol id="chat-container" class="flat sms-list" data-bind="foreach: messageActions">
+										<li class="sms-list-item" data-bind="css: { 'sms-alt': $index() % 2 }">
+											<div class="action-time">
+												<span data-bind="text: actionTimeDisplay"></span>
+												<span class="seperator">&bull;</span>
+												<span data-bind="text: actionDateDisplay"></span>
+											</div>
+											<header data-bind="text: requestUserName"></header>
+											<div data-bind="foreach: actionMessages">
+												<span class="actionmsg" data-bind="text: message, css: css"></span>
+											</div>
+											<p class="chatmsg" data-bind="text: message, css: { locked: messageIsPrivate }"></p>
+										</li>
+									</ol>
+								</article>
+							</section>
+							<section class="rq-sms-input">
+								<div id="sms-option-tray">
+									<div id="stock-response-container">
+										<a href="#" data-bind="visible: filteredStockResponses().length > 0, click: showStockResponses">
+											@ConnectCMSResources.StockResponsesLinkText
+										</a>
+										<span data-bind="visible: filteredStockResponses().length < 1" class="muted-text">
+											@ConnectCMSResources.StockResponsesLinkText
+										</span>
+										<div id="stock-response" data-bind="visible: stockResponsesAreVisible">
+											<header>
+												<div class="close-stock-response">
+													<a href="#" class="linkButton cancel" data-bind="click: showStockResponses" title="@ConnectCMSResources.Close">
+														@ConnectCMSResources.Close
+													</a>
+												</div>
+												<p>@ConnectCMSResources.StockResponsesSelectorTitle</p>
+											</header>
+											<div data-bind="foreach: filteredStockResponses">
+												<span data-bind="text: message, click: $parent.selectStockResponse" />
+											</div>
+										</div>
+									</div>
+									<ul id="msg-privacy-buttons">
+										<li>
+											<input type="radio" id="msg-public" name="msg-privacy" value="public" data-bind="checked: selectedMessagePrivacy" />
+											<label for="msg-public">@ConnectCMSResources.Public</label>
+										</li>
+										<li>
+											<input type="radio" id="msg-private" name="msg-privacy" value="private" data-bind="checked: selectedMessagePrivacy" />
+											<label for="msg-private">@ConnectCMSResources.Private</label>
+										</li>
+									</ul>
+								</div>
+								<input type="text" class="sms-input" data-bind="value: newChatMessage" placeholder="@ConnectCMSResources.RequestActionMessagePlaceholder" />
+								<a href="#" class="linkButton" data-bind="click: sendNewChatMessage">
+									@ConnectCMSResources.RequestActionSubmitButtonText
+								</a>
+							</section>
+						</section>
+					</section>
+				</div>
+			</div>
+			<div data-bind="visible: selectedPage() === 'create', with: createPageModel">
+				<div class="mons-rq-header">
+					<a class="hdr-link-button linkButton gray" href="#" data-bind="click: $parent.closeCreatePage">
+						@ConnectCMSResources.CreateRequestReturnToListButtonText
+					</a>
+					<h1>@ConnectCMSResources.CreateRequestHeaderText</h1>
+				</div>
+				<section class="mons-rq-form-section">
+					<aside data-bind="visible: selectedRequestType">
+						<header>@ConnectCMSResources.RequestDetailHeaderText</header>
+						<div data-bind="with: selectedRequestType">
+							<p data-bind="visible: isManagedByConsole">
+								@ConnectCMSResources.RequestDetailManagedByConsoleLabel
+							</p>
+							<p data-bind="text: handledByText"></p>
+							<p data-bind="visible: requiresValidation">
+								@ConnectCMSResources.RequestDetailRequiresValidationLabel
+							</p>
+							<p data-bind="text: estimatedEtaText"></p>
+						</div>
+					</aside>
+					<div class="mons-rq-input-container">
+						<!-- ko if: devices().length > 1-->
+						<div>
+							<label>@ConnectCMSResources.CreateRequestSelectHotelLabel</label>
+							<select data-bind="value: selectedDevice">
+								<option value="">@(ConnectCMSResources.CreateRequestSelectHotelLabel)</option>
+								<!-- ko foreach:devices-->
+								<option data-bind="text: name, value: $data"></option>
+								<!-- /ko -->
+							</select>
+						</div>
+						<!-- /ko -->
+						<div data-bind="visible: selectedDevice() != ''">
+							<label>@ConnectCMSResources.CreateRequestSelectRequestTypeLabel</label>
+							@*<select data-bind="options: requestTypes, optionsText: 'name', value: selectedRequestType, optionsCaption: '@(ConnectCMSResources.CreateRequestSelectRequestTypeLabel)'"></select>*@
+							<select data-bind="value: selectedRequestType">
+								<option value="">@(ConnectCMSResources.CreateRequestSelectRequestTypeLabel)</option>
+								<!-- ko foreach:selectedDevice().groupedRequestTypes-->
+								<optgroup data-bind="attr: {label: name}, foreach: requestTypes">
+									<option data-bind="text: name, value: $data"></option>
+								</optgroup>
+								<!-- /ko -->
+							</select>
+						</div>
+						<div class="mons-rq-notselected" data-bind="visible: !selectedRequestType()">
+							<p>
+								@ConnectCMSResources.CreateRequestInstructionPart1
+								<strong>@ConnectCMSResources.CreateRequestInstructionPart2</strong>
+								@ConnectCMSResources.CreateRequestInstructionPart3
+							</p>
+						</div>
+						<div class="mons-rq-options flex" data-bind="visible: selectedRequestType">
+						</div>
+						<div class="mons-rq-options" data-bind="visible: selectedRequestType, with: selectedRequestType">
+							<header>@ConnectCMSResources.CreateRequestGuestOptionsLabel</header>
+							<div class="mons-rq-option">
+								<label>@ConnectCMSResources.CreateRequestGuestNameLabel</label>
+								<input class="mons-rq-option-text" type="text" data-bind="value: guestUserName, insertMessages: false"/>
+								<span class="mons-rq-option-validation-error" data-bind="text: '@ConnectCMSClientResources.ValidationFieldRequired', visible: enableValidation() && !guestUserName.isValid()"></span>
+							</div>
+							<div class="mons-rq-option">
+								<label>@ConnectCMSResources.CreateRequestGuestRoomNumberLabel</label>
+								<input class="mons-rq-option-text" type="text" data-bind="value: guestUserRoomNumber, insertMessages: false"/>
+								<span class="mons-rq-option-validation-error" data-bind="text: '@ConnectCMSClientResources.ValidationFieldRequired', visible: enableValidation() && !guestUserRoomNumber.isValid()"></span>
+							</div>
+							<header>@ConnectCMSResources.CreateRequestOptionsLabel</header>
+							<!-- ko foreach: orderedRequestOptions -->
+							<div class="mons-rq-option">
+								<label data-bind="text: name"></label>
+								<!-- ko if: fieldTypeIsNumber -->
+								<input data-bind="kendoNumericTextBox: { value: optionValue, min: minValue, max: maxValue, decimals: 0, format: 'n0' }"/>
+								<!-- /ko -->
+								<!-- ko if: fieldTypeIsDateTime -->
+								<input onkeydown=" return false; " data-bind="kendoDateTimePicker: { value: optionValue, interval: 15, min: minAllowableDateTime }"/>
+								<!-- /ko -->
+								<!-- ko if: fieldTypeIsText -->
+								<input type="text" class="mons-rq-option-text" data-bind="value: optionValue"/>
+								<!-- /ko -->
+								<span class="mons-rq-option-validation-error" data-bind="text: validationError, visible: !isValid()"></span>
+							</div>
+							<!-- /ko -->
+							<div class="mons-rq-option">
+								<label>@ConnectCMSResources.CreateRequestAdditionalInstructionsLabel</label>
+								<textarea class="mons-rq-specialInstructions" data-bind="value: specialInstructions"></textarea>
+							</div>
+						</div>
+						<div data-bind="visible: selectedRequestType">
+							<a href="javascript: return void(0);" class="linkButton blue" data-bind="click: $root.saveNewRequest, disableAnchor: savingNewRequest">
+								@ConnectCMSResources.CreateRequestSubmitButtonText
+							</a>
+							<a href="javascript: return void(0);" class="mons-rq-link cancel-request" data-bind="click: cancelNewRequest">
+								@ConnectCMSResources.CreateRequestCancelButtonText
+							</a>
+						</div>
+					</div>
+				</section>
+				<div class="progressBar" data-bind="visible: savingNewRequest"></div>
+			</div>
+		</div>
+	</div>
+</div>
+@Html.Partial( "~/Views/Request/_RequestListTemplate.cshtml" )
+@if( Request.IsAjaxRequest() )
+{
+	<script type="text/javascript">
+		function getSelectedDeviceId() {
+			return [ConnectCMS.MainViewModel.SelectedDevice().PKID()];
+		};
+	</script>
+}
+else
+{
+	// This is a hard-coded replacement for the deviceId used
+	// if the page is ran outside of the CMS container.
+	<script type="text/javascript">
+	function getSelectedDeviceId() {
+		return @(ViewBag.DemoDeviceId ?? "[22093]");
+		}
+
+		// If the page is run as a stand-alone, add a pending request count to the browser tab.
+		$(function () {
+
+			var titleUpdateHandle = null;
+			var plainTitle = document.title;
+			var requestUserId = parseInt('@ViewBag.RequestUserId');
+
+			var getPendingStatusCount = function () {
+				ConnectCMS.Requests.RequestApi.getRequestCountByStatus(requestUserId, 0, function (result) {
+					var count = result || 0;
+					if(count == 0 && document.title !== plainTitle) {
+						document.title = plainTitle;
+					} else {
+						document.title = '(' + count + ') ' + plainTitle;
+					}
+				}, function (xhr, textStatus, errorThrown) {
+					// Something has happened. Clear the refresh timeout so it doesn't keep repeating.
+					console.log('Get pending status count failed | ' + textStatus + ' | ' + errorThrown);
+					if (titleUpdateHandle) {
+						window.clearTimeout(titleUpdateHandle);
+					}
+				});
+			};
+
+			getPendingStatusCount();
+			titleUpdateHandle = setInterval(getPendingStatusCount, 20000);
+
+		});
+	</script>
+}
+<script type="text/javascript">
+	function requestCanDelete() {
+		return @(ViewBag.CanDelete.ToString().ToLower());
+	};
+
+	var shellModel = new ConnectCMS.Requests.ShellViewModel(
+		getSelectedDeviceId(),
+		parseInt('@ViewBag.RequestUserId'),
+		'@System.Threading.Thread.CurrentThread.CurrentCulture');
+
+	ko.applyBindings(shellModel, $('#bindingDiv')[0]);
+</script>

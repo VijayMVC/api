@@ -1,0 +1,48 @@
+﻿@using ConnectCMS.Enumerations
+@using ConnectCMS.Resources
+@model LoginMessageType?
+
+@if( Model.HasValue )
+{
+	if( Model == LoginMessageType.LoginError )
+	{
+		<div class="login-error-container">
+			<p>@ConnectCMSResources.SigninFailure</p>
+		</div>
+	}
+	else if( Model == LoginMessageType.ResetError )
+	{
+		<div class="login-error-container">
+			<p>@ConnectCMSResources.ResetPasswordError</p>
+			<p>@ConnectCMSResources.ResetPasswordErrorDetails</p>
+		</div>
+	}
+	else if( Model == LoginMessageType.ResetSent )
+	{
+		<div class="login-info-container">
+			<p>@ConnectCMSResources.ResetPasswordSent</p>
+			<p>@ConnectCMSResources.ResetPasswordSentDetails</p>
+		</div>
+	}
+	else if( Model == LoginMessageType.ResetSuccess )
+	{
+		<div class="login-info-container">
+			<p>@ConnectCMSResources.ResetPasswordSuccess</p>
+			<p>@ConnectCMSResources.ResetPasswordSuccessDetails</p>
+		</div>
+	}
+	else if( Model == LoginMessageType.VerificationError )
+	{
+		<div class="login-error-container">
+			<p>@ConnectCMSResources.VerificationError</p>
+			<p>@ConnectCMSResources.VerificationErrorDetails</p>
+		</div>
+	}
+	else if( Model == LoginMessageType.VerificationSuccess )
+	{
+		<div class="login-info-container">
+			<p>@ConnectCMSResources.VerificationSuccess</p>
+			<p>@ConnectCMSResources.VerificationSuccessDetails</p>
+		</div>
+	}
+}

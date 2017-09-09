@@ -1,0 +1,318 @@
+﻿@using ConnectCMS.Resources
+<div data-bind="allowBindings: false">
+	<div id="eventEdit" class="bindingPoint">
+		<div style="position: relative">
+			<h1 class="bottomBorder paddingBottom">@ConnectCMSResources.Event</h1>
+			<div class="Events_AddEvent_Container">
+				<a class="linkButton white" data-bind="click: ToggleReorder, disableAnchor: EventDetailSections().length <= 1, text: IsReordering() ? '@ConnectCMSResources.Done' : '@ConnectCMSResources.ReorderSections'"></a>
+				<div class="vr"></div>
+				<a class="linkButton white" data-bind="click: Cancel, text: CanInlineEdit() ? '@ConnectCMSResources.Back' : '@ConnectCMSResources.Cancel'"></a>
+				<a class="linkButton blue" data-bind="click: Save, text: CanInlineEdit() ? '@ConnectCMSResources.Save' : '@ConnectCMSResources.Create', disableAnchor: { value: !CanSave(), allowClick: true }"></a>
+			</div>
+		</div>
+		<div class="collapsablePanel" style="margin: 10px">
+			<div class="header" data-bind="event: { dblclick: ToggleCollapse }, visible: !IsReordering()">
+				<a class="collapsable" data-bind="css: { collapsed: !Expanded() }, click: ToggleCollapse"></a>
+				<div class="ordinalSpacer"></div>
+				<div class="titleContainer">
+					<span class="title" data-bind="text: Name() == null || Name() == '' ? '(no title)' : Name()"></span>
+				</div>
+			</div>
+			<div class="header" data-bind=" visible: IsReordering()">
+				<div class="ordinalSpacer"></div>
+				<div class="ordinalSpacer"></div>
+				<div class="titleContainer">
+					<span class="title" data-bind="text: Name() == null || Name() == '' ? '(no title)' : Name()"></span>
+				</div>
+			</div>
+			<div class="content" data-bind="slideIn: Expanded">
+				<span class="EventDetailHeader">@ConnectCMSResources.EventDetails</span>
+				<div class="hrule" style="margin-top: 4px;"></div>
+				<div class="contentTable">
+					<div class="contentRow">
+						<div class="contentColumn labels">
+							<label class="contentLabel" for="eventNameInput">@ConnectCMSResources.EventName</label>
+						</div>
+						<div class="contentColumn" data-bind="visible: !IsReadOnly">
+							<div data-bind="monsciergeEditableItem: {value: Name, type: 'text', id: 'eventNameInput'}"></div>
+						</div>
+						<div class="contentColumn" data-bind="visible: IsReadOnly">
+							<span class="contentText" data-bind="text: Name"></span>
+						</div>
+					</div>
+					<div class="contentRow">
+						<div class="contentColumn labels">
+							<label class="contentLabel" for="eventGroupInput">@ConnectCMSResources.Group</label>
+						</div>
+						<div class="contentColumn" data-bind="visible: !IsReadOnly">
+							<div data-bind="monsciergeEditableItem: {value: FKEventGroup, type: 'select', id: 'eventGroupInput', options: 'EventGroups', optionsText: 'Name', optionsValue: 'PKID', optionsCaption: '@ConnectCMSResources.SelectAGroup'}"></div>
+						</div>
+						<div class="contentColumn" data-bind="visible: IsReadOnly">
+							<span class="contentText" data-bind="text: EventGroup() == null ? '' : EventGroup().Name()"></span>
+						</div>
+					</div>
+					<div class="contentRow">
+						<div class="contentColumn labels">
+							<label class="contentLabel" for="DateTimeInput">@ConnectCMSResources.DateAndTime</label>
+						</div>
+						<div class="contentColumn" data-bind="visible: !IsReadOnly">
+							<div data-bind="if: !IsAllDay()">
+								<div data-bind="css: { Error: LocalStartDateTime() != null && LocalEndDateTime() != null && LocalStartDateTime() >= LocalEndDateTime() }">
+									<div data-bind="monsciergeEditableItem: {value:LocalStartDateTime, type: 'datetimepicker'}"></div>
+									<div data-bind="monsciergeEditableItem: {value:LocalEndDateTime, type: 'datetimepicker'}"></div>
+								</div>
+							</div>
+							<div data-bind="if: IsAllDay()">
+								<div data-bind="css: { Error: LocalStartDateTime() != null && LocalEndDateTime() != null && LocalStartDateTime() > LocalEndDateTime() }">
+									<div data-bind="monsciergeEditableItem: {value:LocalStartDateTime, type: 'datepicker'}"></div>
+									<div data-bind="monsciergeEditableItem: {value:LocalEndDateTime, type: 'datepicker'}"></div>
+								</div>
+							</div>
+							<div id="allDayCheck">
+								<div data-bind="checkbox: {checked: IsAllDay, text: '@ConnectCMSResources.IsAllDay'}"></div>
+							</div>
+							<div id="repeatCheck" data-bind="visible: !IsReadOnly">
+								<div data-bind="checkbox: {checked: IsRecurring, text: '@ConnectCMSResources.Repeat'}"></div>
+								<!-- ko if: IsRecurring -->
+								<span style="font-weight: bold; font-size: 14px" data-bind="text: ':  ' + Recurrence().RecurrenceShortSummary()"></span>
+								<a style="margin-left: 0" class="navLink" data-bind="click: EditRecurrence">@ConnectCMSResources.Edit</a>
+								<!-- /ko -->
+							</div>
+						</div>
+						<div class="contentColumn" data-bind="visible: IsReadOnly">
+							<span class="contentText" data-bind="text: EventTimeStr"></span>
+							<!-- ko if: IsRecurring() -->
+							<span data-bind="text: Recurrence().RecurrenceShortSummary"></span>
+							<!-- /ko -->
+						</div>
+					</div>
+					<div class="contentRow">
+						<div class="contentColumn labels">
+							<label class="contentLabel" for="eventLocationInput">@ConnectCMSResources.Location</label>
+						</div>
+						<!-- ko if: !IsReadOnly-->
+						<div class="contentColumn" data-bind="visible: !IsReadOnly">
+							<div data-bind="monsciergeEditableItem: {value: FKEventLocation, type: 'select', id: 'eventLocationInput', options: 'EventLocations', optionsText: 'Name', optionsValue: 'PKID', optionsCaption: '@ConnectCMSResources.SelectALocation'}"></div>
+						</div>
+						<!-- /ko -->
+						<div class="contentColumn" data-bind="visible: IsReadOnly">
+							<span class="contentText" data-bind="text: EventLocation() == null ? '' : EventLocation().Name()"></span>
+						</div>
+					</div>
+					<div class="contentRow" data-bind="with: EventGroup">
+						<div class="contentColumn labels">
+							<label class="contentLabel" for="AccessInput">@ConnectCMSResources.EventLink</label>
+						</div>
+						<div class="contentColumn">
+							<a target="blank" class="contentText" data-bind="text: EventUrl, attr : { href: EventUrl}"></a>
+						</div>
+					</div>
+					<div class="contentRow" data-bind="with: EventGroup">
+						<div class="contentColumn labels">
+							<label class="contentLabel" for="eventAccessCode">@ConnectCMSResources.EventCode</label>
+						</div>
+						<div class="contentColumn">
+							<span class="contentText" data-bind="text: EventAccessCode"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="Reorder-Container" id="EventDetailSectionsReorder">
+			<div class="Reorder-SubContainer" id="EventDetailSections" data-bind="template: { name: 'sectionTemplate', foreach: EventDetailSections}, sortable: EventDetailsSectionsSortableViewModel">
+			</div>
+		</div>
+
+		<div style="margin-top: 20px;">
+			<a id="eventSectionAdd" class="navLink add" data-bind="click: AddSection, visible: CanSave">@ConnectCMSResources.AddNewSection</a>
+		</div>
+	</div>
+</div>
+
+<script type="text/html" id="sectionTemplate">
+	<div class="collapsablePanel" style="margin: 10px">
+		<div class="header" data-bind="event: { dblclick: ToggleCollapse }, visible: !$parent.IsReordering()">
+			<a class="collapsable" data-bind="css: { collapsed: !Expanded() }, click: ToggleCollapse"></a>
+			<div class="ordinalSpacer">
+				<span data-bind="text: Ordinal() + 1"></span>
+			</div>
+			<div class="titleContainer">
+				<span class="title" data-bind="text: Name() == null || Name() == '' ? '(no title)' : Name()"></span>
+			</div>
+			<div class="expandButtonContainer">
+				<div class="contentContainer menu-panel right" data-bind="attr: { id : 'contentContainer_' + Ordinal() }">
+					<div class="check-container">
+						<div class="check-innerContainer" data-bind="click: HasName() ? RemoveName : AddName, css: { checked: HasName}">
+							<label class="check-label">@ConnectCMSResources.Title</label>
+							<div class="flexSpacer"></div>
+							<div class="check-replacement"></div>
+						</div>
+					</div>
+					<div class="check-container">
+						<div class="check-innerContainer" data-bind="click: HasDescription() ? RemoveDescription : AddDescription, css: { checked: HasDescription}">
+							<label class="check-label">@ConnectCMSResources.Paragraph</label>
+							<div class="flexSpacer"></div>
+							<div class="check-replacement"></div>
+						</div>
+					</div>
+					<div class="check-container">
+						<div class="check-innerContainer" data-bind="click: HasWebsite() ? RemoveWebsite : AddWebsite, css: { checked: HasWebsite}">
+							<label class="check-label">@ConnectCMSResources.Hyperlink</label>
+							<div class="flexSpacer"></div>
+							<div class="check-replacement"></div>
+						</div>
+					</div>
+					<div class="check-container">
+						<div class="check-innerContainer" data-bind="click: HasAttachment() ? RemoveAttachment : AddAttachment, css: { checked: HasAttachment}">
+							<label class="check-label">@ConnectCMSResources.Attachment</label>
+							<div class="flexSpacer"></div>
+							<div class="check-replacement"></div>
+						</div>
+					</div>
+					<div class="check-container">
+						<div class="check-innerContainer" data-bind="click: HasImageGallery() ? RemoveImageGallery : AddImageGallery, css: { checked: HasImageGallery}">
+							<label class="check-label">@ConnectCMSResources.PhotoGallery</label>
+							<div class="flexSpacer"></div>
+							<div class="check-replacement"></div>
+						</div>
+					</div>
+					<div class="check-container">
+						<div class="check-innerContainer" data-bind="click: HasSponsorship() ? RemoveSponsorship : AddSponsorship, css: { checked: HasSponsorship}">
+							<label class="check-label">@ConnectCMSResources.Sponsorship</label>
+							<div class="flexSpacer"></div>
+							<div class="check-replacement"></div>
+						</div>
+					</div>
+				</div>
+				<a class="linkButton arrow" data-bind="click: Expand, monsciergeMenu : { menuSelector : '#contentContainer_' + Ordinal(), minWidth: 150 }, attr: { id: 'mediaButton_' + Ordinal()}">@ConnectCMSResources.Media</a>
+			</div>
+			<a class="linkButton trash" data-bind="click: $parent.RemoveSection"></a>
+		</div>
+		<div class="header reorder" data-bind=" visible: $parent.IsReordering()">
+			<div class="ordinalSpacer"></div>
+			<div class="ordinalSpacer">
+				<span data-bind="text: Ordinal() + 1"></span>
+			</div>
+			<div class="titleContainer">
+				<span class="title" data-bind="text: Name() == null || Name() == '' ? '(no title)' : Name()"></span>
+			</div>
+		</div>
+		<div class="content" data-bind="slideIn: Expanded">
+			<div class="EventSubSectionContainer" data-bind="if: HasName">
+				<div class="EventSubSectionValue">
+					<label>@ConnectCMSResources.Title</label>
+					<div data-bind="monsciergeEditableItem: Name" style="max-width: 400px"></div>
+					<a class="linkButton trash" data-bind="click: RemoveName"></a>
+				</div>
+			</div>
+			<div class="EventSubSectionContainer" data-bind="if: HasDescription">
+				<div class="EventSubSectionValue">
+					<label>@ConnectCMSResources.Description</label>
+					<div data-bind="monsciergeEditableItem: { value: Description, type: 'paragraph'}" style="max-width: 800px"></div>
+					<a class="linkButton trash" data-bind="click: RemoveDescription"></a>
+				</div>
+			</div>
+			<div class="EventSubSectionContainer" data-bind="if: HasWebsite">
+				<div class="EventSubSectionValue">
+					<label>@ConnectCMSResources.Website</label>
+					<div data-bind="monsciergeEditableItem: { value: Website, type: 'text'}" style="max-width: 800px"></div>
+					<a class="linkButton trash" data-bind="click: RemoveWebsite"></a>
+				</div>
+			</div>
+			<div class="EventSubSectionContainer" data-bind="if: HasAttachment">
+				<div class="EventSubSectionValue">
+					<span class="sectionHeader">@ConnectCMSResources.Attachments</span>
+					<a class="link add" data-bind="click: InsertAttachment">@ConnectCMSResources.UploadFile</a>
+					<div class="EventSubSectionDropZone" data-bind="attr:{id: 'AttachmentsUploaderDropZone_'+Ordinal()}">
+						<input style="display: none" type="file" data-bind="fileUploader: AttachmentUploadConfig(), attr: { id: 'AttachmentsUploader_' + Ordinal(), name: 'attachments_' + Ordinal() + '[]' }" />
+						<div class="Reorder-Container" data-bind="attr:{id: 'AttachmentsReorder_'+Ordinal()}">
+							<ul class="Reorder-SubContainer" data-bind="foreach: EventDetailSectionAttachmentMaps, sortable: EventDetailsSectionAttachmentMapsSortableViewModel">
+								<li class="AttachmentContainer">
+									<div class="icon" data-bind="css: BlobFile().State()"></div>
+									<div class="item">
+										<span data-bind="text: BlobFile().Name"></span>
+									</div>
+									<div class="actions">
+										<a class="linkButton download" data-bind="attr: { 'href' : BlobFile().FileUrl }, disableAnchor: BlobFile().State() != null"></a>
+										<a class="linkButton trash" data-bind="click: $parent.RemoveAttachmentItem, disableAnchor: BlobFile().State() != null"></a>
+										<a class="linkButton reorder" data-bind="attr: { id : 'AttachmentReorder_'+ $parent.Ordinal()+'_'+Ordinal() }"></a>
+									</div>
+								</li>
+							</ul>
+						</div>
+
+						<div data-bind="visible: EventDetailSectionAttachmentMaps() == null || EventDetailSectionAttachmentMaps().length == 0">
+							<span>@ConnectCMSResources.DragDropFiles</span>
+						</div>
+					</div>
+					<a class="linkButton trash" data-bind="click: RemoveAttachment"></a>
+				</div>
+			</div>
+			<div class="EventSubSectionContainer" data-bind="if: HasImageGallery">
+				<div class="EventSubSectionValue">
+					<span class="sectionHeader">@ConnectCMSResources.PhotoGallery</span>
+
+					<a class="link add" data-bind="click: InsertPhoto">@ConnectCMSResources.UploadImage</a>
+					<div class="EventSubSectionDropZone" data-bind="attr:{id: 'PhotoGalleryUploaderDropZone_'+Ordinal()}">
+						<input style="display: none" type="file"
+							   data-bind="fileUploader: PhotoGalleryUploadConfig(), attr: { id: 'PhotoGalleryUploader_' + Ordinal(), name: 'photos_' + Ordinal() + '[]' }" />
+						<div class="Reorder-Container images" data-bind="attr:{id: 'PhotoGalleryReorder_'+Ordinal()}">
+							<ul class="Reorder-SubContainer EventPhotoGalleryContainer" data-bind="foreach: EventDetailSectionImageMaps, sortable: EventDetailsSectionImageMapsSortableViewModel">
+								<li class="EventSectionImageContainer">
+									<div class="EventSectionImage" data-bind="style: {backgroundImage: 'url('+ Image().ImageGalleryThumbnailImageUrl() +')'}">
+										<div class="ImageHoverOverlay" data-bind="visible: Image().State() == null, click: Image().Preview">
+											<a class="linkButton trash" data-bind="click: $parent.RemoveImage"></a>
+											<a class="linkButton reorder" data-bind="attr : { id: 'EventSectionImageMapReorderHandle_' + $parent.Ordinal() + '_' + Ordinal()}, click: $parent.StartImageReorder"></a>
+										</div>
+										<div class="ImageHoverOverlay" data-bind="visible: Image().State() != null, css: Image().State()">
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div data-bind="visible: EventDetailSectionImageMaps() == null || EventDetailSectionImageMaps().length == 0">
+							<span>@ConnectCMSResources.DragDropImages</span>
+						</div>
+					</div>
+					<a class="linkButton trash" data-bind="click: RemoveImageGallery"></a>
+				</div>
+			</div>
+			<div class="EventSubSectionContainer" data-bind="if: HasSponsorship">
+				<div class="EventSubSectionValue">
+					<span class="sectionHeader">@ConnectCMSResources.Sponsorships</span>
+					<a class="link add" data-bind="click: AddSponsorshipItem">@ConnectCMSResources.UploadImage</a>
+					<div class="EventSubSectionDropZone" data-bind="attr:{id: 'SponsorshipUploaderDropZone_'+Ordinal()}">
+						<input style="display: none" type="file"
+							   data-bind="fileUploader: SponsorshipUploadConfig(), attr: { id: 'SponsorshipUploader_' + Ordinal(), name: 'sponsorships_' + Ordinal() + '[]' }" />
+						<div class="Reorder-Container" data-bind="attr:{id: 'SponsorshipReorder_'+Ordinal()}">
+							<ul class="Reorder-SubContainer EventSectionSponsorshipContainer" data-bind="foreach: EventDetailSectionSponsorshipMaps, sortable: EventDetailsSectionSponsorshipMapsSortableViewModel">
+								<li class="EventSponsorshipItemContainer">
+									<div class="EventSponsorshipImageContainer">
+										<div class="EventSectionImageContainer">
+											<div class="EventSectionImage" data-bind="style: {backgroundImage: 'url('+Image().ListItemImageUrl()+')'}, click: Image().Preview">
+												<div class="ImageHoverOverlay" data-bind="visible: Image().State() != null, css: Image().State()">
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="EventSponsorshipWebsiteContainer">
+										<label data-bind="attr: { for : 'SponsorshipURL_'+ $parent.Ordinal()+'_'+Ordinal() }">@ConnectCMSResources.Website</label>
+										<div data-bind="monsciergeEditableItem: { value: Website, id: 'SponsorshipURL_'+ $parent.Ordinal()+'_'+Ordinal() }"></div>
+									</div>
+									<div class="actions">
+										<a class="linkButton trash" data-bind="click: $parent.RemoveSponsorshipItem"></a>
+										<a class="linkButton reorder" data-bind="attr: { id : 'SponsorshipReorder_'+ $parent.Ordinal()+'_'+Ordinal() }"></a>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<a class="linkButton trash" data-bind="click: RemoveSponsorship"></a>
+				</div>
+			</div>
+			<div data-bind="if: !HasSubSection()">
+				<span>@ConnectCMSResources.AddMediaPart1 <a class="link" data-bind="click: OpenMedia">@ConnectCMSResources.AddMediaPart2</a> @ConnectCMSResources.AddMediaPart3</span>
+			</div>
+		</div>
+	</div>
+</script>

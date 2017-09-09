@@ -1,0 +1,40 @@
+﻿@using ConnectCMS.Resources
+<div>
+	<div>
+		<span class="header">
+			@ConnectCMSResources.BrowserUnsupportedHeader
+		</span>
+	</div>
+	<div>
+		<span class="subHeader">
+			@ConnectCMSResources.BrowserUnsupportedSubHeader
+		</span>
+	</div>
+	<div class="flexContainer flexItemsCenter flexContentCenter">
+		<div class="positionRelative flexSpacer">
+			<a class="browserImageButton chrome" href="@ConnectCMSResources.GoogleChromeUrl" title="@ConnectCMSResources.GoogleChrome"></a>
+		</div>
+		<div class="positionRelative flexSpacer">
+			<a class="browserImageButton firefox" href="@ConnectCMSResources.FirefoxUrl" title="@ConnectCMSResources.Firefox"></a>
+		</div>
+		@if( HttpContext.Current.Request.Browser.Platform == "WinNT" )
+		{
+			<div class="positionRelative flexSpacer">
+				<a class="browserImageButton internetExplorer" href="@ConnectCMSResources.InternetExplorerUrl" title="@ConnectCMSResources.InternetExplorer"></a>
+			</div>
+		}
+		<div class="positionRelative flexSpacer">
+			<a class="browserImageButton opera" href="@ConnectCMSResources.OperaUrl" title="@ConnectCMSResources.Opera"></a>
+		</div>
+		@if( HttpContext.Current.Request.Browser.Platform != "WinNT" )
+		{
+			<div class="positionRelative flexSpacer">
+				<a class="browserImageButton safari" href="@ConnectCMSResources.SafariUrl" title="@ConnectCMSResources.Safari"></a>
+			</div>
+		}
+	</div>
+	<div style="display: block; padding-bottom: 10px; margin-top: 50px;">
+		<span class="details">@ConnectCMSResources.NotReadyToUpgrade</span>
+		<a class="linkButton" data-bind="click: Ok">@ConnectCMSResources.DismissThisMessage</a>
+	</div>
+</div>

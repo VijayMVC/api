@@ -1,0 +1,32 @@
+﻿@using ConnectCMS.Resources
+<script type="text/html" id="enterpriseTipTemplate">
+	@Html.Partial( "~/Views/Enterprise/_TipTemplate.cshtml" )
+</script>
+<div data-bind="with: RecommendationTipViewModel">
+	<div class="toolBarContainer overflow">
+		<div class="flexSpacer"></div>
+		<div class="inline">
+			<label class="horizontal marginRight" for="sortEnterprisesBySelect">@ConnectCMSResources.SortMerchantsBy</label>
+			<select class="marginRight" id="sortEnterprisesBySelect" data-bind="value: EnterpriseSort, enable: ToolBarEnabled">
+				<option value="1">@ConnectCMSResources.Nearest</option>
+				<option value="2">@ConnectCMSResources.Alphabetical</option>
+			</select>
+			<div class="vr marginLeft marginRight"></div>
+			<label class="horizontal marginLeft marginRight" for="sortTipsBySelect">@ConnectCMSResources.SortTipsBy</label>
+			<select class="marginRight" id="sortTipsBySelect" data-bind="value: TipSort, enable: ToolBarEnabled">
+				<option value="1">@ConnectCMSResources.Latest</option>
+				<option value="2">@ConnectCMSResources.Earliest</option>
+				<option value="3">@ConnectCMSResources.TipsterName</option>
+				<option value="4">@ConnectCMSResources.Address</option>
+			</select>
+			<div class="vr marginLeft marginRight"></div>
+			<label class="marginLeft marginRight" for="languageSelect">@ConnectCMSResources.Language</label>
+			<select class="horizontal" id="languageSelect" data-bind="options: ConnectCMS.AvailableLanguages, optionsText: 'Value', value: ConnectCMS.SelectedLanguage, enable: ToolBarEnabled"></select>
+		</div>
+	</div>
+	<div data-bind="progressBar: ProgressBarViewModel"></div>
+	<div data-bind="visible: Executed">
+		<div data-bind="template: { name: 'noDataTemplate', data: NoDataViewModel }"></div>
+		<div data-bind="template: { name: 'enterpriseTipTemplate', foreach: Enterprises }"></div>
+	</div>
+</div>

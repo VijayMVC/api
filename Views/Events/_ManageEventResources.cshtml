@@ -1,0 +1,76 @@
+﻿@using ConnectCMS.Models.Events
+@using Kendo.Mvc.UI
+@model ConnectCMS.Models.Events.EventResourceModel
+<script type="text/javascript">
+
+    function AddNewResource() {
+        var validator = $('#NewEventForm').kendoValidator().data("kendoValidator");
+
+        var resource = JSON.stringify({
+            PKID: '0',
+            Name: $('#NewEventResourceText').val(),
+            ResourceType: '@Model.ResourceType',
+            DeviceId: '@Model.DeviceId',
+        });
+
+        if (validator.validate()) {
+            kendo.ui.progress($('#EventResourceList'), true);
+            $.ajax({
+                url: '@Url.Action("EventResourceCreate", "Events")',
+                contentType: 'application/json; charset=utf-8',
+                data: resource,
+                type: 'post',
+                traditional: true,
+                success: function (data, textStatus, jqXHR) {
+                    $('#EventResourceList').data('kendoGrid').dataSource.read();
+                    $('#NewEventResourceText').val('');
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    kendo.ui.progress($('#EventResourceList'), false);
+                },
+                complete: function(jqXHR, textStatus ) {
+                    kendo.ui.progress($('#EventResourceList'), false);
+                }
+            });
+        }
+    }
+
+    function NewEventFormSubmit() {
+        AddNewResource();
+        return false;
+    }
+</script>
+<div>
+	<div>
+		<form id="NewEventForm" onsubmit="return NewEventFormSubmit()">
+			<input id="NewEventResourceText" class="k-textbox EventResourceNewText" required />
+			<a class="k-button EventResourceNewButton" id="AddNewResource" onclick="AddNewResource()">Add New</a>
+		</form>
+	</div>
+	<div style="max-height: 300px;">
+		@(Html.Kendo().Grid<EventResourceModel>().Name("EventResourceList")
+              .Editable()
+              .Filterable()
+              .Sortable()
+              .Resizable(x => x.Columns(false))
+              .Reorderable(x => x.Columns(false))
+              .Groupable(x => x.Enabled(false))
+              .Scrollable(x => x.Enabled(true))
+              .Columns(c =>
+              {
+                  c.Bound(x => x.Name).Title("Resource Name").Width(250);
+                  c.Command(command => { command.Edit(); command.Destroy(); }).Width(185);
+              })
+              .Selectable(s => s.Enabled(false))
+              .Pageable(p => p.Enabled(false))
+              .DataSource(ds =>
+              {
+                  ds.Ajax().Model(m => m.Id(x => x.PKID));
+                  ds.Ajax().Read(r => r.Action("EventResourcesReadDataSource", "Events", new { deviceId = Model.DeviceId, resourceType = Model.ResourceType }));
+                  ds.Ajax().Create(c => c.Action("EventResourceCreate", "Events"));
+                  ds.Ajax().Update(u => u.Action("EventResourceUpdate", "Events"));
+                  ds.Ajax().Destroy(d => d.Action("EventResourceDestroy", "Events"));
+              })
+		)
+	</div>
+</div>

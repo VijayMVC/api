@@ -1,0 +1,122 @@
+﻿@using ConnectCMS.Resources
+@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+	.contentLabel {
+		display: block;
+		margin: 3px;
+	}
+
+	.contentInput {
+		margin: 3px;
+		margin-bottom: 10px;
+		display: block;
+		width: 100%;
+	}
+
+	input.contentInput[readonly], textarea.contentInput[readonly] {
+		background-color: #EEE;
+	}
+</style>
+<div id="SMSBlastModule" class="flexSpacer pageContainer" data-bind="allowBindings: false">
+	<div id="bindingDiv">
+		<div style="padding-bottom: 20px;">
+			<h1 class="bottomBorder paddingBottom">@ConnectCMSResources.SMSWelcomeMessageBlast</h1>
+		</div>
+
+		<div data-bind="disable: Sending()">
+			<label for="WelcomeMessage">@(ConnectCMSResources.StockMessage):</label>
+			<select data-bind="options: AvailableMessages, value: SelectedMessage, optionsText: 'Name'"></select>
+			<a class="linkButton" data-bind="disableAnchor: Sending(), click: AddMessage">@ConnectCMSResources.Add</a>
+			<div data-bind="with: SelectedMessage">
+				<fieldset style="margin-top: 15px;">
+					<!-- ko if: PKID() != 0 && PKID() != -1 -->
+					<label class="contentLabel">@ConnectCMSResources.Name</label>
+					<input class="contentInput" type="text" data-bind="value: Name, prop: {'readonly': !IsEditable()}, valueUpdate:'input'" />
+					<!-- /ko -->
+					<label class="contentLabel">@ConnectCMSResources.Message</label>
+					<textarea class="contentInput" data-bind="value: Message, prop: {'readonly': !IsEditable()}, valueUpdate:'input'"></textarea>
+					<p>@ConnectCMSResources.SMSWelcomeMessageBody</p>
+					<div data-bind="visible: IsEditable && PKID() != 0 && PKID() != -1">
+						<a class="linkButton" data-bind="disableAnchor: $parent.Sending()||!CanSave() || !HasChanges() || $parent.IsSavingMessage(), click: $parent.SaveMessage">@ConnectCMSResources.Save</a>
+						<a class="linkButton white" data-bind="disableAnchor: $parent.Sending()||(PKID() != null && !HasChanges()) || $parent.IsSavingMessage(), click: $parent.CancelMessage">@ConnectCMSResources.Cancel</a>
+						<a class="linkButton red" data-bind="visible: PKID() != null, disableAnchor: $parent.Sending()||$parent.IsSavingMessage(), click: $parent.DeleteMessage">@ConnectCMSResources.Delete</a>
+					</div>
+				</fieldset>
+			</div>
+		</div>
+		<hr />
+		<div>
+			<div data-bind="radioButton:{ text: '@ConnectCMSResources.Import', selected: AddType, value: 0}"></div>
+			<div data-bind="radioButton:{ text: '@ConnectCMSResources.Manual', selected: AddType, value: 1}"></div>
+		</div>
+		<div data-bind="if: AddType() == 0">
+			<p class="headerBody">@ConnectCMSResources.SMSBlastHeaderBody</p>
+			<div class="importContainer">
+				<label class="importLabel" for="importFile">@(ConnectCMSResources.File):</label>
+				<input id="importFile" type="file" style="display: none" data-bind="fileUploader: SMSBlastCSVUploadConfig(), attr: { id: 'SMSBlastCSVUploader', name: 'SMSBlastCSVfile[]' }" />
+				<input class="importFile" type="text" data-bind="value: FileName" disabled="disabled" />
+				<a class="linkButton importSelect" data-bind="click: SelectFile">@ConnectCMSResources.SelectFile</a>
+				<a class="linkButton green importSend" data-bind="click: Send, disableAnchor: !UploadComplete() || Sending() || SMSBlastData().length == 0 || !GoodMessage()">@ConnectCMSResources.Send</a>
+			</div>
+		</div>
+		<div data-bind="if: AddType() == 1">
+			<div class="inputsContainer">
+				<div class="inputContainer">
+					<label class="label">@ConnectCMSResources.FirstName</label>
+					<input class="input" type="text" data-bind="value: FirstName, valueUpdate: 'input'" />
+				</div>
+				<div class="inputContainer">
+					<label class="label">@ConnectCMSResources.LastName</label>
+					<input class="input" type="text" data-bind="value: LastName, valueUpdate: 'input'" />
+				</div>
+				<div class="inputContainer">
+					<label class="label">@ConnectCMSResources.PhoneNumber</label>
+					<input class="input" type="text" data-bind="value: PhoneNumber, valueUpdate: 'input'" />
+				</div>
+			</div>
+
+			<div class="buttonsContainer">
+				<a class="linkButton" data-bind="click: AddNumber, disableAnchor: !CanAddNumber()">@ConnectCMSResources.Add</a>
+				<a class="linkButton green" data-bind="click: Send, disableAnchor: Sending() || SMSBlastData().length == 0 || !GoodMessage()">@ConnectCMSResources.Send</a>
+			</div>
+		</div>
+		<div class="areaCodeContainer" style="position: relative">
+			<div class="areaCodeCheck" data-bind="checkbox: {checked: PrefixAreaCode, text: '@ConnectCMSResources.SMSBlastPrefixAreaCodeLabel'}"></div>
+			<input class="areaCodeValue" type="text" data-bind="value: AreaCode, valueUpdate: 'input', enable: PrefixAreaCode" size="3" />
+			<a class="linkButton red" style="position: absolute; right: 0px; top: 10px;" data-bind="click: ClearList, disableAnchor: SMSBlastData().length == 0">@ConnectCMSResources.ClearList</a>
+		</div>
+		<div class="resultGrid" data-bind="kendoGrid: FilteredSMSBlastData">
+		</div>
+	</div>
+</div>
+
+@if( Request.IsAjaxRequest() )
+{
+	<script type="text/javascript">
+		function getSelectedDeviceId() {
+			return ConnectCMS.MainViewModel.SelectedDevice().PKID();
+		};
+	</script>
+}
+else
+{
+	// This is a hard-coded replacement for the deviceId used
+	// if the page is ran outside of the CMS container.
+	<script type="text/javascript">
+		function getSelectedDeviceId() {
+			return @(ViewBag.DeviceId ?? 22093);
+		}
+	</script>
+}
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		var hotelId = @(ViewBag.HotelId);
+		var welcomeMessage = '@HttpUtility.JavaScriptStringEncode(ViewBag.WelcomeMessage)';
+		var smsStockMessages = @Html.Raw( ViewBag.SMSStockMessages ?? "null" );
+		var vm = new ConnectCMS.Requests.SMSBlastViewModel(getSelectedDeviceId(), hotelId, welcomeMessage, smsStockMessages);
+		ko.applyBindings(vm, $('#bindingDiv')[0]);
+	});
+</script>

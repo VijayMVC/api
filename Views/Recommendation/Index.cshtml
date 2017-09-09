@@ -1,0 +1,78 @@
+﻿@using ConnectCMS.Resources
+@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout.cshtml";
+}
+
+@if( !Request.IsAjaxRequest() )
+{
+	<script type="text/javascript">
+		$(function () {
+			ConnectCMS.MainViewModel.SelectedDevice(new DeviceViewModel({ PKID: 13267, Name: 'Test' }));
+		});
+	</script>
+}
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		ko.applyBindings(new RecommendationViewModel(), $('#bindingDiv')[0]);
+	});
+</script>
+
+<script type="text/html" id="enterpriseHeaderTemplate">
+	@Html.Partial( "~/Views/Enterprise/_HeaderTemplate.cshtml" )
+</script>
+
+<script type="text/html" id="enterpriseLocationEnterpriseTemplate">
+	@Html.Partial( "~/Views/EnterpriseLocation/_EnterpriseTemplate.cshtml" )
+</script>
+
+<script type="text/html" id="imageEnterpriseEditTemplate">
+	@Html.Partial( "~/Views/Image/_EnterpriseEditTemplate.cshtml" )
+</script>
+
+<script type="text/html" id="imageEnterpriseTemplate">
+	@Html.Partial( "~/Views/Image/_EnterpriseTemplate.cshtml" )
+</script>
+
+<script type="text/html" id="tipTemplate">
+	@Html.Partial( "~/Views/Tip/_TipTemplate.cshtml" )
+</script>
+
+<script type="text/html" id="noDataTemplate">
+	@Html.Partial( "~/Views/Widget/_NoDataTemplate.cshtml" )
+</script>
+
+<script type="text/html" id="tabHeaderTemplate">
+	@Html.Partial( "~/Views/Widget/_TabHeaderTemplate.cshtml" )
+</script>
+
+<div class="flexSpacer pageContainer" data-bind="allowBindings: false">
+	<div id="bindingDiv" class="transitionPanelContainer" data-bind="transitionPanel: { panelId: 'RecommendationContent', selectedIndex: SelectedContentIndex, selector: '.recommendationContent' }">
+		<div id="rootDiv" class=" recommendationContent">
+			<h1 class="bottomBorder paddingBottom">@ConnectCMSResources.Recommendations</h1>
+
+			<div data-bind="errorMessage: ErrorMessageViewModel"></div>
+
+			<div data-bind="template: { name: 'tabHeaderTemplate', data: Tabs }"></div>
+			<div class="transitionPanelContainer" data-bind="transitionPanel: { panelId: 'RecommendationTabs', selectedIndex: SelectedTabIndex, selector: '.recommendationTab' }">
+				<div class="recommendationTab tabContent">
+					@Html.Partial( "_Search" )
+				</div>
+				<div class="recommendationTab tabContent">
+					@Html.Partial( "_Recommend" )
+				</div>
+				<div class="recommendationTab tabContent">
+					@Html.Partial( "_Blacklist" )
+				</div>
+				<div class="recommendationTab tabContent">
+					@Html.Partial( "_Tip" )
+				</div>
+				<div class="recommendationTab tabContent">
+					@Html.Partial( "~/Views/Category/_Category.cshtml" )
+				</div>
+			</div>
+		</div>
+
+		<div id="recommendationNavigationDiv" class="recommendationContent"></div>
+	</div>
+</div>

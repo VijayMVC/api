@@ -1,0 +1,95 @@
+﻿@{
+	ViewBag.Title = "Dashboard";
+	Layout = ( Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout.cshtml" );
+}
+
+<div id="page-container" class="flexSpacer pageContainer cms-dashboard @(!Request.IsAjaxRequest() ? "include-dev-sidebar" : "")" data-bind="allowBindings: false">
+	<div id="bindingDiv" class="transitionPanelContainer">
+		<div id="dev-sidebar">Sidebar Placeholder (dev only)</div>
+		<div id="page-content">
+			<div>
+				<h1>Dashboard</h1>
+			</div>
+
+			<hr />
+			<div class="stat-container" data-bind="foreach: stats">
+				<div class="stat-block" data-bind="css: statClass">
+					<div class="stat-row">
+						<div class="stat-cell stat-hdr-cell">
+							<span class="stat-title" data-bind="text: title"></span>
+							<span class="stat-subtitle" data-bind="text: range"></span>
+						</div>
+					</div>
+					<div class="stat-row">
+						<div class="stat-cell stat-result" data-bind="text: value"></div>
+					</div>
+				</div>
+			</div>
+			<div class="lower-container">
+				<div id="todays-events" class="lower-block">
+					<header>Today's Events</header>
+					<ul class="flat tiled" data-bind="foreach: events, visible: hasEvents">
+						<li class="event-row" data-bind="click: $parent.navigate">
+							<div class="event-cell event-cell-gutter"></div>
+							<div class="event-cell db-eventtime">
+								<span data-bind="text: startTimeText"></span>
+							</div>
+							<div class="event-cell">
+								<span class="db-eventtitle" data-bind="text: title"></span>
+								<span data-bind="text: location"></span>
+							</div>
+							<div class="event-cell event-link">
+								<i class="fa fa-angle-right fa-3x"></i>
+							</div>
+						</li>
+					</ul>
+					<p data-bind="visible: !hasEvents()">
+						There are currently no events scheduled.
+					</p>
+				</div>
+
+				<div id="quick-links" class="lower-block">
+					<header>Quicklinks</header>
+					<div class="quick-link-container" data-bind="foreach: quickLinks">
+						<div class="quick-link-block" data-bind="click: $parent.navigate">
+							<div class="quick-link-row">
+								<div class="quick-link-cell">
+									<i class="icon icon-3x" data-bind="css: iconClass"></i>
+								</div>
+							</div>
+							<div class="quick-link-row">
+								<div class="quick-link-cell" data-bind="text: title"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+@if( !Request.IsAjaxRequest() )
+{
+	<div id="non-ajax-request" style="visibility: hidden"></div>
+	// This is a hard-coded replacement for the deviceId used
+	// if the page is ran outside of the CMS container.
+	<script type="text/javascript">
+		function getSelectedDeviceId() {
+			return 22093;
+		}
+	</script>
+}
+else
+{
+	<script type="text/javascript">
+		function getSelectedDeviceId() {
+			return ConnectCMS.MainViewModel.SelectedDevice().PKID();
+		}
+	</script>
+}
+
+<script type="text/javascript">
+	$(function () {
+		var vm = new ConnectCMS.Dashboard.DashboardViewModel(getSelectedDeviceId());
+		ko.applyBindings(vm, $('#bindingDiv')[0]);
+	});
+</script>

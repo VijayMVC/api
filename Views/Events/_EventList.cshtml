@@ -1,0 +1,95 @@
+﻿@using ConnectCMS.Resources
+<div class="EventsListView">
+	<div class="elvStaticHeader" data-bind="visible: ListViewEvents().length > 0">
+		<a class="elvTimeHeader" data-bind="with: TopTime, click: TimeHeaderClick">
+			<div data-bind="if: $parent.SelectedView().name == 'day'">
+				<span class="header" data-bind="text: $data.format('h:mm')"></span>
+				<span class="subHeader" data-bind="text: $data.format('A')"></span>
+			</div>
+			<div data-bind="if: $parent.SelectedView().name == 'week'">
+				<span class="header" data-bind="text: $data.date()"></span>
+				<span class="subHeader" data-bind="text: $data.format('dd')"></span>
+			</div>
+			<div data-bind="if: $parent.SelectedView().name == 'month'">
+				<span class="header" data-bind="text: $data.date()"></span>
+				<span class="subHeader" data-bind="text: $data.format('dd')"></span>
+			</div>
+		</a>
+		<div class="elvGroupContainer" data-bind="with: TopGroup">
+			<div class="elvGroupHeader">
+				<span class="elvGroupName" data-bind="text: $data"></span>
+				<span class="elvYear" data-bind="text: $parent.TopTime().format('YYYY')"></span>
+			</div>
+		</div>
+	</div>
+	<div class="elvStaticTimeSelector">
+		<div data-bind="foreach: ListViewEvents()">
+			<a class=" elvTimeSelectorHeader" data-bind="click: $parent.TimeSelectorClick, attr: {title: start.format('YYYYMMDDHHmmss')}">
+				<div data-bind="if: $parent.SelectedView().name == 'day'">
+					<span class="header" data-bind="text: start.format('h:mm')"></span>
+					<span class="subHeader" data-bind="text: start.format('A')"></span>
+				</div>
+				<div data-bind="if: $parent.SelectedView().name == 'week'">
+					<span class="header" data-bind="text: start.date()"></span>
+					<span class="subHeader" data-bind="text: start.format('dd')"></span>
+				</div>
+				<div data-bind="if: $parent.SelectedView().name == 'month'">
+					<span class="header" data-bind="text: start.date()"></span>
+					<span class="subHeader" data-bind="text: start.format('dd')"></span>
+				</div>
+			</a>
+		</div>
+	</div>
+	<div class="elvTimeContainer" data-bind="foreach: ListViewEvents(), event: {scroll: ListViewScroll}">
+		<a class="elvTimeHeader" data-bind="click: $parent.TimeHeaderClick, attr: {title: start.format('YYYYMMDDHHmmss')}">
+			<div data-bind="if: $parent.SelectedView().name == 'day'">
+				<span class="header" data-bind="text: start.format('h:mm')"></span>
+				<span class="subHeader" data-bind="text: start.format('A')"></span>
+			</div>
+			<div data-bind="if: $parent.SelectedView().name == 'week'">
+				<span class="header" data-bind="text: start.date()"></span>
+				<span class="subHeader" data-bind="text: start.format('dd')"></span>
+			</div>
+			<div data-bind="if: $parent.SelectedView().name == 'month'">
+				<span class="header" data-bind="text: start.date()"></span>
+				<span class="subHeader" data-bind="text: start.format('dd')"></span>
+			</div>
+		</a>
+		<div class="elvGroupContainer" data-bind="foreach: groups">
+			<div class="elvGroupHeader" style="z-index: 3">
+				<span class="elvGroupName" data-bind="text: group"></span>
+				<span class="elvYear" data-bind="text: $parent.start.format('YYYY')"></span>
+			</div>
+			<div class="elvEventContainer" data-bind="foreach: events">
+				<div class="elvEventItem">
+					<div class="elvEventContentContainer">
+						<div class="elvEventNameContainer">
+							<span class="elvEventName" data-bind="text: Name()"></span>
+							<div class="elvRecurrenceIcon" data-bind="visible: IsRecurring"></div>
+						</div>
+						<div>
+							<span class="elvLocationName" data-bind="text: EventLocation().Name()"></span>
+						</div>
+						<div>
+							<i class="fa fa-lock" data-bind="visible: IsPrivate"></i>
+							<span class="elvTimeSpan" data-bind="text: TimeSpanString()"></span>
+						</div>
+					</div>
+					<div class="elvEventActionContainter">
+						@if( ViewBag.IsContentManager && !ViewBag.HasSyncer )
+						{
+							<div class="marginLeft" data-bind="listButton: ListViewListButtonViewModel"></div>
+						}
+						else
+						{
+							<a class="linkButton" data-bind="click: EditEvent">@ConnectCMSResources.ManageEvent</a>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="elvNoEvents" data-bind="visible: !EventsLoading() && ListEvents().length == 0">
+		<p>@ConnectCMSResources.EventListNoEvents</p>
+	</div>
+</div>

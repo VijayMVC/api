@@ -1,0 +1,72 @@
+﻿@using System.Reflection
+@using ConnectCMS.Resources
+<div class="modal fade" id="aboutCmsModal" tabindex="-1" role="dialog" aria-labelledby="aboutCmsModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">&times;</span>
+					<span class="sr-only">Close</span>
+				</button>
+				<h4 class="modal-title">@ConnectCMSResources.AboutConnectCMS ( @Assembly.GetAssembly( typeof( MvcApplication ) ).GetName().Version.ToString() )</h4>
+			</div>
+			<div class="modal-body">
+				<p>
+					@ConnectCMSResources.AboutConnectCMSText1
+				</p>
+				<p>
+					@ConnectCMSResources.AboutConnectCMSText2
+					<a href="mailto:support@monscierge.com">@ConnectCMSResources.AboutConnectCMSHyperlinkText</a>
+				</p>
+			</div>
+			<div class="modal-footer">
+				<a href="#" data-dismiss="modal">@ConnectCMSResources.Close</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="unsupportedBrowserModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="unsupportedBrowserModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div id="unsp-browser" class="modal-body">
+				<div class="header">
+					@ConnectCMSResources.BrowserUnsupportedHeader
+				</div>
+				<div class="subheader">
+					@ConnectCMSResources.BrowserUnsupportedSubHeader
+				</div>
+				<div id="browsers-list">
+					<div class="spacer"></div>
+					<div class="browser-img">
+						<a class="browser-chrome" href="@ConnectCMSResources.GoogleChromeUrl" title="@ConnectCMSResources.GoogleChrome"></a>
+					</div>
+					<div class="browser-img">
+						<a class="browser-firefox" href="@ConnectCMSResources.FirefoxUrl" title="@ConnectCMSResources.Firefox"></a>
+					</div>
+					@if( HttpContext.Current.Request.Browser.Platform == "WinNT" )
+					{
+						<div class="browser-img">
+							<a class="browser-ie" href="@ConnectCMSResources.InternetExplorerUrl" title="@ConnectCMSResources.InternetExplorer"></a>
+						</div>
+					}
+					<div class="browser-img">
+						<a class="browser-opera" href="@ConnectCMSResources.OperaUrl" title="@ConnectCMSResources.Opera"></a>
+					</div>
+					@if( HttpContext.Current.Request.Browser.Platform != "WinNT" )
+					{
+						<div class="browser-img">
+							<a class="browser-safari" href="@ConnectCMSResources.SafariUrl" title="@ConnectCMSResources.Safari"></a>
+						</div>
+					}
+					<div class="spacer"></div>
+				</div>
+				<div id="dismiss-upgrade-msg">
+					<span class="details">@ConnectCMSResources.NotReadyToUpgrade</span>&nbsp;
+					<button class="btn btn-primary btn-custom" data-dismiss="modal">@ConnectCMSResources.DismissThisMessage</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+

@@ -1,0 +1,82 @@
+﻿@using ConnectCMS.Resources
+@model ConnectCMS.Models.HomeViewModel
+
+@section scripts
+{
+	@Scripts.Render("~/bundles/silverlight")
+}
+
+<script type="text/javascript">
+	ConnectCMS.CurrentUser = { PKID: @(Model.CurrentUser.PKID), Email: '@(Model.CurrentUser.Email)', Name: '@(Model.CurrentUser.ContactUserName)' };
+</script>
+
+<script type="text/html" id="navItemTemplate">
+	<div data-bind="click: Navigate, css: IsExpanded() ? 'selected' : ''" class="leftnav-navigationItem">
+		<div class="icon-border">
+			<div class="icon" data-bind="visible: Icon() != null, style: { backgroundImage: 'url(Content/monscierge/images/icons/leftnav/'+Icon()+')' }"></div>
+		</div>
+		<span data-bind="text: $data.Text"></span>
+		<div class="arrow" data-bind="visible: SubItems().length > 0, css: IsExpanded() ? 'expanded' : ''"></div>
+	</div>
+	<div class="leftnav-subnav" data-bind="visible: IsExpanded, template:{name: 'navSubItemTemplate', foreach: $data.SubItems}">
+	</div>
+</script>
+
+<script type="text/html" id="navSubItemTemplate">
+	<div data-bind="click: Navigate, css: IsSelected() ? 'selected' : ''" class="leftnav-navigationSubItem">
+		<span data-bind="text: $data.Text"></span>
+		<div class="arrow" data-bind="visible: SubItems().length > 0, css: IsExpanded() ? 'expanded' : ''"></div>
+	</div>
+	<div class="leftnav-subnav" data-bind="visible: IsExpanded, template:{name: 'navSubItemTemplate', foreach: $data.SubItems}">
+	</div>
+</script>
+
+<div class="leftnav container">
+	<div class="leftnav-device container" data-bind="visible: SelectedDevice() == null && !NavigationLoading()">
+		<div class="leftnav-deviceplaceholder" id="NoDevicePlaceholder">
+			<div>
+				<div class="icon"></div>
+				<span>@ConnectCMSResources.YourDeviceNetwork</span>
+			</div>
+		</div>
+	</div>
+	<div class="leftnav-device container" data-bind="with: SelectedDevice">
+		<div class="leftnav-deviceplaceholder" id="DevicePlaceholder" data-bind="monsciergeHoverOverlay: {overlaySelector: '.leftnav-devicenetwork-hover'}">
+			<div>
+				<span data-bind="text: Name"></span>
+			</div>
+		</div>
+		@*<div class="leftnav-devicenetwork-hover" data-bind="click: $root.Navigate.bind($data, null, false, true, 'DeviceNetwork')">
+				<div>
+					<div class="icon"></div>
+					<span>@ConnectCMSResources.YourDeviceNetwork</span>
+					<div class="arrow"></div>
+				</div>
+			</div>*@
+	</div>
+	<div class="leftnav-navigation container" data-bind="template:{name: 'navItemTemplate', foreach: $data.NavigationItems}">
+	</div>
+</div>
+
+<div id="contentContainer" class="content container">
+	<div id="mvcContainer" class="MVC container" data-bind="visible: ShowMvc"></div>
+	<div id="slContainer" class="silverlight container">
+		<object id="silverlightControl" data="data:application/x-silverlight-2," type="application/x-silverlight-2">
+			@Html.Raw(Model.SilverlightParam)
+			<param name="onError" value="onSilverlightError" />
+			<param name="background" value="transparent" />
+			<param name="EnableGPUAcceleration" value="true" />
+			<param name="minRuntimeVersion" value="5.0.61118.0" />
+			<param name="onLoad" value="pluginLoaded" />
+			<param name="autoUpgrade" value="true" />
+			<param name="windowless" value="true" />
+			<param name="maxframerate" value="10" />
+			<param name="enablehtmlaccess" value="true" />
+			<param name="initParams" value="EnableMenuEditor=True,IPAddress=@Model.SilverlightIpAddress, IsConnectCMS=True" />
+			<a href="https://go.microsoft.com/fwlink/?LinkID=149156&v=5.0.61118.0" style="text-decoration: none">
+				<img src="~/Content/monscierge/images/SLMedallion_ENU.png" alt="Get Microsoft Silverlight"
+					 style="border-style: none" />
+			</a>
+		</object>
+	</div>
+</div>

@@ -1,0 +1,16 @@
+﻿@using ConnectCMS.Repositories
+@using ConnectCMS.Resources
+@model MonsciergeDataModel.Image
+<div class="previewImage-popup">
+	<div class="options tabHeaderContainer">
+		<a class="tabHeader fit selected" onclick="ConnectCMS.Widgets.Popups.PreviewImage.ShowFit()">@ConnectCMSResources.FitToWindow</a>
+		<a class="tabHeader full" onclick="ConnectCMS.Widgets.Popups.PreviewImage.ShowFull()">@ConnectCMSResources.ActualSize</a>
+	</div>
+	<div class="ImagePreview">
+		<img id="previewImage_full" class="full" style="display: none" src="@Monscierge.Utilities.UrlHelper.FormatBaseUri( "/MonsciergeImaging/getImage.ashx")?filename=@(Model.Path)" />
+		<img id="previewImage_fit" class="fit" src="@Monscierge.Utilities.UrlHelper.FormatBaseUri( "/MonsciergeImaging/getImage.ashx" )?filename=@(Model.Path)&width=400&height=400" />>
+	</div>
+	<div class="actions">
+		<a class="linkButton white" data-bind="click: Close">@ConnectCMSResources.Close</a>
+	</div>
+</div>

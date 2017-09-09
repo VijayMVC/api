@@ -1,0 +1,23 @@
+﻿@using ConnectCMS.Resources
+<div class="listItemContainer">
+	<img class="listItemImage marginRight" data-bind="attr: { src: ListItemImage() != null ? ListItemImage().ListItemImageUrl : null }, visible: ImageVisible" />
+	<div class="flexSpacer block marginRight" data-bind="css: ImageVisible() ? 'marginLeft' : ''">
+		<span class="listItemHeader center marginBlock" data-bind="text: Name"></span>
+		<div>
+			<div class="block" data-bind="visible: EnterpriseLocationsLength() != 1">
+				<span class="listItemLabel block gray" data-bind="text: FormattedEnterpriseLocationsLength"></span>
+			</div>
+			<div class="block" data-bind="visible: EnterpriseLocationsLength() == 1, with: FirstEnterpriseLocation">
+				<div class="block marginBlock">
+					<img class="listItemLabelImage" src="Content/monscierge/images/distance.png" />
+					<span class="listItemLabel black bold" data-bind="text: FormattedDistanceInMiles"></span>
+					<span class="listItemLabel black bold">@ConnectCMSResources.Miles</span>
+				</div>
+				<div data-bind="if: Location() != null">
+					<span class="listItemLabel block gray" data-bind="text: Location().FullAddress"></span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<a class="linkButton marginLeft white" data-bind="click: ClickBack">@ConnectCMSResources.Back</a>
+</div>

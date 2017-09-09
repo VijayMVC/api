@@ -1,0 +1,151 @@
+﻿@using ConnectCMS.Resources
+@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout.cshtml";
+}
+@section PageStyles{
+	@Styles.Render( "~/Content/kendo/2016.1.226/bootstrap-css" )
+	@Styles.Render( "~/Content/monscierge/bootstrappy/css" )
+}
+<script type="text/html" id="ImageGalleryTemplate">
+	<div class="ImageUploaderContainer">
+		<div class="ImageUploaderValue">
+			<a class="link add" data-bind="click: InsertPhoto">@ConnectCMSResources.UploadImage</a>
+			<div class="ImageUploaderDropZone" data-bind="attr:{id: 'PhotoGalleryUploaderDropZone_'+Ordinal() }">
+				<input style="display: none" type="file"
+					   data-bind="fileUploader: PhotoGalleryUploadConfig(), attr: { id: 'PhotoGalleryUploader_'+Ordinal(), name: 'photos_'+Ordinal()+'[]' }" />
+				<div class="Reorder-Container images" data-bind="attr:{id: 'PhotoGalleryReorder_'+Ordinal()}, css: { 'error' : !ImageMaps.isValid() }">
+					<ul class="Reorder-SubContainer ImageUploaderPhotoGalleryContainer" data-bind="foreach: ImageMaps, sortable: ImageMapsSortableViewModel">
+						<li class="ImageUploaderImageContainer">
+							<div class="ImageUploaderImage" data-bind="style: {backgroundImage: 'url('+ Image().ImageGalleryThumbnailImageUrl() +')'}">
+								<div class="ImageHoverOverlay" data-bind="visible: Image().State() == null, click: Image().Preview">
+									<a class="linkButton trash" data-bind="click: $parent.RemoveImage"></a>
+									<a class="linkButton reorder" data-bind="attr : { id: 'ImageUploaderImageMapReorderHandle_' + $parent.Ordinal() + '_' + Ordinal()}, click: $parent.StartImageReorder"></a>
+								</div>
+								<div class="ImageHoverOverlay" data-bind="visible: Image().State() != null, css: Image().State()">
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="ImageUploaderEmpty" data-bind="visible: ImageMaps() == null || ImageMaps().length == 0">
+					<span>@ConnectCMSResources.DragDropImages</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<div id="equalizer" data-bind="allowBindings: false" class="connect_cms">
+	<div class="container-fluid" id="bindingDiv">
+		<div class="row" id="scenes" data-bind="validationOptions: {decorateElement: false, insertMessages: false}">
+			@Html.Partial( "_LeftNav" );
+			<div class="col-sm-9 col-md-9 col-sm-offset-3 col-md-offset-3 col-xs-12 base-content">
+				<div class="page-header headroom">
+					<!-- Please change this functionality if needed -->
+					<h1 class="pull-left" id="page_section_title">
+						Add a campaign scenes
+					</h1>
+					<!-- Start Header Action -->
+					<div class="header_btn_holder pull-right">
+						<a class="btn btn-border btn-wide" href="@Url.Action("Screens")">Back</a>
+						<a class="btn btn-primary btn-wide" href="#" data-bind="disableAnchor: !CanSave(), click: Save">Save</a>
+					</div>
+					<!-- End Header Action -->
+					<div class="clearfix"></div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<!-- Start Tab Content -->
+						<div class="interior-content">
+							<div class="alert alert-danger alert-dismissible" style="display: none;" role="alert" data-bind="visible: ErrorMessage() != null">
+								<button class="close" type="button" data-dismiss="alert">
+									<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+								</button>
+								<span data-bind="text: ErrorMessage" class="margin-right-10"></span>
+								<a class="link" data-bind="click: ErrorRetry">Retry</a>
+							</div>
+							<div class="headroom_less">
+								<div class="row">
+									<div class="col-sm-5">
+										<div class="form-group">
+											<label class="control-label" for="campaignNameTitle">Campaign Scene Name</label>
+											<div data-bind="css: {'error': !Name.isValid()}">
+												<input class="form-control" id="campaignNameTitle" type="text" placeholder="A short name for this scene..." data-bind="value: Name">
+											</div>
+										</div>
+									</div>
+									<div class="col-sm-2">
+										<!-- Select Basic -->
+										<div class="form-group">
+											<label class="control-label" for="sceneorientation1">Orientation</label>
+											<div data-bind="css: {'error': !Orientation.isValid()}">
+												<select required="required" data-bind="kendoDropDownList: {data: Orientations, value: Orientation, filter: 'contains', dataTextField: 'Name', dataValueField: 'PKID', optionLabel: 'Select an orientation'}"></select>
+											</div>
+										</div>
+									</div>
+									<div class="col-sm-2">
+										<!-- Select Basic -->
+										<div class="form-group">
+											<label class="control-label" for="scenelayout1">Layout</label>
+											<div data-bind="css: {'error': !Layout.isValid()}">
+												<select required="required" data-bind="kendoDropDownList: {data: FilteredLayouts, value: Layout, filter: 'contains', dataTextField: 'Name', dataValueField: 'PKID', optionLabel: 'Select a layout'}"></select>
+											</div>
+										</div>
+									</div>
+									<div class="col-sm-2" data-bind="visible: Layout() != null">
+										<label class="control-label">Preview</label>
+										<img width="50" class="img-responsive" alt="Layout" data-bind="attr: { src: LayoutImageUrl }">
+									</div>
+								</div>
+								<!-- ko foreach: ScreenSections -->
+								<div class="row">
+									<div class="col-sm-12 headroom_less">
+										<div class="panel panel-info panel-condensed">
+											<div class="panel-heading clearfix">
+												<h3 class="panel-title col-sm-7">Slides</h3>
+												<div class="col-sm-5 text-right">
+													<form class="form-horizontal">
+														<div class="form-group clean_lower">
+															<label class="col-sm-6 control-label text-muted small" for="transition1">Transition Time</label>
+															<div class="col-sm-6 text-left">
+																<div data-bind="css: {'error': !Transition.isValid()}">
+																	<select required="required" data-bind="kendoDropDownList: {data: Transitions, value: Transition, filter: 'contains', dataTextField: 'Name', dataValueField: 'Value', optionLabel: 'Select a transition'}"></select>
+																</div>
+															</div>
+														</div>
+													</form>
+												</div>
+											</div>
+											<div class="panel-body">
+												<div class="col-sm-2">
+													<img width="70" class="img-responsive" alt="Gallery 2" data-bind="attr: { src: LayoutImageUrl() }">
+												</div>
+												<div class="col-sm-10 col-xs-12 upload_form">
+													<!-- Standard Form -->
+													<!-- <h4>Select file from your computer</h4> -->
+													<!-- ko template: { name: "ImageGalleryTemplate" } -->
+													<!-- /ko -->
+													<!-- ImageGallery -->
+													<p>Recommended Format: <span data-bind="text: RecommendedFormat"></span></p>
+													<p>Recommended Size: <span data-bind="text: RecommendedSize"></span></p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div><!-- End Row -->
+								<!-- /ko -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function () {
+		var data = @Html.Raw( ViewBag.Campaign ?? "null" );
+		var vm = new ConnectCMS.MarketingCampaigns.ScreenViewModel(data);
+		ko.applyBindings(vm, $('#bindingDiv')[0]);
+		vm.Load();
+	});
+</script>

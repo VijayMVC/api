@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "TestNotes";
+    Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="flexSpacer pageContainer" data-bind="allowBindings: false">
+    <div id="bindingDiv" class="transitionPanelContainer">
+        <div>
+            <h1>Release Notes</h1>
+        </div>
+        <div id="release-notes"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function() {
+        $('#release-notes').releaseNotes();
+    });
+</script>

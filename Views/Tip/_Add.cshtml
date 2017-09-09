@@ -1,0 +1,17 @@
+﻿@using ConnectCMS.Resources
+<div>
+	<h1 class="bottomBorder paddingBottom">@ConnectCMSResources.CreateNewTip</h1>
+	<div data-bind="with: RecommendationEnterpriseTipViewModel.RecommendationEnterpriseViewModel.HeaderEnterprise">
+		<div class="marginTop" data-bind="template: { name: 'enterpriseHeaderTemplate' }"></div>
+	</div>
+	<div class="toolBarContainer overflow">
+		<div class="flexSpacer">
+			<a class="linkButton" data-bind="click: ClickUpdate">@ConnectCMSResources.Save</a>
+		</div>
+		<div class="inline">
+			<label class="marginRight" for="languageSelect">@ConnectCMSResources.Language</label>
+			<select class="horizontal" id="languageSelect" data-bind="options: ConnectCMS.AvailableLanguages, optionsText: 'Value', value: ConnectCMS.SelectedLanguage"></select>
+		</div>
+	</div>
+	<textarea class="rows10 width100Percent" data-bind="value: Tip, valueUpdate: 'input'"></textarea>
+</div>

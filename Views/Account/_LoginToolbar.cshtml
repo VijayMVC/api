@@ -1,0 +1,35 @@
+﻿@using ConnectCMS.Resources
+@model ConnectCMS.Models.Account.BaseLoginModel
+<div id="toolbar">
+	<span class="clearfix"></span>
+	<div class="dropdown pull-left">
+		<a href="#" data-toggle="dropdown">
+			<img src="~/Content/monscierge/images/logo-connect-mark.png" class="img-responsive" width="33" alt="Menu" />
+		</a>
+		<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+			<li><a href="#" data-toggle="modal" data-target="#aboutCmsModal">@ConnectCMSResources.AboutConnectCMS</a></li>
+		</ul>
+	</div>
+	<div id="lang-selector" class="dropdown pull-right">
+		@if( Model.SupportedCultures != null )
+		{
+			<a href="#" data-toggle="dropdown">@ConnectCMSResources.Language <span class="caret"></span></a>
+			<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+				@foreach( var culture in Model.SupportedCultures )
+				{
+					<li>
+						<a href="#" class="lang-option" data-culture="@culture.Culture">
+							@if( culture.IsSelected )
+							{
+								<span class="glyphicon glyphicon-ok"></span>
+							}
+							@culture.NativeName
+						</a>
+					</li>
+				}
+			</ul>
+		}
+	</div>
+	<span class="clearfix"></span>
+</div>
+

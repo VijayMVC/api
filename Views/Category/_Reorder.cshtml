@@ -1,0 +1,22 @@
+﻿@using ConnectCMS.Resources
+
+<div>
+    <div class="bottomBorder flexContainer paddingBottom">
+        <h1 class="flexSpacer marginRight">@ConnectCMSResources.ReorderCategories</h1>
+
+        <a class="linkButton marginLeft white" data-bind="click: ClickBack">@ConnectCMSResources.Back</a>
+    </div>
+
+    <div data-bind="errorMessage: ErrorMessageViewModel"></div>
+    <div data-bind="helpMessage: HelpMessageViewModel"></div>
+
+    <div class="toolBarContainer">
+        <a class="linkButton" data-bind="click: ClickUpdate, css: ToolBarEnabled() ? '' : 'disabled'">@ConnectCMSResources.Save</a>
+    </div>
+
+    <div data-bind="progressBar: ProgressBarViewModel"></div>
+    <div data-bind="visible: RecommendationCategoryViewModel.RecommendationViewModel.CategoriesExecuted">
+        <div data-bind="template: { name: 'noDataTemplate', data: NoDataViewModel }"></div>
+        <div data-bind="sortable: SortableViewModel, template: { name: 'categoryReorderTemplate', foreach: Categories }"></div>
+    </div>
+</div>

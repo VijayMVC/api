@@ -1,0 +1,9 @@
+﻿@using ConnectCMS.Resources
+
+<div class="listItemContainer paddingTop">
+    <img class="listItemImage marginRight" data-bind="attr: { src: Image() != null ? Image().ListItemImageUrl : null }, style: { backgroundColor: !ConnectCMS.Strings.IsNullOrWhitespace(BackgroundColor) ? FormattedBackgroundColor() : '' }" />
+
+    <span class="listItemHeader center flexSpacer marginLeft marginRight" data-bind="text: Name"></span>
+
+    <div class="marginLeft" data-bind="listButton: ListButtonViewModel"></div>
+</div>

@@ -1,0 +1,159 @@
+﻿@using ConnectCMS.Resources
+@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="ImageUploader" class="flexSpacer pageContainer" data-bind="allowBindings: false">
+	<div id="bindingDiv">
+		<label for="uploaderTypes">@ConnectCMSResources.ImageTypes</label>
+		<select id="uploaderTypes" data-bind="options: AvailableImageUploaderViewModels, value: SelectedImageUploaderViewModel, optionsText: 'label', optionsCaption: 'Select an upload type'"></select>
+
+		<div class="" data-bind="with: SelectedImageUploaderViewModel">
+			<div data-bind="template:{ name: template, data: vm }">
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/html" id="HotelImageTemplate">
+	<label for="searchText">@ConnectCMSResources.SearchHotels</label>
+	<input id="searchText" type="text" data-bind="value: SearchText, valueUpdate: 'input'" />
+	<a class="linkButton" data-bind="click: Search, disableAnchor: SearchText().length == 0">@ConnectCMSResources.Search</a>
+	<div data-bind="foreach: Hotels" class="SearchResultsContainer">
+		<div class="SearchResultsItem" data-bind="css: $parent.SelectedHotel() == $data ? 'selected' : '', click: $parent.SelectedHotel.bind($data)">
+			<span class="header" data-bind="text: Name"></span>
+			<div class="data-item">
+				<span class="data-label">PKID :</span>
+				<span class="data-value" data-bind="text: PKID"></span>
+			</div>
+			<div class="data-item">
+				<span class="data-label">Device Ids :</span>
+				<span class="data-value" data-bind="text: DeviceIds()"></span>
+			</div>
+		</div>
+	</div>
+	<div data-bind="if: SelectedHotel() != null">
+		<div data-bind="template: {name: 'ImageGalleryTemplate'}">
+		</div>
+	</div>
+</script>
+<script type="text/html" id="HotelLogoImagesTemplate">
+	<label for="searchText">@ConnectCMSResources.SearchHotels</label>
+	<input id="searchText" type="text" data-bind="value: SearchText, valueUpdate: 'input'" />
+	<a class="linkButton" data-bind="click: Search, disableAnchor: SearchText().length == 0">@ConnectCMSResources.Search</a>
+	<div data-bind="foreach: Hotels" class="SearchResultsContainer">
+		<div class="SearchResultsItem" data-bind="css: $parent.SelectedHotel() == $data ? 'selected' : '', click: $parent.SelectedHotel.bind($data)">
+			<span class="header" data-bind="text: Name"></span>
+			<div class="data-item">
+				<span class="data-label">PKID :</span>
+				<span class="data-value" data-bind="text: PKID"></span>
+			</div>
+			<div class="data-item">
+				<span class="data-label">Device Ids :</span>
+				<span class="data-value" data-bind="text: DeviceIds()"></span>
+			</div>
+		</div>
+	</div>
+	<div data-bind="if: SelectedHotel() != null">
+		<span>LogoOnWhite</span>
+		<div data-bind="template: {name: 'SingleImageTemplate', data: SelectedHotel().HotelDetail().LogoOnWhiteImageUploader}">
+		</div>
+		<span>LogoOnBlack</span>
+		<div data-bind="template: {name: 'SingleImageTemplate', data: SelectedHotel().HotelDetail().LogoOnBlackImageUploader}">
+		</div>
+		<span>LogoOnColor</span>
+		<div data-bind="template: {name: 'SingleImageTemplate', data: SelectedHotel().HotelDetail().LogoOnColorImageUploader}">
+		</div>
+	</div>
+</script>
+<script type="text/html" id="HotelBrandLogoImagesTemplate">
+	<label for="searchText">Search Hotel Brands</label>
+	<input id="searchText" type="text" data-bind="value: SearchText, valueUpdate: 'input'" />
+	<a class="linkButton" data-bind="click: Search, disableAnchor: SearchText().length == 0">@ConnectCMSResources.Search</a>
+	<div data-bind="foreach: HotelBrands" class="SearchResultsContainer">
+		<div class="SearchResultsItem" data-bind="css: $parent.SelectedHotelBrand() == $data ? 'selected' : '', click: $parent.SelectedHotelBrand.bind($data)">
+			<span class="header" data-bind="text: Name"></span>
+			<div class="data-item">
+				<span class="data-label">PKID :</span>
+				<span class="data-value" data-bind="text: PKID"></span>
+			</div>
+			<div class="data-item">
+				<span class="data-label">Hotel Ids :</span>
+				<span class="data-value" data-bind="text: HotelIds()"></span>
+			</div>
+		</div>
+	</div>
+	<div data-bind="if: SelectedHotelBrand() != null">
+		<span>LogoOnWhite</span>
+		<div data-bind="template: {name: 'SingleImageTemplate', data: SelectedHotelBrand().LogoOnWhiteImageUploader}">
+		</div>
+		<span>LogoOnBlack</span>
+		<div data-bind="template: {name: 'SingleImageTemplate', data: SelectedHotelBrand().LogoOnBlackImageUploader}">
+		</div>
+		<span>LogoOnColor</span>
+		<div data-bind="template: {name: 'SingleImageTemplate', data: SelectedHotelBrand().LogoOnColorImageUploader}">
+		</div>
+	</div>
+</script>
+<script type="text/html" id="HotelBrandImageTemplate">
+	<label for="searchText">Search Hotel Brands</label>
+	<input id="searchText" type="text" data-bind="value: SearchText, valueUpdate: 'input'" />
+	<a class="linkButton" data-bind="click: Search, disableAnchor: SearchText().length == 0">@ConnectCMSResources.Search</a>
+	<div data-bind="foreach: HotelBrands" class="SearchResultsContainer">
+		<div class="SearchResultsItem" data-bind="css: $parent.SelectedHotelBrand() == $data ? 'selected' : '', click: $parent.SelectedHotelBrand.bind($data)">
+			<span class="header" data-bind="text: Name"></span>
+			<div class="data-item">
+				<span class="data-label">PKID :</span>
+				<span class="data-value" data-bind="text: PKID"></span>
+			</div>
+			<div class="data-item">
+				<span class="data-label">Hotel Ids :</span>
+				<span class="data-value" data-bind="text: HotelIds()"></span>
+			</div>
+		</div>
+	</div>
+	<div data-bind="if: SelectedHotelBrand() != null">
+		<div data-bind="template: {name: 'ImageGalleryTemplate'}">
+		</div>
+	</div>
+</script>
+<script type="text/html" id="ImageGalleryTemplate">
+	<div class="ImageUploaderContainer">
+		<div class="ImageUploaderValue">
+			<span class="sectionHeader">@ConnectCMSResources.HotelImages</span>
+
+			<a class="link add" data-bind="click: InsertPhoto">@ConnectCMSResources.UploadImage</a>
+			<div class="ImageUploaderDropZone" data-bind="attr:{id: 'PhotoGalleryUploaderDropZone' }">
+				<input style="display: none" type="file"
+					   data-bind="fileUploader: PhotoGalleryUploadConfig(), attr: { id: 'PhotoGalleryUploader', name: 'photos[]' }" />
+				<div class="Reorder-Container images" data-bind="attr:{id: 'PhotoGalleryReorder'}">
+					<ul class="Reorder-SubContainer ImageUploaderPhotoGalleryContainer" data-bind="foreach: ImageMaps, sortable: ImageMapsSortableViewModel">
+						<li class="ImageUploaderImageContainer">
+							<div class="ImageUploaderImage" data-bind="style: {backgroundImage: 'url('+ Image().ImageGalleryThumbnailImageUrl() +')'}">
+								<div class="ImageHoverOverlay" data-bind="visible: Image().State() == null, click: Image().Preview">
+									<a class="linkButton trash" data-bind="click: $parent.RemoveImage"></a>
+									<a class="linkButton reorder" data-bind="attr : { id: 'ImageUploaderImageMapReorderHandle_' + Ordinal()}, click: $parent.StartImageReorder"></a>
+								</div>
+								<div class="ImageHoverOverlay" data-bind="visible: Image().State() != null, css: Image().State()">
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div data-bind="visible: ImageMaps() == null || ImageMaps().length == 0">
+					<span>@ConnectCMSResources.DragDropImages</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<script id="SingleImageTemplate" type="text/html">
+	@Html.Partial( "~/Views/Image/_SingleUploadableImage.cshtml" )
+</script>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		var vm = new ConnectCMS.CreativeServices.ImageUploaderViewModel();
+		ko.applyBindings(vm, $('#bindingDiv')[0]);
+	});
+</script>

@@ -1,0 +1,19 @@
+﻿@using ConnectCMS.Resources
+
+<div class="SingleImageUploaderDropZone" data-bind="attr:{id: 'ImageUploaderDropZone_' + UniqueId }">
+	<input style="display: none" type="file"
+		   data-bind="fileUploader: ImageUploadConfig(), attr: { id: 'ImageUploader_' + UniqueId, name: 'photos_'+ UniqueId +'[]' }" />
+	<div class="ImageUploaderImageContainer" data-bind="if: Image() != null, visible: Image() != null">
+		<div class="ImageUploaderImage" data-bind="style: {backgroundImage: 'url('+ Image().ImageGalleryThumbnailImageUrl() +')'}">
+			<div class="ImageHoverOverlay" data-bind="visible: Image().State() == null, click: Image().Preview">
+				<a class="linkButton trash" data-bind="click: RemoveImage"></a>
+				<a class="linkButton upload" data-bind="click: InsertImage"></a>
+			</div>
+			<div class="ImageHoverOverlay" data-bind="visible: Image().State() != null, css: Image().State()">
+			</div>
+		</div>
+	</div>
+	<div data-bind="visible: Image() == null">
+		<a class="linkButton" data-bind="click:InsertImage">@ConnectCMSResources.UploadImage</a>
+	</div>
+</div>

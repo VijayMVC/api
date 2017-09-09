@@ -1,0 +1,218 @@
+﻿@using ConnectCMS.Resources
+<div data-bind="with: RecommendationEnterpriseEditViewModel">
+	<div class="toolBarContainer overflow">
+		<div class="flexSpacer">
+			<div data-bind="visible: !Edit()">
+				<a class="linkButton green marginRight" data-bind="click: ClickEdit">@ConnectCMSResources.Edit</a>
+				<a class="linkButton green marginLeft" data-bind="click: ClickVerify">@ConnectCMSResources.Verify</a>
+			</div>
+			<div data-bind="visible: Edit">
+				<a class="linkButton white" data-bind="click: ClickCancel, css: CancelVisible() ? 'marginRight' : '', visible: CancelVisible">@ConnectCMSResources.Cancel</a>
+				<a class="linkButton" data-bind="click: ClickUpdate, css: CancelVisible() ? 'marginLeft' : ''">@ConnectCMSResources.Save</a>
+			</div>
+		</div>
+		<div class="inline">
+			<label class="marginRight" for="languageSelect">@ConnectCMSResources.Language</label>
+			<select class="horizontal" id="languageSelect" data-bind="options: ConnectCMS.AvailableLanguages, optionsText: 'Value', value: ConnectCMS.SelectedLanguage"></select>
+		</div>
+	</div>
+	<div data-bind="with: RecommendationEnterpriseViewModel.Enterprise">
+		<div class="paddingGroup">
+			<h2 class="paddingBottom">@ConnectCMSResources.MerchantDetail</h2>
+			<div data-bind="visible: !$parent.Edit()">
+				<div class="input" data-bind="text: Name"></div>
+				<div class="input paddingTop" data-bind="text: !ConnectCMS.Strings.IsNullOrWhitespace(Description) ? Description : '@(ConnectCMSResources.DescriptionIsUnavailable)'"></div>
+			</div>
+			<div data-bind="visible: $parent.Edit">
+				<label class="vertical paddingLeftInput" for="enterpriseNameInput">@ConnectCMSResources.Name</label>
+				<input class="width100Percent" id="enterpriseNameInput" type="text" data-bind="value: Name, valueUpdate: 'input'" />
+				<label class="vertical paddingLeftInput paddingTop" for="enterpriseDescriptionInput">@ConnectCMSResources.Description</label>
+				<textarea class="width100Percent" id="enterpriseDescriptionInput" data-bind="value: Description, valueUpdate: 'input'"></textarea>
+			</div>
+		</div>
+		<div data-bind="visible: EnterpriseLocationsLength() == 1, with: FirstEnterpriseLocation">
+			<div class="paddingGroup" data-bind="with: Location">
+				<h2 class="paddingBottom">@ConnectCMSResources.LocationInformation</h2>
+				<div class="flexContainer" data-bind="visible: !$parents[2].Edit()">
+					<div data-bind="visible: $parents[2].NoEditMapVisible">
+						<div id="thumbnailBingMap" class="bingMap marginRight thumbnail" data-bind="bingMap: $parents[2].NoEditMap"></div>
+					</div>
+					<div class="flexSpacer" data-bind="css: $parents[2].NoEditMapVisible() ? 'marginLeft' : ''">
+						<div data-bind="visible: $parent.Location.IsValid">
+							<div class="input marginBlock" data-bind="text: Address1"></div>
+							<div class="input marginBlock" data-bind="text: Address2"></div>
+							<div class="input" data-bind="text: CityStatePostalCodeCountry"></div>
+						</div>
+						<span class="block input" data-bind="visible: !$parent.Location.IsValid()">@ConnectCMSResources.AddressIsUnavailable</span>
+						<span class="block input marginTop" data-bind="visible: !$parents[2].NoEditMapVisible()">@ConnectCMSResources.MapIsUnavailable</span>
+					</div>
+				</div>
+				<div data-bind="visible: $parents[2].Edit">
+					<div class="flexContainer">
+						<div class="flexSpacer paddingRight">
+							<label class="vertical paddingLeftInput" for="countrySelect">@ConnectCMSResources.Country</label>
+							<select id="countrySelect" data-bind="options: AvailableCountries, optionsCaption: '@(ConnectCMSResources.SelectACountry)', optionsText: 'Name', optionsValue: 'PKID', value: FKCountry"></select>
+						</div>
+						<div class="flexSpacer paddingRight">
+							<label class="vertical paddingLeftInput" for="postalCodeInput" data-bind="visible: PostalCodeVisible">@ConnectCMSResources.PostalCode</label>
+							<input class="width15Characters" id="postalCodeInput" type="text" data-bind="value: PostalCode, visible: PostalCodeVisible, event: { blur: BlurPostalCode }, valueUpdate: 'input'" />
+						</div>
+						<div class="flexSpacer paddingLeft">
+							<label class="vertical paddingLeftInput" for="stateSelect" data-bind="visible: StatesVisible">@ConnectCMSResources.StateOrProvince</label>
+							<select id="stateSelect" data-bind="options: AvailableStates, optionsCaption: '@(ConnectCMSResources.SelectAStateOrProvince)', optionsText: 'Name', optionsValue: 'PKID', value: FKState, visible: StatesVisible"></select>
+						</div>
+					</div>
+					<div class="flexContainer paddingTop">
+						<div class="flexSpacer paddingRight two">
+							<label class="vertical paddingLeftInput" for="address1Input">@ConnectCMSResources.StreetAddress</label>
+							<input class="width100Percent" id="address1Input" type="text" data-bind="value: Address1, valueUpdate: 'input'" />
+						</div>
+						<div class="flexSpacer paddingLeft">
+							<label class="vertical paddingLeftInput" for="cityInput">@ConnectCMSResources.City</label>
+							<input class="width100Percent" id="cityInput" type="text" data-bind="value: City, valueUpdate: 'input'" />
+						</div>
+					</div>
+					<div class="flexContainer paddingTop">
+						<div class="flexSpacer paddingRight two">
+							<input class="width100Percent" id="address2Input" type="text" data-bind="value: Address2, valueUpdate: 'input'" />
+						</div>
+						<div class="flexSpacer center paddingLeft" data-bind="with: $parents[2]">
+							<a class="linkButton green" data-bind="text: MapText, click: ClickLocate, css: LocateEnabled() ? '' : 'disabled'"></a>
+						</div>
+					</div>
+					<div id="locationBingMap" class="bingMap marginTop" data-bind="bingMap: $parents[2].EditMap, visible: $parents[2].EditMapVisible"></div>
+				</div>
+			</div>
+		</div>
+		<div class="paddingGroup">
+			<h2 class="paddingBottom">@ConnectCMSResources.WebsiteAndSocialLinks</h2>
+			<div class="table" data-bind="visible: !$parent.Edit()">
+				<div class="tr">
+					<div class="td">
+						<img class="label horizontal middle" src="Content/monscierge/images/website-label.png" />
+					</div>
+					<div class="td">
+						<span class="horizontal label">@ConnectCMSResources.Website</span>
+					</div>
+					<div class="td">
+						<span class="input" data-bind="text: !ConnectCMS.Strings.IsNullOrWhitespace(WebsiteUrl) ? WebsiteUrl : '@(ConnectCMSResources.Unavailable)'" />
+					</div>
+				</div>
+				<div class="tr">
+					<div class="td">
+						<img class="label horizontal middle" src="Content/monscierge/images/facebook-label.png" />
+					</div>
+					<div class="td">
+						<span class="horizontal label">@ConnectCMSResources.Facebook</span>
+					</div>
+					<div class="td">
+						<span class="input" data-bind="text: !ConnectCMS.Strings.IsNullOrWhitespace(FacebookUrl) ? FacebookUrl : '@(ConnectCMSResources.Unavailable)'"></span>
+					</div>
+				</div>
+				<div class="tr">
+					<div class="td">
+						<img class="label horizontal middle" src="Content/monscierge/images/twitter-label.png" />
+					</div>
+					<div class="td">
+						<span class="horizontal label">@ConnectCMSResources.Twitter</span>
+					</div>
+					<div class="td">
+						<span class="input" data-bind="text: !ConnectCMS.Strings.IsNullOrWhitespace(TwitterUrl) ? TwitterUrl : '@(ConnectCMSResources.Unavailable)'"></span>
+					</div>
+				</div>
+			</div>
+			<div class="table" data-bind="visible: $parent.Edit()">
+				<div class="tr">
+					<div class="td"></div>
+					<div class="td">
+						<span class="label vertical">@ConnectCMSResources.Type</span>
+					</div>
+					<div class="td">
+						<span class="label vertical paddingLeftInput">@ConnectCMSResources.URL</span>
+					</div>
+				</div>
+				<div class="tr">
+					<div class="td">
+						<img class="label horizontal middle" src="Content/monscierge/images/website-label.png" />
+					</div>
+					<div class="td">
+						<label class="horizontal" for="websiteInput">@ConnectCMSResources.Website</label>
+					</div>
+					<div class="td width100Percent">
+						<input class="width100Percent" id="websiteInput" type="text" data-bind="value: WebsiteUrl, valueUpdate: 'input'" />
+					</div>
+				</div>
+				<div class="tr">
+					<div class="td">
+						<img class="label horizontal middle" src="Content/monscierge/images/facebook-label.png" />
+					</div>
+					<div class="td">
+						<label class="horizontal" for="facebookInput">@ConnectCMSResources.Facebook</label>
+					</div>
+					<div class="td width100Percent">
+						<input class="width100Percent" id="facebookInput" type="text" data-bind="value: FacebookUrl, valueUpdate: 'input'" />
+					</div>
+				</div>
+				<div class="tr">
+					<div class="td">
+						<img class="label horizontal middle" src="Content/monscierge/images/twitter-label.png" />
+					</div>
+					<div class="td">
+						<label class="horizontal" for="twitterInput">@ConnectCMSResources.Twitter</label>
+					</div>
+					<div class="td width100Percent">
+						<input class="width100Percent" id="twitterInput" type="text" data-bind="value: TwitterUrl, valueUpdate: 'input'" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="paddingGroup" data-bind="visible: EnterpriseLocationsLength() == 1, with: FirstEnterpriseLocation">
+			<h2 class="paddingBottom">@ConnectCMSResources.Telephone</h2>
+			<span class="input" data-bind="text: !ConnectCMS.Strings.IsNullOrWhitespace(Phone) ? Phone : '@(ConnectCMSResources.TelephoneNumberIsUnavailable)', visible: !$parents[1].Edit()"></span>
+			<div class="flexContainer" data-bind="visible: $parents[1].Edit()">
+				<div class="flexSpacer paddingRight">
+					<label class="vertical paddingLeftInput" for="phoneNumberCountrySelect">@ConnectCMSResources.CountryCode</label>
+					<select id="phoneNumberCountrySelect" data-bind="options: $parents[1].CountriesWithPhoneNumber, optionsCaption: '@(ConnectCMSResources.SelectACountry)', optionsText: 'FormattedNameAndPhoneNumberCountryCode', optionsValue: 'ISOCountryCode', value: PhoneISOCountryCode"></select>
+				</div>
+				<div class="flexSpacer paddingLeft paddingRight">
+					<label class="vertical paddingLeftInput" for="phoneNumberInput">@ConnectCMSResources.TelephoneNumber</label>
+					<input class="width40Characters" id="phoneNumberInput" type="text" data-bind="value: Phone, valueUpdate: 'input'" />
+				</div>
+				<div class="flexSpacer paddingLeft"></div>
+			</div>
+		</div>
+		<div class="paddingGroup" data-bind="visible: EnterpriseLocationsLength() == 1, with: FirstEnterpriseLocation">
+			<h2 class="paddingBottom">@ConnectCMSResources.HoursAndOpenTimes</h2>
+			<div data-bind="visible: !$parents[1].Edit()">
+				<span class="input" data-bind="text: FormattedHourType"></span>
+				<span class="input marginTop" data-bind="text: Hours, visible: !ConnectCMS.Strings.IsNullOrWhitespace(Hours)"></span>
+			</div>
+			<div data-bind="visible: $parents[1].Edit">
+				<div class="flexContainer">
+					<div class="flexSpacer" data-bind="radioButton: { group: 'HourType', value: 0, selected: HourType, text: ConnectCMS.Globalization.AlwaysOpen }"></div>
+					<div class="flexSpacer" data-bind="radioButton: { group: 'HourType', value: 1, selected: HourType, text: ConnectCMS.Globalization.HoursDoNotApply }"></div>
+					<div class="flexSpacer" data-bind="radioButton: { group: 'HourType', value: 2, selected: HourType, text: ConnectCMS.Globalization.CustomHours }"></div>
+				</div>
+				<label class="vertical paddingLeftInput marginTop" for="hoursTextarea">@ConnectCMSResources.Notes</label>
+				<textarea class="width100Percent" id="hoursTextarea" data-bind="value: Hours, valueUpdate: 'input'"></textarea>
+			</div>
+		</div>
+		<div class="paddingBottom paddingTop">
+			<h2 class="paddingBottom">@ConnectCMSResources.Images</h2>
+			<div data-bind="visible: !$parent.Edit()">
+				<span class="block input" data-bind="visible: $parent.ImageNoDataVisible">@ConnectCMSResources.ImagesAreUnavailable</span>
+				<div data-bind="template: {name: 'imageEnterpriseTemplate', foreach: Images}"></div>
+			</div>
+			<div data-bind="visible: $parent.Edit">
+				<div class="toolBarContainer">
+					<div class="flexSpacer">
+						<a class="linkButton green" data-bind="click: $parent.ClickAddImage">@ConnectCMSResources.Add</a>
+					</div>
+					<a class="linkButton green" data-bind="click: $parent.ClickAddImage">@ConnectCMSResources.Reorder</a>
+				</div>
+				<div data-bind="template: { name: 'noDataTemplate', data: $parent.ImageNoDataViewModel }"></div>
+				<div data-bind="template: { name: 'imageEnterpriseEditTemplate', foreach: Images }"></div>
+			</div>
+		</div>
+	</div>
+</div>

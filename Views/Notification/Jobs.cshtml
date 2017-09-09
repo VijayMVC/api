@@ -1,0 +1,252 @@
+﻿@using ConnectCMS.Resources
+@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+	div.table-header {
+		padding: 15px;
+		border: 1px solid #ddd;
+		background-color: @(ViewBag.BannerColor ?? "#008080");
+		
+		margin-top: 20px;
+	}
+
+		div.table-header > h1 {
+			color: @(ViewBag.TextColor ?? "White");
+		}
+
+	.contentTable .contentRow .contentColumn {
+		padding-top: 6px;
+		padding-bottom: 6px;
+	}
+
+	.contentTable .contentColumn.valignTop {
+		vertical-align: top;
+	}
+
+	.contentTable .contentColumn.labels {
+		padding-right: 20px;
+	}
+
+	.contentTable .contentRow .contentColumn .contentLabel {
+	}
+
+	.contentTable .contentRow .contentColumn input[type="text"].contentInput {
+		min-width: 300px;
+	}
+
+	.contentTable .contentRow .contentColumn textarea.contentInput {
+		width: 100%;
+		height: 50px;
+	}
+
+		.contentTable .contentRow .contentColumn textarea.contentInput.tall {
+			height: 100px;
+		}
+
+	.contentTable .contentRow .contentColumn .navLink {
+		margin-left: 20px;
+	}
+
+	.detailsContainer {
+		margin-top: 20px;
+		margin-bottom: 20px;
+	}
+
+	p > a.MessageEllipse {
+		cursor: pointer;
+		margin-left: 5px;
+		font-weight: bold;
+	}
+</style>
+
+@section Scripts{
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+
+		});
+	</script>
+}
+
+<div id="NotificationJobModule" class="flexSpacer pageContainer" data-bind="allowBindings: false">
+	<div id="bindingDiv">
+		<div style="padding-bottom: 20px;" data-bind="visible: SelectedJob() == null">
+			<div class="mons-rq-header">
+				<a class="hdr-link-button linkButton green" href="#" data-bind="click: NewJob">
+					@ConnectCMSResources.SMSJobsCreateButton
+				</a>
+				<h1>Notification Jobs</h1>
+			</div>
+			<div class="flex table-header flexItemsCenter">
+				<h1 class="flexSpacer">Active Jobs</h1>
+			</div>
+			<div data-bind="kendoGrid: ActiveGridConfig">
+			</div>
+			<div class="flex table-header flexItemsCenter">
+				<h1 class="flexSpacer">Upcoming Jobs</h1>
+			</div>
+			<div data-bind="kendoGrid: UpcomingGridConfig">
+			</div>
+			<div class="flex table-header flexItemsCenter">
+				<h1 class="flexSpacer">Completed Jobs</h1>
+			</div>
+			<div data-bind="kendoGrid: CompletedGridConfig">
+			</div>
+		</div>
+		<div style="padding-bottom: 20px;" data-bind="with: SelectedJob()">
+			<!-- ko if: PKID() != null -->
+			<div class="mons-rq-header">
+				<a class="hdr-link-button linkButton white" href="#" data-bind="click: BackToList">
+					@ConnectCMSResources.SMSJobsBackButton
+				</a>
+				<h1>@ConnectCMSResources.SMSJobHeader</h1>
+			</div>
+			<fieldset class="detailsContainer">
+				<span class="EventDetailHeader">Job Details</span>
+				<div class="hrule" style="margin-top: 4px;"></div>
+				<div class="contentTable">
+					<div class="contentRow">
+						<div class="contentColumn labels">
+							<label class="contentLabel">Name :</label>
+						</div>
+						<div class="contentColumn">
+							<span class="contentText" data-bind="text: Name"></span>
+						</div>
+					</div>
+					<div class="contentRow">
+						<div class="contentColumn labels">
+							<label class="contentLabel">Status :</label>
+						</div>
+						<div class="contentColumn">
+							<span class="contentText" data-bind="text: StatusString"></span>
+						</div>
+					</div>
+					<div class="contentRow">
+						<div class="contentColumn labels">
+							<label class="contentLabel">Created By :</label>
+						</div>
+						<div class="contentColumn">
+							<span class="contentText" data-bind="text: CreatedBy"></span>
+						</div>
+					</div>
+					<div class="contentRow">
+						<div class="contentColumn labels">
+							<label class="contentLabel">Created On :</label>
+						</div>
+						<div class="contentColumn">
+							<span class="contentText" data-bind="text: moment(CreatedOn()).format('M/D/YY h:mm:ss A')"></span>
+						</div>
+					</div>
+					<div class="contentRow">
+						<div class="contentColumn labels">
+							<label class="contentLabel">Last Updated On :</label>
+						</div>
+						<div class="contentColumn">
+							<span class="contentText" data-bind="text: moment(LastUpdatedOn()).format('M/D/YY h:mm:ss A')"></span>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+			<!-- /ko -->
+			<!-- ko if: PKID() == null -->
+			<div class="mons-rq-header">
+				<a class="hdr-link-button linkButton marginLeft" href="#" data-bind="click: $parent.SaveJob,disableAnchor: !CanSave()">
+					@ConnectCMSResources.Create
+				</a>
+				<a class="hdr-link-button linkButton white" href="#" data-bind="click: BackToList">
+					@ConnectCMSResources.Cancel
+				</a>
+
+				<h1>New Notification Job</h1>
+			</div>
+			<fieldset class="detailsContainer">
+				<span class="EventDetailHeader">Job Details</span>
+				<div class="hrule" style="margin-top: 4px;"></div>
+				<div class="contentTable">
+					<div class="contentRow">
+						<div class="contentColumn labels">
+							<label class="contentLabel">Name :</label>
+						</div>
+						<div class="contentColumn">
+							<input type="text" class="contentInput" data-bind="value: Name" />
+						</div>
+					</div>
+					<div class="contentRow">
+						<div class="contentColumn labels">
+							<label class="contentLabel">Date :</label>
+						</div>
+						<div class="contentColumn">
+							<input data-bind="kendoDateTimePicker: ScheduledFor" />
+						</div>
+					</div>
+					<div class="contentRow">
+						<div class="contentColumn labels">
+							<label class="contentLabel">Message :</label>
+						</div>
+						<div class="contentColumn">
+							<textarea class="contentInput block tall" data-bind="value: Message, valueUpdate:'input'"></textarea>
+							<p>The following variables can be used in the message above: {FirstName} - the First Name of the guest {LastName} - the Last Name of the guest</p>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+			<!-- /ko -->
+		</div>
+	</div>
+</div>
+
+@if( Request.IsAjaxRequest() )
+{
+	<script type="text/javascript">
+		function getSelectedDeviceId() {
+			return ConnectCMS.MainViewModel.SelectedDevice().PKID();
+		};
+	</script>
+}
+else
+{
+	// This is a hard-coded replacement for the deviceId used
+	// if the page is ran outside of the CMS container.
+	<script type="text/javascript">
+
+		function getSelectedDeviceId() {
+			return @(ViewBag.DemoDeviceId ?? 22093);
+		};
+	</script>
+}
+
+<script type="text/javascript">
+	var pageVM = null;
+	function cancelTask(id) {
+		if (pageVM === null) return;
+		pageVM.CancelTask(id);
+	}
+
+	function retryTask(id) {
+		if (pageVM === null) return;
+		pageVM.RetryTask(id);
+	}
+
+	function showMessage(id) {
+		if (pageVM === null) return;
+		pageVM.ShowMessage(id);
+	}
+
+	function showStatusMessage(id) {
+		if (pageVM === null) return;
+		pageVM.ShowStatusMessage(id);
+	}
+
+	$(document).ready(function() {
+
+		var hotelId = @(ViewBag.HotelId);
+		pageVM = new ConnectCMS.Notifications.NotificationJobsViewModel(getSelectedDeviceId(), hotelId);
+		ko.applyBindings(pageVM, $('#bindingDiv')[0]);
+
+		window.onhashchange = function() {
+			pageVM.SelectJob(window.location.hash);
+		};
+	});
+</script>

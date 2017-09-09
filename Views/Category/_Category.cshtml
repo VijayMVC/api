@@ -1,0 +1,33 @@
+﻿@using ConnectCMS.Resources
+
+<script type="text/html" id="categoryCategoryTemplate">
+    @Html.Partial( "~/Views/Category/_CategoryTemplate.cshtml" )
+</script>
+
+<script type="text/html" id="categoryHeaderTemplate">
+    @Html.Partial( "~/Views/Category/_HeaderTemplate.cshtml" )
+</script>
+
+<script type="text/html" id="categoryManageTemplate">
+    @Html.Partial( "~/Views/Category/_ManageTemplate.cshtml" )
+</script>
+
+<script type="text/html" id="categoryReorderTemplate">
+    @Html.Partial( "~/Views/Category/_ReorderTemplate.cshtml" )
+</script>
+
+<div data-bind="with: RecommendationCategoryViewModel">
+    <div class="toolBarContainer overflow">
+        <div class="flexSpacer">
+            <a class="linkButton green" data-bind="click: ClickManage">@ConnectCMSResources.Manage</a>
+        </div>
+
+        <a class="linkButton green" data-bind="click: ClickReorder">@ConnectCMSResources.Reorder</a>
+    </div>
+
+    <div data-bind="progressBar: ProgressBarViewModel"></div>
+    <div data-bind="visible: RecommendationViewModel.CategoriesExecuted">
+        <div data-bind="template: { name: 'noDataTemplate', data: NoDataViewModel }"></div>
+        <div data-bind="template: { name: 'categoryCategoryTemplate', foreach: Categories }"></div>
+    </div>
+</div>
